@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @Log4j2
-@RequestMapping
+@RequestMapping("auth")
 @RequiredArgsConstructor
 public class UserController {
 }
