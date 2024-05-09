@@ -21,8 +21,8 @@ public class UserRepositoryTests {
     @Test
     public void insertUsers() {
         User user = User.builder()
-                .uid("test")
-                .password("1111")
+                .uid("test1")
+                .password(passwordEncoder.encode("1111"))
                 .nickName("tu")
                 .email("test@naver.com")
                 .build();

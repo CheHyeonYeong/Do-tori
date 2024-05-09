@@ -12,11 +12,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @Log4j2
-<<<<<<< HEAD
 @RequestMapping("/user")
-=======
-@RequestMapping("auth")
->>>>>>> d95b80fe127d296e1b9a7005c38afde8370bfe0b
+//@RequestMapping("auth")
 @RequiredArgsConstructor
 public class UserController {
 
