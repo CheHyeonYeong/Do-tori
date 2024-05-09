@@ -1,11 +1,12 @@
 package com.dotori.dotori.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class UserDTO {
+@Getter
+@Setter
+public class UpdateUserDTO {
 
-    private String uid;
     private String password;
     private String nickName;
     private String email;

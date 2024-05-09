@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Simple Sideber - Login</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+</head>
+
+<div layout:fragment="content">
+    <br>
+    <h1 class="title">User Modify</h1>
+    <hr>
+    <form th:action="@{/user/modify}" method="post">
+        <div class="input-group mb-3">
+            <span class="input-group-text">아이디</span>
+            <input type="text" th:value="${user.uid}" name="uid" class="form-control" readonly>
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text">패스워드</span>
+            <input type="password" name="password" th:value="${user.password}" class="form-control">
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text">닉네임</span>
+            <input type="text" name="nickName" th:value="${user.nickName}" class="form-control">
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text">이메일</span>
+            <input type="email" name="email" th:value="${user.email}" class="form-control">
+        </div>
+
+        <input type="submit" value="회원정보 수정" class="btn btn-primary">
+    </form>
+</div>
+
+</html>

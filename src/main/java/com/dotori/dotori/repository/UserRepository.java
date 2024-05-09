@@ -13,15 +13,18 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, String> {
 
     @EntityGraph(attributePaths = "roleSet")   // fetch 조인을 위해서 사용한 어노테이션...
-    @Query("select m from User m where m.uid = :uid and m.social = false")
+    @Query("select u from User u where u.uid = :uid and u.social = false")
     Optional<User> getWithRoles(String uid);
 
     @EntityGraph(attributePaths = "roleSet")
     Optional<User> findByEmail(String email);
 
-    @Modifying  // 이 어노테이션을 사용하면 @Query에서 DML(insert/update/delete)처리를 가능하게 함
+    @EntityGraph(attributePaths = "roleSet")
+    Optional<User> findByUid(String uid);
+
+    @Modifying
     @Transactional
-    @Query("update User m set m.password = :password where m.uid = :uid ")
-    void updatePassword(@Param("password") String password, @Param("uid") String uid);
+    @Query("update User u set u.password = :password, u.nickName = :nickName, u.email = :email where u.uid = :uid")
+    void updateUser(@Param("password") String password, @Param("nickName") String nickName, @Param("email") String email, @Param("uid") String uid);
 
 }
