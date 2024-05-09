@@ -10,4 +10,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class CustomSecurityConfig {
+
+
 }
