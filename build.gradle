@@ -62,7 +62,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	// ThymeLeaf에서 스프링 시큐리티 사용하기 위한 라이브러리
+//	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE'
+
 
 	// Oauth2 인증... 소셜로그인 처리를 위한 프레임워크
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'

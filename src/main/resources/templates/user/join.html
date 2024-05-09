@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <title>Join Page</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    JOIN
+                </div>
+                <div class="card-body">
+                    <form id="registerForm" action="/user/join" method="post">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">UID</span>
+                            <input type="text" name="uid" class="form-control">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">PW</span>
+                            <input type="password" name="password" class="form-control">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">NICKNAME</span>
+                            <input type="text" name="nickName" class="form-control">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">EMAIL</span>
+                            <input type="email" name="email" class="form-control">
+                        </div>
+                        <div class="my-4">
+                            <div class="float-end">
+                                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
+                                <button type="reset" class="btn btn-secondary">Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </div> <!--end card-body -->
+            </div> <!-- end card -->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+    const error = [[${error}]]
+
+    if(error && error === 'uid') {
+        alert("동일한 UID를 가진 계정이 존재합니다.")
+    }
+
+</script>
+
+</html>

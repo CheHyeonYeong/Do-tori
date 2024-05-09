@@ -1,6 +1,6 @@
 package com.dotori.dotori.service;
 
-import com.dotori.dotori.dto.UserDTO;
+import com.dotori.dotori.dto.UserJoinDTO;
 import com.dotori.dotori.entity.User;
 import com.dotori.dotori.entity.UserRole;
 import com.dotori.dotori.repository.UserRepository;
@@ -20,11 +20,17 @@ public class UserServiceImpl implements UserService{
     private final ModelMapper modelMapper;
 
     @Override
-    public void join(UserDTO userDTO) throws MidExistException {
-        String uid = userDTO.getUid();
+    public void join(UserJoinDTO userJoinDTO) throws UidExistException {
+        String uid = userJoinDTO.getUid();
 
-        User user = modelMapper.map(userDTO, User.class);
-        user.changePassword(passwordEncoder.encode(userDTO.getPassword()));
+        boolean exists = userRepository.existsById(uid);
+
+        if(exists) {
+            throw new UidExistException();
+        }
+
+        User user = modelMapper.map(userJoinDTO, User.class);
+        user.changePassword(passwordEncoder.encode(userJoinDTO.getPassword()));
         user.addRole(UserRole.USER);
 
         log.info("================");

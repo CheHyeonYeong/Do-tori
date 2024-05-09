@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
+import java.util.stream.IntStream;
+
 @SpringBootTest
 @Log4j2
 public class UserRepositoryTests {
@@ -20,14 +23,30 @@ public class UserRepositoryTests {
 
     @Test
     public void insertUsers() {
-        User user = User.builder()
-                .uid("test1")
-                .password(passwordEncoder.encode("1111"))
-                .nickName("tu")
-                .email("test@naver.com")
-                .build();
-        user.addRole(UserRole.USER);
 
-        userRepository.save(user);
+        IntStream.range(2, 21).forEach(i -> {
+            User user = User.builder()
+                    .uid("test" + i)
+                    .password(passwordEncoder.encode("1111"))
+                    .nickName("tu" + i)
+                    .email("test" + i + "@naver.com")
+                    .build();
+            user.addRole(UserRole.USER);
+
+            userRepository.save(user);
+        });
+
+    }
+
+    @Test
+    public void testRead() {
+        Optional<User> result = userRepository.getWithRoles("test");
+
+        User user = result.orElseThrow();
+
+        log.info(user);
+        log.info(user.getRoleSet());
+
+        user.getRoleSet().forEach(userRole -> log.info(userRole.name()));
     }
 }

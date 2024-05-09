@@ -1,4 +1,4 @@
-package com.dotori.dotori.dto;
+package com.dotori.dotori.security.dto;
 
 import lombok.Getter;
 import lombok.Setter;

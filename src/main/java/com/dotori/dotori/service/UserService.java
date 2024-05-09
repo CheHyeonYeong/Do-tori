@@ -1,17 +1,18 @@
 package com.dotori.dotori.service;
 
-import com.dotori.dotori.dto.UserDTO;
+
+import com.dotori.dotori.dto.UserJoinDTO;
 
 public interface UserService {
 
-    static class MidExistException extends Exception {
+    static class UidExistException extends Exception {
 
-        public MidExistException() {}
-        public MidExistException(String msg) {
-            super(msg);
-        }
+//        public UidExistException() {}
+//        public UidExistException(String msg) {
+//            super(msg);
+//        }
     }
 
-    void join(UserDTO userDTO) throws MidExistException;
+    void join(UserJoinDTO userJoinDTO) throws UidExistException;
 
 }
