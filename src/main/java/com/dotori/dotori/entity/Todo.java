@@ -20,7 +20,8 @@ public class Todo {
     private int id;
 
     @Column(name = "uid")
-    private int uid;
+    private String uid;
+
     private String content;
     private LocalDateTime regDate;
     private boolean completed;

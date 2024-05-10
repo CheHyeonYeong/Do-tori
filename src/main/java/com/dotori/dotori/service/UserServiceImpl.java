@@ -10,6 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -21,24 +23,25 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void join(UserJoinDTO userJoinDTO) throws UidExistException {
+
         String uid = userJoinDTO.getUid();
 
-        boolean exists = userRepository.existsById(uid);
+        Optional<User> exists = userRepository.findByUid(uid);
 
-        if(exists) {
+        // 중복 검사 -> empty도 검사하셔야 해요!!!
+        if(exists.isPresent()) {
+            log.info("User already exists");
             throw new UidExistException();
         }
-
         User user = modelMapper.map(userJoinDTO, User.class);
         user.changePassword(passwordEncoder.encode(userJoinDTO.getPassword()));
         user.addRole(UserRole.USER);
 
-        log.info("================");
+        log.info("UserJoinDTO Start");
         log.info(user);
         log.info(user.getRoleSet());
 
         userRepository.save(user);
-
 
     }
 }
