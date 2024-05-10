@@ -31,17 +31,26 @@ public class CustomSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.info("============configure================");
 
-        http.formLogin().loginPage("/user/login");
+        http.formLogin(form ->{
+           form.loginPage("/user/login");       // custom login page
+        });
 
-        http.csrf().disable();
+        http.csrf(httpSecurityCsrfConfigurer -> {
+            httpSecurityCsrfConfigurer.disable();
+        });
 
-//        http.rememberMe()
-//                .key("12345678")
-//                .tokenRepository(persistentTokenRepository())
-//                .userDetailsService(customUserDetailsService)
-//                .tokenValiditySeconds(60*60*24*30);
+        //remember-me 설정
+        http.rememberMe(httpSecurityRememberMeConfigurer -> {
+            httpSecurityRememberMeConfigurer.key("123456789")           // DB에 저장해서 작업할 수 있어야 remember 되기 때문이다.
+                    .tokenRepository(persistentTokenRepository())
+                    .userDetailsService(customUserDetailsService)
+                    .tokenValiditySeconds(60*60*24*30);     //30일
+        });
 
-        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+        //exception Handler 설정
+        http.exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {
+            httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(accessDeniedHandler());
+        });
 
         return http.build();
     }
@@ -54,16 +63,17 @@ public class CustomSecurityConfig {
         return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
-//    @Bean
-//    public PersistentTokenRepository persistentTokenRepository() {
-//        JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
-//        repo.setDataSource(dataSource);
-//        return repo;
-//    }
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
+        repo.setDataSource(dataSource);
+        return repo;
+    }
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new Custom403Handler();
     }
+
 
 }
