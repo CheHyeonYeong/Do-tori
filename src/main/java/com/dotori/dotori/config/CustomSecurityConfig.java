@@ -32,7 +32,7 @@ public class CustomSecurityConfig {
         log.info("============configure================");
 
         http.formLogin(form ->{
-           form.loginPage("/user/login");       // custom login page
+           form.loginPage("/auth/login");       // custom login page
         });
 
         http.csrf(httpSecurityCsrfConfigurer -> {

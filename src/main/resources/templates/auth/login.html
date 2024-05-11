@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Simple Sideber - Login</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+</head>
+<body class="align-middle">
+<div class="container-fluid d-flex justify-content-center" style="height: 100vh">
+    <div class="card align-self-center">
+        <div class="card-header">
+            Login Page
+        </div>
+        <div class="card-body">
+            <th:block th:if="${param.logout != null}">
+                <h1>Logout...........</h1>
+            </th:block>
+
+            <form id="registerForm" action="/auth/login" method="post">
+                <!-- username과 password로 name 속성값을 지정합니다. -->
+                <div class="input-group mb-3">
+                    <span class="input-group-text">아이디</span>
+                    <input type="text" name="id" class="form-control" placeholder="USER ID">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">패스워드</span>
+                    <input type="text" name="password" class="form-control" placeholder="PASSWORD">
+                </div>
+
+<!--                <div class="input-group mb-3">-->
+<!--                    <input class="form-check-input" type="checkbox" name="remember-me">-->
+<!--                    <label class="form-check-label">-->
+<!--                        자동 로그인-->
+<!--                    </label>-->
+<!--                </div>-->
+
+                <div class="my-4">
+                    <div class="float-end">
+                        <button type="submit" class="btn btn-primary submitBtn">LOGIN</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--&lt;!&ndash; 모달 - 회원가입 성공 &ndash;&gt;-->
+<!--<div class="modal successJoinModal" tabindex="-1">-->
+<!--    <div class="modal-dialog">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title">회원가입 성공</h5>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--            </div>-->
+
+<!--            <div class="modal-body">-->
+<!--                <div class="input-group mb-3">-->
+<!--                    <span class="input-group-text">회원가입에 성공 했습니다..</span>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-outline-dark closeBtn">Close</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; 모달 - 로그인 실패 &ndash;&gt;-->
+<!--<div class="modal loginFailModal" tabindex="-1">-->
+<!--    <div class="modal-dialog">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title">Login Fail</h5>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--            </div>-->
+
+<!--            <div class="modal-body">-->
+<!--                <div class="input-group mb-3">-->
+<!--                    <span class="input-group-text">로그인에 실패 했습니다..</span>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-outline-dark closeBtn">Close</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<script layout:fragment="script" th:inline="javascript">-->
+<!--    // 회원가입 성공 모달-->
+<!--    const successJoinModal = new bootstrap.Modal(document.querySelector(".successJoinModal"))-->
+
+<!--    // successJoinModal-->
+<!--    const closeBtn = document.querySelector(".closeBtn")-->
+
+<!--    -->
+
+<!--</script>-->
+
+
+</body>
+</html>

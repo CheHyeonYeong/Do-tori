@@ -5,5 +5,5 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Log4j2
-public class UserServiceTests {
+public class AuthServiceTests {
 }
