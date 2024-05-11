@@ -25,8 +25,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("loadUserByUsername : " + username);
 
+        // DB에 등록된 사용자 정보를 불러옴
         Optional<Auth> result = authRepository.getWithRoles(username);
 
+        // 결과가 없는 경우 예외 처리 클래스 호출
         if(result.isEmpty()) {
             throw new UsernameNotFoundException("username not found....");
         }
