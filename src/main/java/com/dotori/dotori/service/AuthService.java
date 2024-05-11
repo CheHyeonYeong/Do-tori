@@ -2,19 +2,19 @@ package com.dotori.dotori.service;
 
 
 import com.dotori.dotori.dto.AuthDTO;
-import com.dotori.dotori.repository.AuthRepository;
+import com.dotori.dotori.entity.Auth;
 
 public interface AuthService {
 
-    static class IdExistException extends Exception {
+    void login(AuthDTO authDTO);
 
-//        public UidExistException() {}
-//        public UidExistException(String msg) {
-//            super(msg);
-//        }
-    }
+    Auth join(AuthDTO authDTO);
 
-    void join(AuthDTO authDTO) throws IdExistException;
+    AuthDTO info(String id);
 
-    boolean checkPassword(String id, String enteredPassword);
+    void modify(AuthDTO authDTO);
+
+    void delete(String id);
+
+
 }

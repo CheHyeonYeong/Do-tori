@@ -26,26 +26,34 @@ public class CustomUserDetailsService implements UserDetailsService {
         log.info("loadUserByUsername : " + username);
 
         // DB에 등록된 사용자 정보를 불러옴
-        Optional<Auth> result = authRepository.getWithRoles(username);
+        Optional<Auth> result = authRepository.findById(username);
 
         // 결과가 없는 경우 예외 처리 클래스 호출
-        if(result.isEmpty()) {
+        if (result.isEmpty()) {
             throw new UsernameNotFoundException("username not found....");
         }
 
         Auth auth = result.get();
 
         AuthSecurityDTO authSecurityDTO = new AuthSecurityDTO(
-            auth.getId(),
-            auth.getPassword(),
-            auth.getNickName(),
-            auth.getEmail(),
-            false
+                auth.getId(),
+                auth.getPassword(),
+                auth.getNickName(),
+                auth.getEmail(),
+                false
         );
 
         log.info("userSecurityDTO");
         log.info(authSecurityDTO);
 
         return authSecurityDTO;
+
+//        return new AuthSecurityDTO(
+//                auth.getId(),
+//                auth.getPassword(),
+//                auth.getNickName(),
+//                auth.getEmail(),
+//                auth.isSocial()
+//        );
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -36,12 +35,4 @@ public class AuthRepositoryTests {
 
     }
 
-    @Test
-    public void testRead() {
-        Optional<Auth> result = authRepository.getWithRoles("test15");
-
-        Auth auth = result.orElseThrow();
-
-        log.info(auth);
-    }
 }
