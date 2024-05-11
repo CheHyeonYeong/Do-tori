@@ -2,14 +2,17 @@ package com.dotori.dotori.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
-public class UserJoinDTO {
-
-    private Long id;
+@Getter
+@Setter
+public class AuthDTO {
+    private int aid;
 
     @NotBlank(message = "아이디는 필수 입력 값입니다.")
-    private String uid;
+    private String id;
 
     @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
     private String password;
@@ -20,7 +23,6 @@ public class UserJoinDTO {
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
     private String email;
 
-    private boolean del;
     private boolean social;
 
 }

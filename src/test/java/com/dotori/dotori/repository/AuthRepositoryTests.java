@@ -1,7 +1,6 @@
 package com.dotori.dotori.repository;
 
-import com.dotori.dotori.entity.User;
-import com.dotori.dotori.entity.UserRole;
+import com.dotori.dotori.entity.Auth;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +12,10 @@ import java.util.stream.IntStream;
 
 @SpringBootTest
 @Log4j2
-public class UserRepositoryTests {
+public class AuthRepositoryTests {
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthRepository authRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -25,28 +24,24 @@ public class UserRepositoryTests {
     public void insertUsers() {
 
         IntStream.range(2, 21).forEach(i -> {
-            User user = User.builder()
-                    .uid("test" + i)
+            Auth auth = Auth.builder()
+                    .id("test" + i)
                     .password(passwordEncoder.encode("1111"))
                     .nickName("tu" + i)
                     .email("test" + i + "@naver.com")
                     .build();
-            user.addRole(UserRole.USER);
 
-            userRepository.save(user);
+            authRepository.save(auth);
         });
 
     }
 
     @Test
     public void testRead() {
-        Optional<User> result = userRepository.getWithRoles("test");
+        Optional<Auth> result = authRepository.getWithRoles("test15");
 
-        User user = result.orElseThrow();
+        Auth auth = result.orElseThrow();
 
-        log.info(user);
-        log.info(user.getRoleSet());
-
-        user.getRoleSet().forEach(userRole -> log.info(userRole.name()));
+        log.info(auth);
     }
 }

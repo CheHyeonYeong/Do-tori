@@ -27,7 +27,7 @@ public class Custom403Handler implements AccessDeniedHandler {
         log.info("isJSON: " + jsonRequest);
 
         if(!jsonRequest) {
-            response.sendRedirect("/user/login?error=ACCESS_DENIED");
+            response.sendRedirect("/auth/login?error=ACCESS_DENIED");
         }
     }
 }
