@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,41 +30,61 @@ public class CustomSecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
 
     // 로그인 페이지로 이동 안하고 바로 접근 가능
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        log.info("============configure================");
-
-        http.formLogin(form ->{
-           form.loginPage("/auth/login");       // custom login page
-        });
-
-        http.csrf(httpSecurityCsrfConfigurer -> {
-            httpSecurityCsrfConfigurer.disable();
-        });
-
-        //remember-me 설정
-        http.rememberMe(httpSecurityRememberMeConfigurer -> {
-            httpSecurityRememberMeConfigurer.key("123456789")           // DB에 저장해서 작업할 수 있어야 remember 되기 때문이다.
-                    .tokenRepository(persistentTokenRepository())
-                    .userDetailsService(customUserDetailsService)
-                    .tokenValiditySeconds(60*60*24*30);     //30일
-        });
-
-        //exception Handler 설정
-        http.exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {
-            httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(accessDeniedHandler());
-        });
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
+                .formLogin(form -> form
+                        .loginPage("/auth/login")
+                        .defaultSuccessUrl("/auth/test")
+                        .failureUrl("/auth/login?error=true")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/auth/login")
+                        .permitAll()
+                )
+                .sessionManagement(session -> session
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
+                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/auth/**").permitAll()
+                        .anyRequest().authenticated()
+                );
 
         return http.build();
     }
 
-    // 정적 자원들에 필터 적용 제외
 //    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        log.info("----------web configure-----------");
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        log.info("============configure================");
 //
-//        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+//        http.formLogin(form ->{
+//            form.loginPage("/auth/login").permitAll();       // custom login page
+//        });
+//
+//        http.csrf(httpSecurityCsrfConfigurer -> {
+//            httpSecurityCsrfConfigurer.disable();
+//        });
+//
+//        //exception Handler 설정
+//        http.exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {
+//            httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(accessDeniedHandler());
+//        });
+//
+//        return http.build();
 //    }
+
+     // 정적 자원들에 필터 적용 제외
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        log.info("----------web configure-----------");
+
+        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
 
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {

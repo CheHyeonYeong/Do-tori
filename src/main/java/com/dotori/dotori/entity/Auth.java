@@ -5,9 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
 @Getter
 @Builder
@@ -17,6 +14,7 @@ public class Auth {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성
+    @Column(name = "aid")
     private int aid;
 
     @NotNull
@@ -35,6 +33,10 @@ public class Auth {
 
     @ColumnDefault("false")
     private boolean social;
+
+    public void setAuth(String id) {
+        this.id = id;
+    }
 
     public void changePassword(String password) {
         this.password = password;

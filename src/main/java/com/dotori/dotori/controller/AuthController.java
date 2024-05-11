@@ -2,111 +2,88 @@ package com.dotori.dotori.controller;
 
 import com.dotori.dotori.dto.AuthDTO;
 import com.dotori.dotori.entity.Auth;
-import com.dotori.dotori.repository.AuthRepository;
 import com.dotori.dotori.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.security.core.Authentication;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 
-@Controller
+@RestController
 @Log4j2
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private final AuthRepository authRepository;
-
     private final AuthService authService;
-    private final PasswordEncoder passwordEncoder;
 
     // 로그인
 
-    @GetMapping("/login")
-    public void loginGET(String error, String logout) {
-        log.info("login get......");
-        log.info("logout : " + logout);
-
-        if(logout != null){
-            log.info("user logout........ ");
-        }
-
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody AuthDTO authDTO, HttpServletRequest request) {
+        authService.login(authDTO);
+        HttpSession session = request.getSession(true);
+        return ResponseEntity.ok(session.getId());
     }
 
     // 회원 가입
 
-    @GetMapping("/join")
-    public void joinGET() {
-        log.info("join get....");
-    }
-
     @PostMapping("/join")
-    public String joinPost(AuthDTO authDTO, RedirectAttributes redirectAttributes) {
-        log.info("join post.....");
-        log.info(authDTO);
-
+    public ResponseEntity<AuthDTO> join(@RequestBody AuthDTO authDTO) {
         try {
-            authService.join(authDTO);
-        } catch (AuthService.IdExistException e) {
-            redirectAttributes.addFlashAttribute("error", "id");
-            return "redirect:/auth/join";
+            Auth auth = Auth.builder()
+                    .id(authDTO.getId())
+                    .password(authDTO.getPassword())
+                    .nickName(authDTO.getNickName())
+                    .email(authDTO.getEmail())
+                    .social(false)
+                    .build();
+            Auth joinAuth = authService.join(authDTO);
+            AuthDTO responseAuthDTO = AuthDTO.builder()
+                    .id(joinAuth.getId())
+                    .password(joinAuth.getPassword())
+                    .nickName(joinAuth.getNickName())
+                    .email(joinAuth.getEmail())
+                    .social(false)
+                    .build();
+
+            return ResponseEntity.ok().body(responseAuthDTO);
+        } catch (Exception e) {
+            log.error(e);
+            return ResponseEntity.badRequest().build();
         }
-
-        redirectAttributes.addFlashAttribute("result", "success");
-        return "redirect:/auth/login";
+//        String id = authService.join(authDTO);
+//        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+//                .path("/{id}")
+//                .buildAndExpand(id)
+//                .toUri();
+//        return ResponseEntity.created(location).body(id);
     }
 
-    @GetMapping("/info")
-    public String userInfo(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String id = authentication.getName();
-        Auth auth = authRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("auth not found"));
-        model.addAttribute("auth", auth);
-        return "auth/info"; // 회원 정보를 보여주는 뷰 이름
+    // 회원 정보 조회
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AuthDTO> getInfo(@PathVariable String id) {
+        AuthDTO authDTO = authService.info(id);
+        return ResponseEntity.ok(authDTO);
     }
 
-    @GetMapping("/modify")
-    public String updateGET(AuthDTO authDTO, Model model) {
-        log.info("modify get......");
-        log.info(authDTO);
+    // 회원 정보 수정
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String id = authentication.getName();
-        Auth auth = authRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("auth not found"));
-        model.addAttribute("auth", auth);
-        return "auth/modify";
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> modifyInfo(@PathVariable String id, @RequestBody AuthDTO authDTO) {
+        authService.modify(authDTO);
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/modify")
-    public String updatePOST(@ModelAttribute AuthDTO updateAuthDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String id = authentication.getName();
-        authRepository.updateAuth(updateAuthDTO.getPassword(), updateAuthDTO.getNickName(), updateAuthDTO.getEmail(), id);
-        return "redirect:/auth/info";
+    // 회원 탈퇴
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteInfo(@PathVariable String id) {
+        authService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/delete")
-    public String deletePOST(@ModelAttribute AuthDTO deleteAuthDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String id = authentication.getName();
-        authRepository.deleteAuthBy(id);
-        return "redirect:/auth/login";
-    }
 }
