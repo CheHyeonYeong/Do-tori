@@ -14,6 +14,7 @@ public interface AuthService {
 //        }
     }
 
-    String login(String id, String password);
     void join(AuthDTO authDTO) throws IdExistException;
+
+    boolean checkPassword(String id, String enteredPassword);
 }

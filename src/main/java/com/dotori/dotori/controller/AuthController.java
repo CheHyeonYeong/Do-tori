@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.Authentication;
 
@@ -37,22 +38,14 @@ public class AuthController {
     // 로그인
 
     @GetMapping("/login")
-    public String loginGet(HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        if (id != null) {
-            return "redirect:/";
-        }
-        return "auth/login";
-    }
+    public void loginGET(String error, String logout) {
+        log.info("login get......");
+        log.info("logout : " + logout);
 
-    @PostMapping("/login")
-    public String loginPOST(String id, String password, HttpSession session) {
-        String user = authService.login(id, password);
-        if(user == null) {
-            return "redirect:/login";
+        if(logout != null){
+            log.info("user logout........ ");
         }
-        session.setAttribute("id", id);
-        return "redirect:/";
+
     }
 
     // 회원 가입
@@ -89,7 +82,10 @@ public class AuthController {
     }
 
     @GetMapping("/modify")
-    public String updateGET(Model model) {
+    public String updateGET(AuthDTO authDTO, Model model) {
+        log.info("modify get......");
+        log.info(authDTO);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String id = authentication.getName();
         Auth auth = authRepository.findById(id)

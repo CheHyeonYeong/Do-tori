@@ -24,8 +24,6 @@ public class AuthServiceImpl implements AuthService {
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
-    private final HttpSession httpSession;
-    private final CustomUserDetailsService customUserDetailsService;
 
     @Override
     public void join(AuthDTO authDTO) throws IdExistException {
@@ -50,20 +48,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String login(String id, String password) {
-        Optional<Auth> auth = authRepository.getWithRoles(id);
-        if(auth.get().getPassword().equals(password)) {
-            return auth.get().getId();
+    public boolean checkPassword(String id, String enteredPassword) {
+        Optional<Auth> authOptional = authRepository.findById(id);
+        if(authOptional.isPresent()) {
+            Auth auth = authOptional.get();
+            return passwordEncoder.matches(enteredPassword, auth.getPassword());
         }
-        return null;
-//
-//        Optional<Auth> authOptional = authRepository.findById(authDTO.getId());
-//        if(authOptional.isPresent()) {
-//            Auth auth = authOptional.get();
-//            if(passwordEncoder.matches(authDTO.getPassword(), auth.getPassword())) {
-//                return true;
-//            }
-//        }
-//        return false;
+        return false;
     }
 }

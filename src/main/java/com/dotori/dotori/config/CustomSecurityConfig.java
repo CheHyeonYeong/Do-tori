@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -20,6 +21,7 @@ import javax.sql.DataSource;
 @Configuration
 @Log4j2
 @RequiredArgsConstructor
+@EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)        // 접근권한설정
 public class CustomSecurityConfig {
 
@@ -56,12 +58,12 @@ public class CustomSecurityConfig {
     }
 
     // 정적 자원들에 필터 적용 제외
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        log.info("----------web configure-----------");
-
-        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        log.info("----------web configure-----------");
+//
+//        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+//    }
 
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
