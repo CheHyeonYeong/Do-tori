@@ -4,20 +4,16 @@ import com.dotori.dotori.dto.AuthDTO;
 import com.dotori.dotori.entity.Auth;
 import com.dotori.dotori.repository.AuthRepository;
 import com.dotori.dotori.service.AuthService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -34,7 +30,6 @@ public class AuthController {
     @Autowired
     private final AuthRepository authRepository;
     private final AuthService authService;
-    private final PasswordEncoder passwordEncoder;
 
     // 로그인
 
@@ -46,17 +41,6 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login")
-    public String loginPOST(String id, String password, RedirectAttributes redirectAttributes) {
-
-        String user = authService.login(id, password);
-        if(user == null) {
-            return "redirect:/auth/login";
-        }
-        log.info("user : " + user);
-        redirectAttributes.addAttribute("id", id);
-        return "redirect:/auth/test.html";
-    }
 
     // 회원 가입
 

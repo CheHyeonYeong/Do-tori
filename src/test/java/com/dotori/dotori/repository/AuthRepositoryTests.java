@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.Commit;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -38,7 +40,7 @@ public class AuthRepositoryTests {
 
     @Test
     public void testRead(){
-        Optional<Auth> auth = authRepository.findById("test5");
+        Optional<Auth> auth = authRepository.findById("test10");
         Auth auth1 = auth.orElseThrow();
 
         log.info(auth1);
@@ -47,4 +49,32 @@ public class AuthRepositoryTests {
         log.info(auth1.getNickName());
     }
 
+    @Test
+    public void testByEmail(){
+        Optional<Auth> auth = authRepository.findByEmail("test10@naver.com");
+        Auth auth1 = auth.orElseThrow();
+        log.info(auth1);
+        log.info(auth1.getAid());
+        log.info(auth1.getNickName());
+    }
+
+    @Commit
+    @Test
+    public void testUpdate(){
+        String id = "test10";
+        String updatePassword = passwordEncoder.encode("test10");
+        String updateNickName = "test10";
+        String updateEmail = "test10@naver.com";
+        authRepository.updateAuth(updatePassword, updateNickName,updateEmail, id);
+
+        log.info(authRepository.findById(id).get());
+    }
+
+    @Test
+    public void testDelete(){
+        testRead();
+        String id = "test10";
+        authRepository.deleteById(id);
+
+    }
 }

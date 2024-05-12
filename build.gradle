@@ -4,7 +4,6 @@ buildscript {
 	}
 }
 
-
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.5'
@@ -29,50 +28,52 @@ repositories {
 }
 
 dependencies {
-
+	// Spring Boot 관련 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-
+	// Lombok 관련 의존성
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	// lombok setting - test에서 사용할 수 있게 설정
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
+	// 데이터베이스 관련 의존성
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation "com.h2database:h2"
+
+	// 테스트 관련 의존성
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	//Thymeleaf의 레이아웃 기능을 위한 추가 라이브러리
+	// Thymeleaf 관련 의존성
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE'
 
+	// QueryDSL 관련 의존성
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
-
 	annotationProcessor(
 			"jakarta.persistence:jakarta.persistence-api",
 			"jakarta.annotation:jakarta.annotation-api",
 			"com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
 	)
 
+	// 모델 매핑 관련 의존성
 	implementation 'org.modelmapper:modelmapper:3.2.0'
+
+	// Kotlin 관련 의존성
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
+	// 스프링 시큐리티 관련 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-
-	implementation "com.h2database:h2"
-
-	//ThymeLeaf에서 스프링 시큐리티 사용하기 위한 라이브러리
-	// https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE'
-
-	//OAuth2 인증...
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-	implementation 'io.jsonwebtoken:jjwt:0.9.1'
-
+	// JSON 관련 의존성, JWT 관련
+	implementation 'com.google.code.gson:gson:2.10.1'
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5', 'io.jsonwebtoken:jjwt-jackson:0.12.5'
 }
 
 tasks.named('test') {
