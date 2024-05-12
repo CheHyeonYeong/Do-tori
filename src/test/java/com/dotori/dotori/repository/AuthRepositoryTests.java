@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -32,7 +33,18 @@ public class AuthRepositoryTests {
 
             authRepository.save(auth);
         });
+    }
 
+
+    @Test
+    public void testRead(){
+        Optional<Auth> auth = authRepository.findById("test5");
+        Auth auth1 = auth.orElseThrow();
+
+        log.info(auth1);
+        log.info(auth1.getAid());
+
+        log.info(auth1.getNickName());
     }
 
 }

@@ -6,7 +6,7 @@ import com.dotori.dotori.entity.Auth;
 
 public interface AuthService {
 
-    void login(AuthDTO authDTO);
+    String login(String id, String password);
 
     Auth join(AuthDTO authDTO);
 

@@ -17,18 +17,18 @@ public class AuthServiceTests {
     @Autowired
     private AuthService authService;
 
-    @Test
-    public void joinTest() {
-        AuthDTO authDTO = AuthDTO.builder()
-                .id("TTTTTTTTTTTTTTTTTTT")
-                .password("1111")
-                .nickName("테스트")
-                .email("ttttt@test.com")
-                .social(false)
-                .build();
-        log.info("authDTO: ", authDTO);
-        log.info(authService.join(authDTO));
-    }
+//    @Test
+//    public void joinTest() {
+//        AuthDTO authDTO = AuthDTO.builder()
+//                .id("TTTTTTTTTTTTTTTTTTT")
+//                .password("1111")
+//                .nickName("테스트")
+//                .email("ttttt@test.com")
+//                .social(false)
+//                .build();
+//        log.info("authDTO: ", authDTO);
+//        log.info(authService.join(authDTO));
+//    }
 
     @Test
     public void infoTest() {

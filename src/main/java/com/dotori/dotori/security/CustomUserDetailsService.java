@@ -19,7 +19,6 @@ import java.util.Optional;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final AuthRepository authRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -48,12 +47,5 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return authSecurityDTO;
 
-//        return new AuthSecurityDTO(
-//                auth.getId(),
-//                auth.getPassword(),
-//                auth.getNickName(),
-//                auth.getEmail(),
-//                auth.isSocial()
-//        );
     }
 }
