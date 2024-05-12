@@ -27,24 +27,16 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
 
     @Override
-    public String login(String id, String password) {
-        Optional<Auth> auth = authRepository.findById(id);
-        if(auth.get().getPassword().equals(passwordEncoder.encode(password))) {
-            return auth.get().getId();
-        }
-        return null;
-    }
+    public Auth join(AuthDTO authDTO) throws MidExistException{
+        String mid = authDTO.getId();
 
-    @Override
-    public Auth join(AuthDTO authDTO) {
-        if (authRepository.existsById(authDTO.getId())) {
-            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        if (authRepository.existsById(mid)) {
+            throw new MidExistException("이미 존재하는 아이디입니다.");
         }
 
         Auth auth = modelMapper.map(authDTO, Auth.class);
-        auth.setAuth(authDTO.getId());
+        auth.changePassword(passwordEncoder.encode(authDTO.getPassword()));       //password는 암호화
 
-        String id = authRepository.save(auth).getId();
         log.info("생성된 auth : " + auth);
 
         return authRepository.save(auth);
