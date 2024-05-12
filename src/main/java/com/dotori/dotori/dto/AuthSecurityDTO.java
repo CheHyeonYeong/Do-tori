@@ -1,11 +1,13 @@
-package com.dotori.dotori.security.dto;
+package com.dotori.dotori.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 @Getter
@@ -13,6 +15,7 @@ import java.util.Map;
 @ToString
 public class AuthSecurityDTO extends User {
 
+    private int aid;
     private String id;
     private String password;
     private String nickName;
@@ -21,19 +24,14 @@ public class AuthSecurityDTO extends User {
 
     private Map<String, Object> props;
 
-    public AuthSecurityDTO(String username, String password, String nickName, String email,
-                           boolean social) {
-        super(username, password, new ArrayList<>());
-
-        this.id = username;
+    public AuthSecurityDTO(int aid, String id, String password, String nickName, String email, boolean social, Collection<GrantedAuthority> authorities) {
+        super(id, password, authorities);
+        this.aid = aid;
+        this.id = id;
         this.password = password;
         this.nickName = nickName;
         this.email = email;
         this.social = social;
     }
-
-
-
-
 
 }

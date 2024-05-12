@@ -32,7 +32,6 @@ public class AuthController {
     private final AuthService authService;
 
     // 로그인
-
     @GetMapping("/login")
     public void loginGet(String error, String logout) {
         log.info("logout : " + logout);
@@ -40,7 +39,6 @@ public class AuthController {
             log.info("user logout..........");
         }
     }
-
 
     // 회원 가입
 
@@ -56,7 +54,7 @@ public class AuthController {
 
         try {
             authService.join(authDTO);
-        } catch (Exception e) {
+        } catch (AuthService.MidExistException e) {
             redirectAttributes.addFlashAttribute("error", "id");
             return "redirect:/auth/join";
         }
@@ -65,7 +63,7 @@ public class AuthController {
         return "redirect:/auth/login";
     }
 
-    @GetMapping("/info")
+    @GetMapping("/api/info")
     public String authInfo(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String id = authentication.getName();
