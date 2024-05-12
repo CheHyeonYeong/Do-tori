@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+<body>
+<button class="btn1">generateToken</button>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+
+    document.querySelector(".btn1").addEventListener("click",()=>{
+        const data = {id:"test11", password:"1111"}
+        axios.post("http://localhost:8080/generateToken", data).then(res=>{
+            const accessToken = res.data.accessToken
+            const refreshToken = res.data.refreshToken
+
+            //localStorage란 웹 브라우저 저장소이다.
+            localStorage.setItem("accessToken", accessToken)
+
+            // 이 부분이 추가되었습니다.
+            const accessTokenDisplay = document.createElement("p");
+            accessTokenDisplay.textContent = `accessToken: ${accessToken}`;
+            document.body.appendChild(accessTokenDisplay);
+
+
+            localStorage.setItem("refreshToken", refreshToken)
+        })
+    }, false)
+</script>
+</body>
+</html>

@@ -2,6 +2,9 @@ package com.dotori.dotori.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 
 @Data
 @Builder
@@ -23,5 +26,6 @@ public class AuthDTO {
     private String email;
 
     private boolean social;
+
 
 }

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -32,7 +33,6 @@ public class AuthController {
     private final AuthService authService;
 
     // 로그인
-
     @GetMapping("/login")
     public void loginGet(String error, String logout) {
         log.info("logout : " + logout);
@@ -40,7 +40,6 @@ public class AuthController {
             log.info("user logout..........");
         }
     }
-
 
     // 회원 가입
 
@@ -56,7 +55,7 @@ public class AuthController {
 
         try {
             authService.join(authDTO);
-        } catch (Exception e) {
+        } catch (AuthService.MidExistException e) {
             redirectAttributes.addFlashAttribute("error", "id");
             return "redirect:/auth/join";
         }
@@ -65,8 +64,10 @@ public class AuthController {
         return "redirect:/auth/login";
     }
 
-    @GetMapping("/info")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/api/info")
     public String authInfo(Model model) {
+        log.info("info commin");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String id = authentication.getName();
         Auth auth = authRepository.findById(id)
@@ -75,6 +76,7 @@ public class AuthController {
         return "auth/info"; // 회원 정보를 보여주는 뷰 이름
     }
 
+//    @PreAuthorize("principal.username == #authDTO.id")        //이런 인증 절차가 아무것도 없어요ㅠㅠ
     @GetMapping("/modify")
     public String updateGET(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -1,16 +1,17 @@
 package com.dotori.dotori.security;
 
 import com.dotori.dotori.entity.Auth;
-import com.dotori.dotori.security.dto.AuthSecurityDTO;
+import com.dotori.dotori.dto.AuthSecurityDTO;
 import com.dotori.dotori.repository.AuthRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Log4j2
@@ -33,17 +34,17 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         Auth auth = result.get();
-
         AuthSecurityDTO authSecurityDTO = new AuthSecurityDTO(
+                auth.getAid(),
                 auth.getId(),
                 auth.getPassword(),
                 auth.getNickName(),
                 auth.getEmail(),
-                false
+                false,
+                List.of(new SimpleGrantedAuthority("ROLE_USER"))        //권한 설정
         );
 
-        log.info("userSecurityDTO");
-        log.info(authSecurityDTO);
+        log.info("userSecurityDTO : {}", authSecurityDTO);
 
         return authSecurityDTO;
 
