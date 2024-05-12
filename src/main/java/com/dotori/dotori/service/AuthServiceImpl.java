@@ -27,24 +27,12 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
 
     @Override
-    public void login(AuthDTO authDTO) {
-        Auth auth = authRepository.findById(authDTO.getId())
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-
-        if (!passwordEncoder.matches(authDTO.getPassword(), auth.getPassword())) {
-            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+    public String login(String id, String password) {
+        Optional<Auth> auth = authRepository.findById(id);
+        if(auth.get().getPassword().equals(passwordEncoder.encode(password))) {
+            return auth.get().getId();
         }
-
-        AuthSecurityDTO authSecurityDTO = new AuthSecurityDTO(
-                auth.getId(),
-                auth.getPassword(),
-                auth.getNickName(),
-                auth.getEmail(),
-                auth.isSocial()
-        );
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(authSecurityDTO, null, authSecurityDTO.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return null;
     }
 
     @Override
@@ -83,7 +71,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void delete(String id) {
+    public void remove(String id) {
         authRepository.deleteById(id);
     }
+
 }
