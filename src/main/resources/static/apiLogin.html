@@ -10,13 +10,20 @@
 <script>
 
     document.querySelector(".btn1").addEventListener("click",()=>{
-        const data = {mid:"test11", mpw:"1111"}
-        axios.post("http://localhost:8080/gengerateToken", data).then(res=>{
+        const data = {id:"test11", password:"1111"}
+        axios.post("http://localhost:8080/generateToken", data).then(res=>{
             const accessToken = res.data.accessToken
             const refreshToken = res.data.refreshToken
 
             //localStorage란 웹 브라우저 저장소이다.
             localStorage.setItem("accessToken", accessToken)
+
+            // 이 부분이 추가되었습니다.
+            const accessTokenDisplay = document.createElement("p");
+            accessTokenDisplay.textContent = `accessToken: ${accessToken}`;
+            document.body.appendChild(accessTokenDisplay);
+
+
             localStorage.setItem("refreshToken", refreshToken)
         })
     }, false)

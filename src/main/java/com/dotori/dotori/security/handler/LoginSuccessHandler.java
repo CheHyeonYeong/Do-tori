@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Log4j2
 @RequiredArgsConstructor
-public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
+public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     // 토큰 발행 의존성 주입
     private final JWTUtil jwtUtil;

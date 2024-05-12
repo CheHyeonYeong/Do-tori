@@ -1,6 +1,7 @@
 package com.dotori.dotori.security.filter;
 
 import com.dotori.dotori.config.util.JWTUtil;
+import com.dotori.dotori.security.CustomUserDetailsService;
 import com.dotori.dotori.security.exception.AccessTokenException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -11,6 +12,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -21,22 +26,36 @@ import java.util.Map;
 public class TokenCheckFilter extends OncePerRequestFilter {
     // 실질적 filter 생성 클래스
 
+    private final CustomUserDetailsService userDetailService;
     private final JWTUtil jwtUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        log.info("TokenCheckFilter");
         String path = request.getRequestURI();
 
         // auth/api로 접근한 것이 아니라면 checkfilter로 사용하지 않고 다음 필터로 넘어감
         if(!path.startsWith("/auth/api")){
+            log.info("TokenCheckFilter do not commin!!!");
             filterChain.doFilter(request, response);
             return;
         }
         log.info("Token check filter");
 
         try {
-            validateAccessToken(request);
+
+            Map<String, Object> payload = validateAccessToken(request);
+
+            //id
+            String id = (String)payload.get("id");
+            log.info("id : "+id);
+            UserDetails userDetails = userDetailService.loadUserByUsername(id);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             filterChain.doFilter(request, response);
+
         } catch (AccessTokenException e){
             e.sendResponseError(response);
         }

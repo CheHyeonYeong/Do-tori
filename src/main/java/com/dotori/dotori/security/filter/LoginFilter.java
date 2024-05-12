@@ -17,9 +17,9 @@ import java.io.Reader;
 import java.util.Map;
 
 @Log4j2
-public class APILoginFilter extends AbstractAuthenticationProcessingFilter {
+public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
-    public APILoginFilter(String defaultFilterProcessesUrl) {
+    public LoginFilter(String defaultFilterProcessesUrl) {
         super(defaultFilterProcessesUrl);
     }
 
