@@ -71,7 +71,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void delete(String id) {
+    public void remove(String id) {
         authRepository.deleteById(id);
     }
+
 }

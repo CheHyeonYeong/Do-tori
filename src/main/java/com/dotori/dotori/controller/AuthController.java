@@ -6,6 +6,7 @@ import com.dotori.dotori.repository.AuthRepository;
 import com.dotori.dotori.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,33 +39,34 @@ public class AuthController {
     // 로그인
 
     @GetMapping("/login")
-    public String loginGet(HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        if (id != null) {
-            return "redirect:/";
+    public void loginGet(String error, String logout) {
+        log.info("logout : " + logout);
+        if(logout != null){
+            log.info("user logout..........");
         }
-        return "redirect:/auth/login";
     }
 
     @PostMapping("/login")
-    public String loginPOST(String id, String password, HttpSession session) {
+    public String loginPOST(String id, String password, RedirectAttributes redirectAttributes) {
+
         String user = authService.login(id, password);
         if(user == null) {
-            return "redirect:/login";
+            return "redirect:/auth/login";
         }
-        session.setAttribute("id", id);
-        return "redirect:/";
+        log.info("user : " + user);
+        redirectAttributes.addAttribute("id", id);
+        return "redirect:/auth/test.html";
     }
 
     // 회원 가입
 
     @GetMapping("/join")
-    public void joinGET() {
+    public void authJoinGet() {
         log.info("join get....");
     }
 
     @PostMapping("/join")
-    public String joinPost(AuthDTO authDTO, RedirectAttributes redirectAttributes) {
+    public String authJoinPost(AuthDTO authDTO, RedirectAttributes redirectAttributes) {
         log.info("join post.....");
         log.info(authDTO);
 
@@ -79,7 +82,7 @@ public class AuthController {
     }
 
     @GetMapping("/info")
-    public String userInfo(Model model) {
+    public String authInfo(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String id = authentication.getName();
         Auth auth = authRepository.findById(id)
@@ -99,18 +102,22 @@ public class AuthController {
     }
 
     @PostMapping("/modify")
-    public String updatePOST(@ModelAttribute AuthDTO updateAuthDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String id = authentication.getName();
-        authRepository.updateAuth(updateAuthDTO.getPassword(), updateAuthDTO.getNickName(), updateAuthDTO.getEmail(), id);
+    public String updateAuth(@Valid AuthDTO authDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if(bindingResult.hasErrors()) {
+            log.error("has Error");
+            redirectAttributes.addFlashAttribute("errors",bindingResult.getAllErrors());
+            redirectAttributes.addAttribute("aid",authDTO.getAid());
+            return "redirect:/auth/modify";
+        }
+        authService.modify(authDTO);
+        redirectAttributes.addAttribute("aid",authDTO.getAid());
         return "redirect:/auth/info";
     }
 
     @PostMapping("/delete")
-    public String deletePOST(@ModelAttribute AuthDTO deleteAuthDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String id = authentication.getName();
-        authRepository.deleteById(id);
+    public String deleteAuth(AuthDTO authDTO, RedirectAttributes redirectAttributes) {
+        String aid = authDTO.getId();
+        authService.remove(aid);
         return "redirect:/auth/login";
     }
 }

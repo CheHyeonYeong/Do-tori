@@ -52,7 +52,7 @@
         e.preventDefault()
         e.stopPropagation()
 
-        formObj.action = `/auth/delete/${formObj.id.value}`
+        formObj.action = `/auth/delete`
         formObj.method = 'post'
         formObj.submit()
     }, false)
