@@ -29,6 +29,7 @@ public class Auth {
     private String nickName;
 
     @NotNull
+    @Column(unique = true)
     private String email;
 
     @ColumnDefault("false")

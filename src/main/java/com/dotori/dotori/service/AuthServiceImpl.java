@@ -22,12 +22,21 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
 
     @Override
-    public Auth join(AuthDTO authDTO) throws MidExistException{
+    public Auth join(AuthDTO authDTO) throws MidExistException, NickNameExistException, EmailExistException{
         String mid = authDTO.getId();
+        String email = authDTO.getEmail();
+        String nickName = authDTO.getNickName();
 
         if (authRepository.existsById(mid)) {
             throw new MidExistException("이미 존재하는 아이디입니다.");
         }
+        if (authRepository.existsByNickName(nickName)) {
+            throw new NickNameExistException("이미 존재하는 닉네임입니다.");
+        }
+        if (authRepository.existsByEmail(email)) {
+            throw new EmailExistException("이미 존재하는 이메일입니다.");
+        }
+
 
         Auth auth = modelMapper.map(authDTO, Auth.class);
         auth.changePassword(passwordEncoder.encode(authDTO.getPassword()));       //password는 암호화
