@@ -14,7 +14,25 @@ public interface AuthService {
         }
     }
 
-    Auth join(AuthDTO authDTO) throws MidExistException;
+    static class NickNameExistException extends Exception {
+        //ID 가 중복되면 안됨!! 예외발생하기 때문에 예외처리를 함
+
+        public NickNameExistException(){}
+        public NickNameExistException(String message) {
+            super(message);
+        }
+    }
+
+    static class EmailExistException extends Exception {
+        //ID 가 중복되면 안됨!! 예외발생하기 때문에 예외처리를 함
+
+        public EmailExistException(){}
+        public EmailExistException(String message) {
+            super(message);
+        }
+    }
+
+    Auth join(AuthDTO authDTO) throws MidExistException, NickNameExistException, EmailExistException;
 
     AuthDTO info(String id);
     void modify(AuthDTO authDTO);
