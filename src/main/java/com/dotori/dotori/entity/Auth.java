@@ -3,42 +3,40 @@ package com.dotori.dotori.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "roleSet")
-public class User {
+public class Auth {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성
+    @Column(name = "aid")
+    private int aid;
 
     @NotNull
-    @Column(name = "uid", unique = true)
-    private String uid;
+    @Column(unique = true)
+    private String id;
 
     @NotNull
     private String password;
 
     @NotNull
+    @Column(unique = true)
     private String nickName;
 
     @NotNull
     private String email;
 
-    private boolean del;
-
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Builder.Default
-    private Set<UserRole> roleSet = new HashSet<>();
-
+    @ColumnDefault("false")
     private boolean social;
+
+    public void setAuth(String id) {
+        this.id = id;
+    }
 
     public void changePassword(String password) {
         this.password = password;
@@ -50,18 +48,6 @@ public class User {
 
     public void changeEmail(String email) {
         this.email = email;
-    }
-
-    public void changeDel(boolean del) {
-        this.del = del;
-    }
-
-    public void addRole(UserRole userRole) {
-        this.roleSet.add(userRole);
-    }
-
-    public void clearRoles() {
-        this.roleSet.clear();
     }
 
     public void changeSocial(boolean social) {

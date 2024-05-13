@@ -6,29 +6,25 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Todo extends BaseEntity {
+public class File {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "aid")
-    private int aid;
-
-    @ColumnDefault("'YES'")
-    private String category;
+    @Column(name = "pid")
+    private int pid;
 
     @NotNull
-    private String content;
+    private String fileName;
 
-    @ColumnDefault("false")
-    private boolean done;
+    @NotNull
+    private String filePath;
 
 }

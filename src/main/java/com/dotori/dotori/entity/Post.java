@@ -13,22 +13,24 @@ import org.hibernate.annotations.ColumnDefault;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Todo extends BaseEntity {
+public class Post extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "pid")
+    private int pid;
 
     @Column(name = "aid")
     private int aid;
 
-    @ColumnDefault("'YES'")
-    private String category;
-
     @NotNull
     private String content;
 
-    @ColumnDefault("false")
-    private boolean done;
+    @ColumnDefault("0")
+    private int likeCount;
+
+    @ColumnDefault("0")
+    private int commentCount;
+
 
 }

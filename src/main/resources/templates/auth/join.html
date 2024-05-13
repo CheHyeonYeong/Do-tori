@@ -15,10 +15,10 @@
                     JOIN
                 </div>
                 <div class="card-body">
-                    <form id="registerForm" action="/user/join" method="post">
+                    <form id="registerForm" action="/auth/join" method="post">
                         <div class="input-group mb-3">
-                            <span class="input-group-text">UID</span>
-                            <input type="text" name="uid" class="form-control">
+                            <span class="input-group-text">ID</span>
+                            <input type="text" name="id" class="form-control">
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text">PW</span>
@@ -39,18 +39,18 @@
                             </div>
                         </div>
                     </form>
-                </div> <!--end card-body -->
-            </div> <!-- end card -->
-        </div> <!-- end col -->
-    </div> <!-- end row -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
 
     const error = [[${error}]]
 
-    if(error && error === 'uid') {
-        alert("동일한 UID를 가진 계정이 존재합니다.")
+    if(error && error === 'id') {
+        alert("동일한 ID를 가진 계정이 존재합니다.")
     }
 
 </script>

@@ -19,29 +19,42 @@
     <br>
     <h1 class="title">User Modify</h1>
     <hr>
-    <form th:action="@{/user/modify}" method="post">
+    <form th:action="@{/auth/modify}" method="post" id="f1">
         <div class="input-group mb-3">
             <span class="input-group-text">아이디</span>
-            <input type="text" th:value="${user.uid}" name="uid" class="form-control" readonly>
+            <input type="text" th:value="${auth.id}" name="id" class="form-control" readonly>
         </div>
 
         <div class="input-group mb-3">
             <span class="input-group-text">패스워드</span>
-            <input type="password" name="password" th:value="${user.password}" class="form-control">
+            <input type="password" name="password" th:value="${auth.password}" class="form-control">
         </div>
 
         <div class="input-group mb-3">
             <span class="input-group-text">닉네임</span>
-            <input type="text" name="nickName" th:value="${user.nickName}" class="form-control">
+            <input type="text" name="nickName" th:value="${auth.nickName}" class="form-control">
         </div>
 
         <div class="input-group mb-3">
             <span class="input-group-text">이메일</span>
-            <input type="email" name="email" th:value="${user.email}" class="form-control">
+            <input type="email" name="email" th:value="${auth.email}" class="form-control">
         </div>
 
         <input type="submit" value="회원정보 수정" class="btn btn-primary">
+        <input type="button" value="회원탈퇴" class="btn btn-danger removeBtn">
     </form>
 </div>
 
+<script layout:fragment="script" th:inline="javascript">
+    const formObj = document.querySelector("#f1")
+
+    document.querySelector(".removeBtn").addEventListener("click", function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        formObj.action = `/auth/delete`
+        formObj.method = 'post'
+        formObj.submit()
+    }, false)
+</script>
 </html>

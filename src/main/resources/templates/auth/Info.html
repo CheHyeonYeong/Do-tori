@@ -19,31 +19,29 @@
     <br>
     <h1 class="title">User Info</h1>
     <hr>
-<!--    <p>ID: <span th:text="${user.uid}"></span></p>-->
     <div class="input-group mb-3">
         <span class="input-group-text">아이디</span>
-        <input type="text" th:value="${user.uid}" name="uid" class="form-control" readonly>
+        <input type="text" th:value="${auth.id}" name="id" class="form-control" readonly>
     </div>
 
-<!--    <p>Password: <span th:text="${user.password}"></span></p>-->
     <div class="input-group mb-3">
         <span class="input-group-text">패스워드</span>
-        <input type="password" th:value="${user.password}" name="password" class="form-control" readonly>
+        <input type="password" th:value="${auth.password}" name="password" class="form-control" readonly>
     </div>
 
-<!--    <p>Nickname: <span th:text="${user.nickName}"></span></p>-->
     <div class="input-group mb-3">
         <span class="input-group-text">닉네임</span>
-        <input type="text" th:value="${user.nickName}" name="nickName" class="form-control" readonly>
+        <input type="text" th:value="${auth.nickName}" name="nickName" class="form-control" readonly>
     </div>
 
-<!--    <p>Email: <span th:text="${user.email}"></span></p>-->
     <div class="input-group mb-3">
         <span class="input-group-text">이메일</span>
-        <input type="email" th:value="${user.email}" name="email" class="form-control" readonly>
+        <input type="email" th:value="${auth.email}" name="email" class="form-control" readonly>
     </div>
 
-    <input type="button" value="회원정보 수정" class="btn btn-primary">
+    <a th:href="@{/auth/modify}" class="text-decoration-none">
+        <input type="button" value="회원정보 수정" class="btn btn-primary">
+    </a>
 </div>
 
 </html>

@@ -1,55 +1,52 @@
 package com.dotori.dotori.security;
 
-import com.dotori.dotori.security.dto.UserSecurityDTO;
-import com.dotori.dotori.entity.User;
-import com.dotori.dotori.repository.UserRepository;
+import com.dotori.dotori.entity.Auth;
+import com.dotori.dotori.dto.AuthSecurityDTO;
+import com.dotori.dotori.repository.AuthRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Log4j2
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final AuthRepository authRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("loadUserByUsername : " + username);
 
-        Optional<User> result = userRepository.getWithRoles(username);
+        // DB에 등록된 사용자 정보를 불러옴
+        Optional<Auth> result = authRepository.findById(username);
 
-        if(result.isEmpty()) {
+        // 결과가 없는 경우 예외 처리 클래스 호출
+        if (result.isEmpty()) {
             throw new UsernameNotFoundException("username not found....");
         }
 
-        User user = result.get();
-
-        UserSecurityDTO userSecurityDTO = new UserSecurityDTO(
-            user.getUid(),
-            user.getPassword(),
-            user.getNickName(),
-            user.getEmail(),
-            user.isDel(),
-            false,
-            user.getRoleSet().stream().map(userRole ->
-                    new SimpleGrantedAuthority("ROLE_" + userRole.name()))
-                    .collect(Collectors.toList())
+        Auth auth = result.get();
+        AuthSecurityDTO authSecurityDTO = new AuthSecurityDTO(
+                auth.getAid(),
+                auth.getId(),
+                auth.getPassword(),
+                auth.getNickName(),
+                auth.getEmail(),
+                false,
+                List.of(new SimpleGrantedAuthority("ROLE_USER"))        //권한 설정
         );
 
-        log.info("userSecurityDTO");
-        log.info(userSecurityDTO);
+        log.info("userSecurityDTO : {}", authSecurityDTO);
 
-        return userSecurityDTO;
+        return authSecurityDTO;
+
     }
 }
