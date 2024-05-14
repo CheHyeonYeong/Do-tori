@@ -3,6 +3,7 @@ package com.dotori.dotori.service;
 import com.dotori.dotori.dto.AuthDTO;
 import com.dotori.dotori.entity.Auth;
 import com.dotori.dotori.repository.AuthRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @Log4j2
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthServiceImpl implements AuthService {
 
     private final AuthRepository authRepository;
