@@ -23,6 +23,7 @@ public class TodoServiceImpl implements TodoService{
     @Override
     public int addTodo(TodoDTO todoDTO) {
         Todo todo = modelMapper.map(todoDTO, Todo.class);
+        log.info("Add todo: " + todo);
         int id = todoRepository.save(todo).getId();
         return id;
     }
@@ -42,7 +43,8 @@ public class TodoServiceImpl implements TodoService{
         Todo todo = result.orElseThrow();
         todo.changeTodo(todoDTO.getCategory(), todoDTO.getContent(), todoDTO.isDone());
         todoRepository.save(todo);
-        log.info("Todo Service : Todo updated");
+
+        log.info("Todo Service : Todo updated " + todo, " TodoDTO : "+todoDTO);
     }
 
     @Override

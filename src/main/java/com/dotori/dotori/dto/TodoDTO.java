@@ -1,5 +1,7 @@
 package com.dotori.dotori.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,11 +16,21 @@ import java.time.LocalDateTime;
 public class TodoDTO {
 
     private int id;
+
     private int aid;
-    private String category;
+
+    @NotEmpty
+    @Builder.Default
+    private String category="No category";
+
+    @NotEmpty
+    @NotNull
     private String content;
+
     private boolean done;
-    private LocalDateTime todoDate;
+
+    @Builder.Default
+    private LocalDateTime todoDate = LocalDateTime.now();
 
 
 }
