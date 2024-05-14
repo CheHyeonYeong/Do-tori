@@ -8,16 +8,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Log4j2
 @SpringBootTest
 public class TodoRepositoryTests {
+    // CRUD Test를 위함
 
     @Autowired
     private TodoRepository todoRepository;
 
+    // Create
     @Test
     public void testInsert() {
         IntStream.range(1,100).forEach(i -> {
@@ -25,13 +28,15 @@ public class TodoRepositoryTests {
                     .content("title.............."+i)
                     .aid(i%10)
                     .done(false)
+                    .todoDate(LocalDateTime.now())
                     .build();
             todoRepository.save(todo);
         });
     }
 
+    // Read
     @Test
-    public void testSelct() {
+    public void testSelect() {
         int id = 10;
 
         Optional<Todo> result = todoRepository.findById(id);  //optional Type으로 받아서 처리해야 함
@@ -39,6 +44,26 @@ public class TodoRepositoryTests {
         log.info(todo);
     }
 
+    // Read2 -> 추후 진행하겠습니다
 
+    // Update
+    @Test
+    public void testUpdate(){
+        int id = 1;
+        Optional<Todo> result = todoRepository.findById(id);
+        Todo todo = result.orElseThrow();
+
+        todo.changeTodo("update category", "update content", true);
+        todoRepository.save(todo);
+    }
+
+    // Delete
+    @Test
+    public void testDelete() {
+        int id = 90;
+        Optional<Todo> result = todoRepository.findById(id);
+        Todo todo = result.orElseThrow();
+        todoRepository.delete(todo);
+    }
 
 }
