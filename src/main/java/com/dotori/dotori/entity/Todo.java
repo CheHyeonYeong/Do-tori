@@ -46,13 +46,4 @@ public class Todo {
         this.done = done;
     }
 
-    public void changeContent(String content){
-        this.content = content;
-    }
-    public void changeCategory(String category){
-        this.category = category;
-    }
-    public void changeDone(boolean done){
-        this.done = done;
-    }
 }
