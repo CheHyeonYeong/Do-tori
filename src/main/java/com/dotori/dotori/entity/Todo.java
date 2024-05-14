@@ -2,10 +2,7 @@ package com.dotori.dotori.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
@@ -13,22 +10,27 @@ import org.hibernate.annotations.ColumnDefault;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Todo extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "aid")
     private int aid;
 
-    @ColumnDefault("'YES'")
+    @Column(length = 50, nullable = false)
+    @ColumnDefault("'None'")
     private String category;
 
-    @NotNull
+    @Column(nullable = false,length = 500)
     private String content;
 
     @ColumnDefault("false")
     private boolean done;
+
+    public void changeContent(String content){
+        this.content = content;
+    }
 
 }
