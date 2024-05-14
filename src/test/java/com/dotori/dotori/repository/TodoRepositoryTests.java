@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -44,7 +45,14 @@ public class TodoRepositoryTests {
         log.info(todo);
     }
 
-    // Read2 -> 추후 진행하겠습니다
+    // Read2 - find all
+    @Test
+    public void testFindAll(){
+        List<Todo> todos = todoRepository.findAll();
+        todos.forEach(todo -> {
+            log.info(todo.toString());
+        } );
+    }
 
     // Update
     @Test

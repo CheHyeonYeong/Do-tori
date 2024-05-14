@@ -9,7 +9,9 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -26,6 +28,13 @@ public class TodoServiceImpl implements TodoService{
         log.info("Add todo: " + todo);
         int id = todoRepository.save(todo).getId();
         return id;
+    }
+
+    @Override
+    public List<TodoDTO> getAllTodo() {
+
+        List<TodoDTO> dtoList = todoRepository.findAll().stream().map(board -> modelMapper.map(board, TodoDTO.class)).collect(Collectors.toList());
+        return dtoList;
     }
 
     @Override

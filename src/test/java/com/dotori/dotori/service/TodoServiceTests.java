@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Log4j2
 @SpringBootTest
@@ -31,6 +32,14 @@ public class TodoServiceTests {
     public void testReadOneTodo(){
         TodoDTO todo = todoService.readOneTodo(1);
         log.info(todo.toString());
+    }
+
+    @Test
+    public void testGetAllTodo(){
+        List<TodoDTO> todos = todoService.getAllTodo();
+        todos.forEach(
+                todo -> log.info(todo.toString())
+        );
     }
 
     @Test

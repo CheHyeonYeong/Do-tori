@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/basic.html}">
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
+
+<style>
+    #calendar {
+        max-width: 900px;
+        margin: 40px auto;
+    }
+
+    .leftdiv {
+        float:left;
+        width:45%;
+        margin-right:10px;
+    }
+
+    .rightdiv {
+        display:inline-block;
+        width:45%;
+        margin-left:10px;
+    }
+</style>
+<div layout:fragment="content">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 leftdiv">
+                <div class="p-3 border bg-light">
+                    <div class="card">
+                        <div class="card-header">Calender</div>
+                        <div class="card-body">
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div> <!-- 왼쪽 div 끝 -->
+
+            <div class="col-md-6 rightdiv">
+                <div class="p-3 border bg-light">
+
+                    <div class="card">
+                        <div class="card-header">
+                            Todo List
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Todo List</h5>
+
+                            <table class="todoTable">
+                                <thead>     <!-- todoTable에서 뭘 출력할지에 대한 가이드 라인 -->
+                                    <tr>
+                                        <th scope="col">id</th>
+                                        <th scope="col">aid</th>
+                                        <th scope="col">category</th>
+                                        <th scope="col">content</th>
+                                        <th scope="col">done</th>
+                                        <th scope="col">todoDate</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr th:each="todo : ${todos}">
+                                        <td>[[${todo.id}]]</td>
+                                        <td>[[${todo.aid}]]</td>
+                                        <td>[[${todo.category}]]</td>
+                                        <td>[[${todo.content}]]</td>
+                                        <td>[[${todo.done}]]</td>
+                                        <td>[[${#temporals.format(todo.todoDate, 'yyyy-MM-dd HH:mm')}]]</td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div> <!-- box2 div end-->
+        </div> <!-- row div end-->
+    </div> <!-- container div end-->
+</div>
+
+
+<!--fullcalendar 라이브러리-->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js'></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        console.log(calendarEl)
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'ko', // 한국어 설정
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: [
+                {
+                    title: '회의',
+                    start: '2024-05-15T10:30:00',
+                    end: '2024-05-15T12:30:00'
+                },
+                {
+                    title: '점심',
+                    start: '2024-05-16T12:00:00'
+                },
+                {
+                    title: '프로젝트 마감',
+                    start: '2024-05-18'
+                }
+            ]
+        });
+
+        calendar.render();
+    });
+</script>
+
+</html>
