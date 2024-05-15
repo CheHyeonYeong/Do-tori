@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,6 +41,36 @@ public class AuthController {
             log.info("user logout..........");
         }
     }
+
+    //github 로그인
+    @GetMapping("/login/oauth2/code/github")
+    public String oauth2LoginSuccess(Authentication authentication) {
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+
+        String email = oAuth2User.getAttribute("email");
+        String userName = oAuth2User.getAttribute("login");
+        String nickName = oAuth2User.getAttribute("name");
+
+        // 이메일을 기준으로 사용자 정보 조회
+        Auth auth = authRepository.findByEmail(email).orElse(null);
+
+        if (auth == null) {
+            // 사용자 정보가 없는 경우 새로운 사용자 생성
+            auth = Auth.builder()
+                    .email(email)
+                    .nickName(nickName)
+                    .build();
+            authRepository.save(auth);
+        }else {
+            // 사용자 정보가 있는 경우 업데이트
+            auth.updateOAuth2Info(nickName, email);
+            authRepository.save(auth);
+        }
+
+        // 로그인 성공 후 메인 페이지로 리다이렉트
+        return "redirect:/todo/list";
+    }
+
 
     // 회원 가입
 
@@ -82,7 +113,7 @@ public class AuthController {
         return "auth/info"; // 회원 정보를 보여주는 뷰 이름
     }
 
-//    @PreAuthorize("principal.username == #authDTO.id")        //이런 인증 절차가 아무것도 없어요ㅠㅠ
+    //    @PreAuthorize("principal.username == #authDTO.id")        //이런 인증 절차가 아무것도 없어요ㅠㅠ
     @GetMapping("/modify")
     public String updateGET(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

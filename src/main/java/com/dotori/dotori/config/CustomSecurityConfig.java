@@ -16,7 +16,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -80,6 +83,13 @@ public class CustomSecurityConfig {
                 UsernamePasswordAuthenticationFilter.class
         );
 
+        // OAuth2 로그인 설정
+        http.oauth2Login(oauth2 -> oauth2
+                .loginPage("/auth/login")
+                .defaultSuccessUrl("/todo/list")
+                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService()))
+        );
+
         // CSRF 토큰 비활성화
         http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
 
@@ -135,6 +145,11 @@ public class CustomSecurityConfig {
         UrlBasedCorsConfigurationSource sorce = new UrlBasedCorsConfigurationSource();
         sorce.registerCorsConfiguration("/**", configuration);
         return sorce;
+    }
+
+    @Bean
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService() {
+        return new DefaultOAuth2UserService();
     }
 
 }
