@@ -55,5 +55,10 @@ public class Auth {
         this.social = social;
     }
 
+    public void updateOAuth2Info(String nickName, String email) {
+        this.nickName = nickName;
+        this.email = email;
+        this.social = true;
+    }
 
 }
