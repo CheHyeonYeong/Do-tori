@@ -20,10 +20,10 @@ public class Post extends BaseEntity {
     @Column(name = "pid")
     private int pid;
 
-    @Column(name = "aid")
-    private int aid;
+    @Column(name = "nickname")
+    private String nickname;
 
-    @NotNull
+    @Column(nullable = false,length = 500)
     private String content;
 
     @ColumnDefault("0")
@@ -32,5 +32,9 @@ public class Post extends BaseEntity {
     @ColumnDefault("0")
     private int commentCount;
 
+    public void changePost(String content, int likeCount) {
+        this.content = content;
+        this.likeCount = likeCount;
+    }
 
 }

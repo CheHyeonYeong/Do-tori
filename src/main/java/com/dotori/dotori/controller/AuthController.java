@@ -65,6 +65,7 @@ public class AuthController {
             authRepository.save(auth);
         }else {
             // 사용자 정보가 있는 경우 업데이트
+
             auth.updateUser(nickName, email);
             authRepository.save(auth);
         }

@@ -27,7 +27,6 @@ public class Auth {
     @Column(unique = true, name = "username", nullable = false)
     private String nickName;
 
-
     @Column(unique = true)
     private String email;
 
@@ -64,4 +63,5 @@ public class Auth {
 
         return this;
     }
+
 }
