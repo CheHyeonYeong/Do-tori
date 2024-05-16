@@ -17,7 +17,7 @@ public class PostDTO {
     private int pid;
 
     @NotEmpty
-    private int aid;
+    private String nickname;
 
     @Builder.Default
     private int likeCount = 0;

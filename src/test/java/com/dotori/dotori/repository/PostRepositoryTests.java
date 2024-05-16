@@ -20,7 +20,7 @@ public class PostRepositoryTests {
         IntStream.rangeClosed(1,100).forEach(i -> {
             Post board = Post.builder()
                     .content("content...................."+i)
-                    .aid(i%10) //사용자는 0~9번까지
+                    .nickname("tu"+(i%10+11)) //사용자는 0~9번까지
                     .build();
             Post result = postRepository.save(board);  //JPA는 자동으로 만들어주기 때문에 내가 만들지 않은 save 메소드도 나온다.
             log.info(result);

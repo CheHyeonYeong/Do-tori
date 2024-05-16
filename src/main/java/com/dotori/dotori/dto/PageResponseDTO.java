@@ -24,10 +24,10 @@ public class PageResponseDTO<E> {
     // 다음페이지 여부
     private boolean next;
 
-    private List<E> dtoList;  // 게시글 내용!
+    private List<E> postLists;  // 게시글 내용!
 
     @Builder(builderMethodName = "withAll")
-    public PageResponseDTO(PageRequestDTO pageRequestDTO, List<E> dtoList, int total) {
+    public PageResponseDTO(PageRequestDTO pageRequestDTO, List<E> postLists, int total) {
         if(total <= 0) {
             return;
         }
@@ -35,7 +35,7 @@ public class PageResponseDTO<E> {
         this.size = pageRequestDTO.getSize();
         this.total = total;
 
-        this.dtoList = dtoList;
+        this.postLists = postLists;
 
         this.end = (int)(Math.ceil(this.page / 10.0)) * 10; // 화면에 표시할 페이지번호 갯수...
         this.start = this.end - 9; // 화면에서 시작번호

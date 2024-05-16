@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface PostRepository extends JpaRepository<Post, Integer>, PostSearch {
 
-    Page<Post> findByContentContainingOrderByPidDesc(String keyword, Pageable pageable);
+    Page<Post> findByContentContainingOrderByPidDesc(String keyword, Pageable pageable);        // Content로 검색하게끔 들어간다!!
 
     @Query("select b FROM Post b where b.content like concat('%',:keyword,'%')")
     Page<Post> findKeyword(String keyword, Pageable pageable);

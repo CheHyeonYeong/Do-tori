@@ -20,8 +20,8 @@ public class Post extends BaseEntity {
     @Column(name = "pid")
     private int pid;
 
-    @Column(name = "aid")
-    private int aid;
+    @Column(name = "nickname")
+    private String nickname;
 
     @Column(nullable = false,length = 500)
     private String content;
