@@ -2,7 +2,7 @@ package com.dotori.dotori.dto;
 
 import java.time.LocalDateTime;
 
-public class PostListReplyCountDTO {
+public class PostListCommentCountDTO {
 
     private int pid;
     private String content;
