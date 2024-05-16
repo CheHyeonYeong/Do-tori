@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/basic.html}">
+
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/post/modify}" method="post" id="f1">
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Bno</span>
+                            <input type="text" class="form-control" name = "pid" th:value="${dto.pid}" readonly>
+                            <!--/* th는 el을 사용할 때, html에 직접적으로 할 때 [[${}]]이렇게 */-->
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Contnet</span>
+                            <textarea class="form-control col-sm-5"  name = "content"  rows="5" /> [[${dto.content}]]</textarea>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Writer</span>
+                            <input type="text" class="form-control"  name = "nickname"  th:value="${dto.nickname}" readonly />
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">RegDate</span>
+                            <input type="text" class="form-control"  th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd  HH:mm:ss')}" readonly />
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">ModDate</span>
+                            <input type="text" class="form-control"   th:value="${#temporals.format(dto.modDate, 'yyyy-MM-dd  HH:mm:ss')}" readonly />
+                        </div>
+
+                        <div class="my-4">
+                            <div class="float-end"  th:with="link = ${pageRequestDTO.getLink()}">
+                                <button type="button" class="btn btn-primary listBtn">List</button>
+                                <button type="button" class="btn btn-secondary modBtn">Modify</button>
+                                <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                            </div>
+                        </div>
+                    </form>
+                </div><!-- cardbody end-->
+            </div> <!--end card-->
+        </div><!--end col-->
+    </div><!--end row-->
+</div><!--content end-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+    const errors = [[${errors}]]
+    console.log(errors);
+
+    let errorMsg = '';
+    if(errors){
+        for(let i = 0;i<errors.length;i++){
+            errorMsg+=`${errors[i].field}으(는) ${errors[i].code}\n`
+        }
+        history.replaceState({},null,null)
+        alert(errorMsg)
+    }
+    const link =[[${pageRequestDTO.getLink()}]]
+    const formObj = document.querySelector("#f1")
+
+
+    document.querySelector(".modBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        //검색과 관련된 page 번호, 키워드와 title이 있다.
+        formObj.action = `/post/modify?${link}`
+        formObj.method = "post"
+        formObj.submit();
+    },false)
+
+    document.querySelector(".listBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        formObj.reset()
+        self.location = `/post/list?${link}`
+    },false)
+
+    document.querySelector(".removeBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        formObj.action = `/post/remove`
+        formObj.method = "post"
+        formObj.submit();
+    },false)
+
+</script>
+
+</html>

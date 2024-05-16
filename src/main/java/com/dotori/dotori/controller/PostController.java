@@ -57,7 +57,7 @@ public class PostController {
     public void read(int pid, PageRequestDTO pageRequestDTO, Model model) {
         PostDTO postDTO = postService.getPost(pid);
         log.info(postDTO);
-        model.addAttribute("pid",postDTO);
+        model.addAttribute("dto",postDTO);
     }
 
     @PostMapping("/modify")

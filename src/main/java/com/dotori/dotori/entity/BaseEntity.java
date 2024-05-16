@@ -3,6 +3,7 @@ package com.dotori.dotori.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -17,7 +18,7 @@ public class BaseEntity {
 
     @CreatedDate
     @Column(name = "regdate", updatable = false)
-    private LocalDateTime regdate;
+    private LocalDateTime regdate = LocalDateTime.now();
 
     @LastModifiedDate
     @Column(name = "moddate")
