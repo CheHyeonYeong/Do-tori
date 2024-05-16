@@ -36,8 +36,7 @@ public class Todo {
 
     @CreatedDate
     @Builder.Default
-    @Column(name = "todoDate", nullable = false)
-    @ColumnDefault("LocalDateTime.now()")
+    @Column(name = "todoDate")
     private LocalDateTime todoDate = LocalDateTime.now();
 
     public void changeTodo(String category, String content, boolean done) {

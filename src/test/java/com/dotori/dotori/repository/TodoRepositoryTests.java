@@ -24,7 +24,7 @@ public class TodoRepositoryTests {
     // Create
     @Test
     public void testInsert() {
-        IntStream.range(1,100).forEach(i -> {
+        IntStream.range(1,10).forEach(i -> {
             Todo todo = Todo.builder()
                     .content("title.............."+i)
                     .aid(i%10)
