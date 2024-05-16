@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.Authentication;
 
@@ -25,6 +26,7 @@ import org.springframework.security.core.Authentication;
 
 @Controller
 @Log4j2
+@RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
@@ -63,7 +65,8 @@ public class AuthController {
             authRepository.save(auth);
         }else {
             // 사용자 정보가 있는 경우 업데이트
-            auth.updateOAuth2Info(nickName, email);
+
+            auth.updateUser(nickName, email);
             authRepository.save(auth);
         }
 
