@@ -36,8 +36,11 @@
                 </div>
 
                 <div class="my-4">
-                    <a th:href="@{/oauth2/authorization/github}" class="btn btn-primary">GitHub로 로그인</a>
-                    <a th:href="@{/oauth2/authorization/google}" class="btn btn-secondary">Google로 로그인</a>
+
+                    <a href="/oauth2/authorization/github" class="btn btn-sm btn-success active"  role="button">GitHub로 로그인</a>
+                    <a href="/oauth2/authorization/google" class="btn btn-sm btn-success active" role="button">Google Login</a><br>
+                    <a href="/oauth2/authorization/naver" class="btn btn-sm btn-success active" role="button">Naver Login</a><br>
+
                     <div class="float-end">
                         <button type="submit" class="btn btn-primary submitBtn">LOGIN</button>
                     </div>
