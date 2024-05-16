@@ -21,13 +21,12 @@ public class PostDTO {
 
     @Builder.Default
     private int likeCount = 0;
-    @Builder.Default
-    private int commentCount = 0;
 
     @NotEmpty
     @Size(min = 1, max = 100)
     private String content;
 
-    private LocalDateTime regDate;
+    @Builder.Default
+    private LocalDateTime regDate = LocalDateTime.now();
     private LocalDateTime modDate;
 }

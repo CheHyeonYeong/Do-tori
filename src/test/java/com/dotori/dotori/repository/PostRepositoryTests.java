@@ -24,11 +24,11 @@ public class PostRepositoryTests {
     @Test
     public void testInsert() {
         IntStream.rangeClosed(1,100).forEach(i -> {
-            Post board = Post.builder()
+            Post post = Post.builder()
                     .content("content...................."+i)
                     .nickname("tu"+(i%10+11)) //사용자는 0~9번까지
                     .build();
-            Post result = postRepository.save(board);  //JPA는 자동으로 만들어주기 때문에 내가 만들지 않은 save 메소드도 나온다.
+            Post result = postRepository.save(post);  //JPA는 자동으로 만들어주기 때문에 내가 만들지 않은 save 메소드도 나온다.
             log.info(result);
         });
     }
@@ -106,7 +106,7 @@ public class PostRepositoryTests {
 
     @Test
     public void testSearchAll() {
-        String[] types = {"t","c","w"};
+        String[] types = {"c","w"};
         String keyword = "1";
         Pageable pageable = PageRequest.of(1,10,Sort.by("pid").descending());
 

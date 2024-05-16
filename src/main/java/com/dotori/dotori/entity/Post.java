@@ -29,9 +29,6 @@ public class Post extends BaseEntity {
     @ColumnDefault("0")
     private int likeCount;
 
-    @ColumnDefault("0")
-    private int commentCount;
-
     public void changePost(String content, int likeCount) {
         this.content = content;
         this.likeCount = likeCount;

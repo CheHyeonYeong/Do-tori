@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>Board Read</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Board Read
+                </div>
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Pid</span>
+                        <input type="text" class="form-control" th:value="${dto.pid}" readonly>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Content</span>
+                        <textarea class="form-control col-sm-5" rows="5" readonly>[[${dto.content}]]</textarea>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Writer</span>
+                        <input type="text" class="form-control" th:value="${dto.nickname}" readonly>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">RegDate</span>
+                        <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate,'yyyy-MM-dd HH:mm:ss')}" readonly>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">ModDate</span>
+                        <input type="text" class="form-control" th:value="${#temporals.format(dto.modDate,'yyyy-MM-dd HH:mm:ss')}" readonly>
+                    </div>
+                    <div class="my-4" th:with="user=${#authentication.principal}">
+                        <div class="float-end" th:with="link=${pageRequestDTO != null ? pageRequestDTO.getLink() : ''}">
+                            <a th:href="|@{/post/list}?${link}|" class="text-decoration-none">
+                                <button type="button" class="btn btn-primary">List</button>
+                            </a>
+                            <a th:href="|@{/post/modify(pid=${dto.pid})}&${link}|" class="text-decoration-none">
+                                <button type="button" class="btn btn-secondary">Modify</button>
+                            </a>
+                        </div>
+                    </div>
+                </div> <!--end card-body -->
+            </div><!--end card -->
+        </div> <!--end col -->
+    </div> <!--end row -->
+</div> <!--end layout:fragment -->
+</body>
+</html>

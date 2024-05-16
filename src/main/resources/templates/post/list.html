@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+      layout:decorate="~{layout/basic.html}">
+
+<div layout:fragment="content">
+    <div class="search">
+        <!--    검색 화면 추가 -->
+        <div class="row mt-3">
+            <form action="/post/list" method="get">
+                <div class="col">
+                    <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <select class="form-select" name="type">
+                                <option value="">-------</option>
+                                <option value="c" th:selected="${pageRequestDTO.type =='c'}">내용</option>
+                                <option value="w" th:selected="${pageRequestDTO.type =='n'}">작성자</option>
+                                <option value="tcw" th:selected="${pageRequestDTO.type =='cn'}">내용+작성자</option>
+                            </select>
+                        </div>
+                        <input type="text" class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-danger searchBtn" type="submit">Search</button>
+                            <button class="btn btn-outline-secondary clearBtn" type="button">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!--여기에 모달을 집어넣는 것임!-->
+            <div class="modal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">게시글 등록 성공</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>[[${result}]]번 게시글이 성공적으로 등록되었습니다.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </div>  <!-- search div end -->
+
+
+    <div class = "row mt-3 list">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h1>Post List</h1>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead> <!--테이블 목록 -->
+                        <tr>
+                            <th scope="col">PID</th>
+                            <th scope="col">CONTENT</th>
+                            <th scope="col">NICKNAME</th>
+                            <th scope="col">LIKECOUNT</th>
+                            <th scope="col">REDDATE</th>
+                        </tr>
+                        </thead>
+                        <tbody th:with="link = ${pageRequestDTO.getLink()}"> <!-- 실제 출력데이터-->
+                        <tr th:each="dto:${responseDTO.postLists}">
+                            <th scope="row">[[${dto.pid}]]</th>
+                            <td>
+                                <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|">[[${dto.content}]]</a>
+                            </td>
+                            <td>[[${dto.nickname}]]</td>
+                            <td>[[${dto.likeCount}]]</td>
+                            <td>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="float-end">
+                        <ul class="pagination flex-wrap">
+                            <li class="page-item" th:if="${responseDTO.prev}">
+                                <a class="page-link" th:data-num="${responseDTO.start - 1}"> Previous</a>
+                            </li>
+                            <th:block th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+                                    <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                                </li>
+                            </th:block>
+                            <li class="page-item" th:if="${responseDTO.next}">
+                                <a class="page-link" th:data-num="${responseDTO.end + 1}"> Next</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Floating Button -->
+        <button type="button" class="btn btn-primary btn-lg rounded-circle floating-btn" onclick="redirectToNewPostPage()">
+            +
+        </button>
+    </div> <!-- list end -->
+
+
+</div> <!--<div layout:fragment="content" end>-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+    //이벤트 처리
+
+
+    function redirectToNewPostPage() {
+        // 새 게시글 작성 페이지로 이동
+        window.location.href = '/post/register';
+    }
+
+    document.querySelector('.pagination').addEventListener("click", function (e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        const target = e.target;
+
+        console.log(target)
+
+
+        if(target.tagName !='A'){return }
+
+        const num = target.getAttribute("data-num");
+        const formObj = document.querySelector("form");
+        formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`;
+        formObj.submit();
+    }, false)
+
+    document.querySelector(".clearBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+        self.location = '/post/list'
+    }, false)
+
+
+    //show modal
+    //게시글 등록 이후 모달창이 하나 뜰 것이다.
+    const result = [[${result}]]
+
+    const modal = new  bootstrap.Modal(document.querySelector(".modal"))
+
+    if(result){
+        modal.show()
+    }
+
+</script>
+
+</body>
+</html>

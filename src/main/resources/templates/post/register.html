@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      layout:decorate="~{layout/basic.html}">
+
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h1>post Register</h1>
+                </div>
+                <div class="card-body">
+                    <form action="/post/register" method="post">
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Content</span>
+                            <textarea class="form-control col-sm-5" rows="5" name="content"></textarea>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Writer</span>
+                            <input type="text" name="nickname"
+                                   class="form-control" placeholder="nickname">
+                        </div>
+                        <div class="my-4">
+                            <div class="float-end">
+                                <button type="submit" class="btn btn-danger">Submit</button>
+                                <button type="reset" class="btn btn-secondary">Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </div><!-- cardbody end-->
+            </div> <!--end card-->
+        </div><!--end col-->
+    </div><!--end row-->
+</div><!--content end-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+    // const auth=[[${#authentication.principal}]]  나중에 auth 기능이 완료가 되면 추가할 사항입니다!
+
+    const errors = [[${errors}]]
+    console.log(errors);
+
+    let errorMsg = '';
+    if(errors){
+        for(let i = 0;i<errors.length;i++){
+            errorMsg+=`${errors[i].field}으(는) ${errors[i].code}\n`
+        }
+        alert(errorMsg)
+    }
+
+</script>
+
+</html>
