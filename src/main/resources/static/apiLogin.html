@@ -10,7 +10,7 @@
 <script>
 
     document.querySelector(".btn1").addEventListener("click",()=>{
-        const data = {id:"test11", password:"1111"}
+        const data = {id:"test1", password:"1111"}
         axios.post("http://localhost:8080/generateToken", data).then(res=>{
             const accessToken = res.data.accessToken
             const refreshToken = res.data.refreshToken

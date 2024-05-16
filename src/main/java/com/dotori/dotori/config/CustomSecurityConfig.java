@@ -6,6 +6,7 @@ import com.dotori.dotori.security.filter.LoginFilter;
 import com.dotori.dotori.security.filter.TokenCheckFilter;
 import com.dotori.dotori.security.handler.Custom403Handler;
 import com.dotori.dotori.security.handler.LoginSuccessHandler;
+import com.dotori.dotori.service.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -16,7 +17,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -38,6 +39,8 @@ public class CustomSecurityConfig {
     private final DataSource dataSource;
     private final CustomUserDetailsService userDetailsService;
     private final JWTUtil jwtUtil;
+    private final OAuth2UserService oAuth2UserService;
+    private final OAuth2Service oAuth2Service;
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
@@ -58,41 +61,42 @@ public class CustomSecurityConfig {
         // 인증 매니저 등록
         http.authenticationManager(authenticationManager);
 
-        // api login filter 설정
+        // API Login Filter 설정
         LoginFilter apiLoginFilter = new LoginFilter("/generateToken");
         apiLoginFilter.setAuthenticationManager(authenticationManager);
-
-        // APILoginFilter의 위치 조정 - UsernamePasswordAuthenticationFilter 이전에 동작해야 하는 필터이기 때문
-        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
         LoginSuccessHandler successHandler = new LoginSuccessHandler(jwtUtil);
         apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
 
-        // auth/api로 시작하는 모든 경로는 TokenCheckFilter 동작 => TokenCheckFilter에서 처리함
-        LoginFilter loginFilter = new LoginFilter("/gengerateToken");
-        loginFilter.setAuthenticationManager(authenticationManager);
-
-        //APILoginFilter의 위치 조정 - UsernamepasswordAuthenctionFilter 이전에 동작해야 하는 필터이기 때문
+        // APILoginFilter의 위치 조정 - UsernamePasswordAuthenticationFilter 이전에 동작해야 하는 필터이기 때문
         http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
 
-        // api로 시작하는 모든 경로는 TokenCheckFilter 동작
+        // TokenCheckFilter 설정
         http.addFilterBefore(
                 tokenCheckFilter(jwtUtil, userDetailsService),
                 UsernamePasswordAuthenticationFilter.class
         );
 
         // CSRF 토큰 비활성화
-        http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
+        http.csrf(csrf -> csrf.disable());
 
-        // remember-me 설정
-        http.rememberMe(httpSecurityRememberMeConfigurer -> {
-            httpSecurityRememberMeConfigurer.key("123456789")
+        // Remember-me 설정
+        http.rememberMe(rememberMe -> {
+            rememberMe.key("123456789")
                     .tokenRepository(persistentTokenRepository())
                     .userDetailsService(userDetailsService)
                     .tokenValiditySeconds(60 * 60 * 24 * 30); // 30일
         });
 
-        http.cors(httpSecurityCorsConfigurer -> {
-            httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource());
+        // CORS 설정
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
+        // Access Denied Handler 설정
+        http.exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler(accessDeniedHandler()));
+
+        // OAuth2 로그인 설정
+        http.oauth2Login(oauth2Login -> {
+            oauth2Login.defaultSuccessUrl("/todo/list", true)
+                    .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(oAuth2Service));
         });
 
         return http.build();
@@ -118,23 +122,20 @@ public class CustomSecurityConfig {
         return new Custom403Handler();
     }
 
-    // token check filter 객체 생성
-    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, CustomUserDetailsService userDetailService){
-        return new TokenCheckFilter(userDetailService, jwtUtil);
+    // TokenCheckFilter 객체 생성
+    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, CustomUserDetailsService userDetailService) {return new TokenCheckFilter(userDetailService, jwtUtil);
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Authentication", "Cache-Control", "Content-Type"));
-
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://your-frontend-domain.com")); // CORS 허용 도메인
         configuration.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource sorce = new UrlBasedCorsConfigurationSource();
-        sorce.registerCorsConfiguration("/**", configuration);
-        return sorce;
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
-
 }

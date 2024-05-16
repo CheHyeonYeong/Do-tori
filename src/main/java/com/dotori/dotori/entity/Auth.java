@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
 @Builder
+@DynamicUpdate // Entity update시, 원하는 데이터만 update하기 위함
 @AllArgsConstructor
 @NoArgsConstructor
 public class Auth {
@@ -17,22 +19,23 @@ public class Auth {
     @Column(name = "aid")
     private int aid;
 
-    @NotNull
-    @Column(unique = true)
+    @Column(unique = true, name = "user_id")
     private String id;
 
-    @NotNull
     private String password;
 
-    @NotNull
-    @Column(unique = true)
+    @Column(unique = true, name = "username", nullable = false)
     private String nickName;
 
-    @NotNull
+
+    @Column(unique = true)
     private String email;
 
     @ColumnDefault("false")
     private boolean social;
+
+    @Column(name = "provider", nullable = false)
+    private String provider; // 사용자가 로그인한 서비스(ex) google, naver..)
 
     public void setAuth(String id) {
         this.id = id;
@@ -54,5 +57,11 @@ public class Auth {
         this.social = social;
     }
 
+    // 사용자의 이름이나 이메일을 업데이트하는 메소드
+    public Auth updateUser(String nickName, String email) {
+        this.nickName = nickName;
+        this.email = email;
 
+        return this;
+    }
 }

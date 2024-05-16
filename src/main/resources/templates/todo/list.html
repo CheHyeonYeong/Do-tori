@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
+    <style>
+        #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        .leftdiv {
+            float:left;
+            width:45%;
+            margin-right:10px;
+        }
+
+        .rightdiv {
+            display:inline-block;
+            width:45%;
+            margin-left:10px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Todo App</h1>
+</header>
+
+<div layout:fragment="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 leftdiv">
+                <div class="p-3 border bg-light">
+                    <div class="card">
+                        <div class="card-header">Calender</div>
+                        <div class="card-body">
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- 왼쪽 div 끝 -->
+
+            <div class="col-md-6 rightdiv">
+                <div class="p-3 border bg-light">
+                    <div class="card">
+                        <div class="card-header">
+                            Todo insert Form
+
+                            <form action="/todo/register" method="post">
+                                <div>
+                                    <div>
+                                        <span>Category</span>
+                                        <input type="text" name="category" class="form-control">
+
+                                        <span>ID</span>
+                                        <input type="text" name="id" class="form-control">
+
+                                        <span>Aid</span>
+                                        <input type="text" name="aid" class="form-control">
+
+                                        <span>Content</span>
+                                        <input type="text" name="content" class="form-control">
+
+                                        <span>Done</span>
+                                        <input type="checkbox" name="done" class="form-control">
+
+                                        <span>Todo Date:</span>
+                                        <input type="date" name="todoDate" class="form-control">
+                                    </div>
+                                    <hr>
+                                    <button type="submit" class="btn btn-danger">Submit</button>
+                                </div>
+                            </form>
+
+
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Todo List</h5>
+                            <form>
+                                <div th:each="todo, iter : ${todos}">
+                                    <div th:id="'todo-' + ${iter.index}" class="todo-item">
+                                        <span>Category</span>
+                                        <input type="text" name="category" class="form-control" th:value="${todo.category}" readonly>
+
+                                        <span>ID</span>
+                                        <input type="text" name="id" class="form-control" th:value="${todo.id}" readonly>
+
+                                        <span>Aid</span>
+                                        <input type="text" name="aid" class="form-control" th:value="${todo.aid}" readonly>
+
+                                        <span>Content</span>
+                                        <input type="text" name="content" class="form-control" th:value="${todo.content}" readonly>
+
+                                        <span>Done</span>
+                                        <input type="checkbox" name="done" class="form-control" th:checked="${todo.done}" readonly>
+
+                                        <span>Todo Date:</span>
+                                        <input type="date" name="todoDate" class="form-control" th:value="${#temporals.format(todo.todoDate, 'yyyy-MM-dd')}" readonly>
+                                    </div>
+                                    <hr>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- box2 div end-->
+        </div> <!-- row div end-->
+    </div> <!-- container div end-->
+</div>
+
+<!--fullcalendar 라이브러리-->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js'></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        console.log(calendarEl)
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'ko', // 한국어 설정
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: [
+                {
+                    title: '회의',
+                    start: '2024-05-15T10:30:00',
+                    end: '2024-05-15T12:30:00'
+                },
+                {
+                    title: '점심',
+                    start: '2024-05-16T12:00:00'
+                },
+                {
+                    title: '프로젝트 마감',
+                    start: '2024-05-18'
+                }
+            ]
+        });
+
+        calendar.render();
+    });
+</script>
+<script>
+    // 각 todo 항목에 대한 클릭 이벤트 처리
+    document.querySelectorAll('.todo-item').forEach(function(todoDiv) {
+        let isModifyMode = false;
+
+        todoDiv.addEventListener('click', function() {
+            const buttons = todoDiv.querySelectorAll('button');
+
+            if (buttons.length === 0) {
+                const modifyButton = document.createElement('button');
+                modifyButton.textContent = 'Modify';
+                modifyButton.addEventListener('click', function() {
+                    if (isModifyMode) {
+                        const form = document.createElement('form');
+                        form.action = '/todo/modify';
+                        form.method = 'post';
+                        const inputs = todoDiv.querySelectorAll('input');
+                        inputs.forEach(function(input) {
+                            const inputClone = input.cloneNode(true);
+                            form.appendChild(inputClone);
+                        });
+                        document.body.appendChild(form);
+                        form.submit();
+                    } else {
+                        const inputs = todoDiv.querySelectorAll('input');
+                        inputs.forEach(function(input) {
+                            input.removeAttribute('readonly');
+                        });
+                        isModifyMode = true;
+                    }
+                    const buttons = todoDiv.querySelectorAll('button');
+                    buttons.forEach(function(button) {
+                        button.remove();
+                    });
+                });
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', function() {
+                    const form = document.createElement('form');
+                    form.action = '/todo/delete';
+                    form.method = 'post';
+                    const idInput = todoDiv.querySelector('input[name="id"]');
+                    const idInputClone = idInput.cloneNode(true);
+                    form.appendChild(idInputClone);
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+
+                todoDiv.appendChild(modifyButton);
+                todoDiv.appendChild(deleteButton);
+            }
+        });
+    });
+
+    // 체크박스 상태 설정
+    document.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
+        checkbox.checked = checkbox.value === 'true';
+        checkbox.setAttribute('readonly', 'readonly');
+    });
+</script>
+</body>
+</html>

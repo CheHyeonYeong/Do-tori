@@ -16,6 +16,7 @@
 </head>
 <div layout:fragment="content">
     <div class="card align-self-center">
+
         <div class="card-header">
             Login Page
         </div>
@@ -35,10 +36,14 @@
                 </div>
 
                 <div class="my-4">
+                    <a href="/oauth2/authorization/github" class="btn btn-sm btn-success active"  role="button">GitHub로 로그인</a>
+                    <a href="/oauth2/authorization/google" class="btn btn-sm btn-success active" role="button">Google Login</a><br>
+                    <a href="/oauth2/authorization/naver" class="btn btn-sm btn-success active" role="button">Naver Login</a><br>
                     <div class="float-end">
                         <button type="submit" class="btn btn-primary submitBtn">LOGIN</button>
                     </div>
                 </div>
+
             </form>
         </div>
     </div>
