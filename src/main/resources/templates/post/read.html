@@ -26,7 +26,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">Writer</span>
-                        <input type="text" class="form-control" th:value="${dto.nickname}" readonly>
+                        <input type="text" class="form-control" th:value="${dto.nickName}" readonly>
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">RegDate</span>
@@ -50,6 +50,142 @@
             </div><!--end card -->
         </div> <!--end col -->
     </div> <!--end row -->
+
+<!--    댓글 처리 영역 만들기-->
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="my-4">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Comment Text</span>
+                    <input type="text" class="form-control commentContent">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Writer</span>
+                    <input type="text" class="form-control nickname">
+                </div>
+                <button type="button" class="btn btn-outline-info addCommentBtn">Register</button>
+            </div>
+            <ul class="list-group commentList">
+
+            </ul>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <ul class="pagination commentPaging">
+            </ul>
+        </div>
+    </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/js/comment.js"></script>
+
 </div> <!--end layout:fragment -->
+
+<script layout:fragment="script" th:inline="javascript">
+
+    const pid = [[${dto.pid}]];
+    const commentList = document.querySelector('.commentList');
+    const commentPaging = document.querySelector('.commentPaging');
+
+    function printList(dtoList) {
+        let str = '';
+
+        if(dtoList && dtoList.length > 0) {
+            for (const dto of dtoList) {
+                str +=`<li class="list-group-item d-flex justify-content-between commentItem">
+                    <div>
+                        <span class="col-2">${dto.id}</span>
+                        <span class="col-6" data-id="${dto.id}">${dto.content}</span>
+                        <span class="col-2">${dto.nickName}</span>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-danger removeBtn" data-id="${dto.id}">Remove</button>
+                    </div>
+                </li>`;
+            }
+        }
+        commentList.innerHTML = str;
+    }
+
+    function printPages(data) {
+        let pageStr = '';
+
+        if(data.prev) {
+            pageStr += `<li class="page-item">
+                    <a class="page-link" data-page="${data.start - 1}">PREV</a>
+                 </li>`;
+        }
+
+        for (let i = data.start; i <= data.end; i++ ){
+            pageStr += `<li class="page-item ${i == data.page ? "active" : ""}">
+                    <a class="page-link" data-page="${i}">${i}</a>
+                </li>`;
+        }
+
+        if(data.next) {
+            pageStr += `<li class="page-item">
+                    <a class="page-link" data-page="${data.end + 1}">NEXT</a>
+                 </li>`;
+        }
+        commentPaging.innerHTML = pageStr;
+    }
+
+    function printComments(page = 1, size = 10) {
+        getList(pid, page, size).then(response => {
+            printList(response.postLists);
+            printPages(response);
+        }).catch(error => {
+            console.error(error);
+        });
+    }
+
+    printComments();
+
+    document.querySelector(".addCommentBtn").addEventListener("click", function () {
+        const commentObj = {
+            pid: pid,
+            content: document.querySelector(".commentContent").value,
+            nickName: document.querySelector(".nickname").value
+        };
+        addComment(commentObj).then(response => {
+            alert(response.id);
+            document.querySelector(".commentContent").value = '';
+            document.querySelector(".nickname").value = '';
+            printComments();
+        }).catch(error => {
+            console.error(error);
+        });
+    }, false);
+
+    commentList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('removeBtn')) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const id = e.target.dataset.id;
+            removeComment(id).then(() => {
+                printComments();
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+    });
+
+    commentPaging.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const target = e.target;
+        if(!target || target.tagName !== 'A') {
+            return;
+        }
+
+        const pageNum = target.getAttribute("data-page");
+        printComments(pageNum);
+    }, false);
+
+
+</script>
+
 </body>
 </html>

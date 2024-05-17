@@ -12,17 +12,24 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comment extends BaseEntity {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "pid")
-    private int pid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Post post;
+
     private String nickName;
+
+    private int pid;
+
     @NotNull
     private String content;
 
+    public void setPost(int pid) {
+        this.post = Post.builder().pid(pid).build();
+    }
 
 }

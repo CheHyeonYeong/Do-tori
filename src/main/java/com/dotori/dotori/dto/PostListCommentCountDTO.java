@@ -1,12 +1,16 @@
 package com.dotori.dotori.dto;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
 public class PostListCommentCountDTO {
 
     private int pid;
     private String content;
-    private String nickname;
+    private String nickName;
     private LocalDateTime regDate;
-    private int commentCount;
+    private int likeCount;
+    private Long commentCount;
 }

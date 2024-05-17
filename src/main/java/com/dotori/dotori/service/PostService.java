@@ -3,6 +3,7 @@ package com.dotori.dotori.service;
 import com.dotori.dotori.dto.PageRequestDTO;
 import com.dotori.dotori.dto.PageResponseDTO;
 import com.dotori.dotori.dto.PostDTO;
+import com.dotori.dotori.dto.PostListCommentCountDTO;
 import com.dotori.dotori.entity.Post;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface PostService {
     PostDTO getPost(int id);
     void modifyPost(PostDTO postDTO);
     void deletePost(int id);
+    PageResponseDTO<PostListCommentCountDTO> listWithCommentCount(PageRequestDTO pageRequestDTO);
+
 }

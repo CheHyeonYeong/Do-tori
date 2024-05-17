@@ -18,7 +18,7 @@ public class PostServiceTests {
 
     @Test
     public void testAddPost() {
-        PostDTO postDTO = PostDTO.builder().content("content").nickname("tu"+11).build();
+        PostDTO postDTO = PostDTO.builder().content("content").nickName("tu"+11).build();
         postService.addPost(postDTO);
         int pid = postDTO.getPid();
         log.info(pid);
@@ -34,7 +34,7 @@ public class PostServiceTests {
     @Test
     public void updateTest() {
         log.info("updateTest");
-        PostDTO postDTO = PostDTO.builder().pid(56).content("content").nickname("tu5").build();
+        PostDTO postDTO = PostDTO.builder().pid(56).content("content").nickName("tu5").build();
         postService.modifyPost(postDTO);
         log.info(postService.getPost(56).getContent());
     }
@@ -47,7 +47,7 @@ public class PostServiceTests {
     @Test
     public void listTest() {
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
-                .type("tc")
+                .type("cn")
                 .keyword("1")
                 .page(1)
                 .size(10)

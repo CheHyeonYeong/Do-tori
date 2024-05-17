@@ -26,7 +26,7 @@ public class PostRepositoryTests {
         IntStream.rangeClosed(1,100).forEach(i -> {
             Post post = Post.builder()
                     .content("content...................."+i)
-                    .nickname("tu"+(i%10+11)) //사용자는 0~9번까지
+                    .nickName("tu"+(i%10+11)) //사용자는 0~9번까지
                     .build();
             Post result = postRepository.save(post);  //JPA는 자동으로 만들어주기 때문에 내가 만들지 않은 save 메소드도 나온다.
             log.info(result);
@@ -34,7 +34,7 @@ public class PostRepositoryTests {
     }
 
     @Test
-    public void testSelct() {
+    public void testSelect() {
         int pid = 50;
 
         Optional<Post> result = postRepository.findById(pid);  //optional Type으로 받아서 처리해야 함
@@ -119,16 +119,17 @@ public class PostRepositoryTests {
     }
 
     @Test
-    public void testSearchWithReplyCount(){
-        // 아직 구현 안한 부분들입니다. comment 완성되고나서 구현할 예정입니다. => 현재 널 값 뜸!!
-        String[] types = {"c","w"};
-        String keyword = "1";
-        Pageable pageable = PageRequest.of(0,10,Sort.by("bno").descending());
-        Page<PostListCommentCountDTO> result = postRepository.searchWithReplyCount(types, keyword,pageable);
+    public void testSearchWithCommentCount(){
 
-        result.getContent().forEach(boardListReplyCountDTO -> {
-            log.info(boardListReplyCountDTO);
+        String[] types = {"c","n"};
+        String keyword = "1";
+        Pageable pageable = PageRequest.of(0,10,Sort.by("pid").descending());
+        Page<PostListCommentCountDTO> result = postRepository.searchWithCommentCount(types, keyword, pageable);
+
+        result.getContent().forEach(postListCommentCountDTO -> {
+            log.info("+" + postListCommentCountDTO);
         });
+
     }
 
 
