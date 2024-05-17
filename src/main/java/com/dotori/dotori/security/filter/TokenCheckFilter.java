@@ -30,13 +30,13 @@ public class TokenCheckFilter extends OncePerRequestFilter {
     private final JWTUtil jwtUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         log.info("TokenCheckFilter");
         String path = request.getRequestURI();
 
         // auth/api로 접근한 것이 아니라면 checkfilter로 사용하지 않고 다음 필터로 넘어감
-        if(!path.startsWith("/auth/api")){
+        if (!path.startsWith("/auth/api")) {
             log.info("TokenCheckFilter do not commin!!!");
             filterChain.doFilter(request, response);
             return;
@@ -44,47 +44,63 @@ public class TokenCheckFilter extends OncePerRequestFilter {
         log.info("Token check filter");
 
         try {
-
+            // 액세스 토큰 검증
             Map<String, Object> payload = validateAccessToken(request);
 
-            //id
-            String id = (String)payload.get("id");
-            log.info("id : "+id);
-            UserDetails userDetails = userDetailService.loadUserByUsername(id);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            // id 추출
+            String id = (String) payload.get("id");
+            log.info("id : " + id);
 
+            // UserDetails 조회
+            UserDetails userDetails = userDetailService.loadUserByUsername(id);
+
+            // 인증 토큰 생성
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+            // SecurityContext에 인증 정보 저장
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            // 다음 필터로 요청 전달
             filterChain.doFilter(request, response);
 
-        } catch (AccessTokenException e){
+        } catch (AccessTokenException e) {
+            // 액세스 토큰 검증 실패 시 오류 응답 전송
             e.sendResponseError(response);
         }
     }
+
     private Map<String, Object> validateAccessToken(HttpServletRequest request) {
+        // 요청 헤더에서 Authorization 값 추출
         String headerStr = request.getHeader("Authorization");
-        if(headerStr == null || !headerStr.startsWith("Bearer ") || headerStr.length() < 8){ //token is not defind
+
+        // 토큰이 없거나 형식이 올바르지 않은 경우
+        if (headerStr == null || !headerStr.startsWith("Bearer ") || headerStr.length() < 8) {
             throw new AccessTokenException(AccessTokenException.Token_ERROR.UNACCEPT);
         }
-        // Bearer 생략
-        String tokenType = headerStr.substring(0,6);
+
+        // 토큰 타입 및 토큰 값 추출
+        String tokenType = headerStr.substring(0, 6);
         String tokenStr = headerStr.substring(7);
-        if(tokenType.equalsIgnoreCase("Bearer") == false){      // 잘못된 타입
+
+        // 토큰 타입이 Bearer가 아닌 경우
+        if (!tokenType.equalsIgnoreCase("Bearer")) {
             throw new AccessTokenException(AccessTokenException.Token_ERROR.BADTYPE);
         }
 
         try {
+            // 토큰 검증 및 페이로드 추출
             Map<String, Object> values = jwtUtil.validateToken(tokenStr);
             return values;
-        }catch (MalformedJwtException e){   //기본적으로 만들어져 있는 것
+        } catch (MalformedJwtException e) {
             log.info("Invalid JWT token");
             throw new AccessTokenException(AccessTokenException.Token_ERROR.MALFORM);
-        }catch (SignatureException e){
+        } catch (SignatureException e) {
             log.info("Signature exception");
             throw new AccessTokenException(AccessTokenException.Token_ERROR.BADSIGN);
-        }catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             log.info("Expired JWT token");
             throw new AccessTokenException(AccessTokenException.Token_ERROR.EXPIRD);
         }
-
     }
 }
