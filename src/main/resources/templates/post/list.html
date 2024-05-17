@@ -73,8 +73,9 @@
                             <th scope="row">[[${dto.pid}]]</th>
                             <td>
                                 <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|">[[${dto.content}]]</a>
+                                <span class="badge progress-bar-success" style="background-color: #0a53be">[[${dto.commentCount}]]</span>
                             </td>
-                            <td>[[${dto.nickname}]]</td>
+                            <td>[[${dto.nickName}]]</td>
                             <td>[[${dto.likeCount}]]</td>
                             <td>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</td>
                         </tr>

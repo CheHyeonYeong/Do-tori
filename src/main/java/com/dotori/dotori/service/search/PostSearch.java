@@ -9,7 +9,7 @@ public interface PostSearch {
 
     Page<Post> searchOne(Pageable pageable);
     Page<Post> searchAll(String[] types,String keyword, Pageable pageable);
-    Page<PostListCommentCountDTO> searchWithReplyCount(String[] types, String keyword, Pageable pageable);       //join 처리함
+    Page<PostListCommentCountDTO> searchWithCommentCount(String[] types, String keyword, Pageable pageable);       //join 처리함
 
 }
 

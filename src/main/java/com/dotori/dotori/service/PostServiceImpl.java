@@ -3,6 +3,7 @@ package com.dotori.dotori.service;
 import com.dotori.dotori.dto.PageRequestDTO;
 import com.dotori.dotori.dto.PageResponseDTO;
 import com.dotori.dotori.dto.PostDTO;
+import com.dotori.dotori.dto.PostListCommentCountDTO;
 import com.dotori.dotori.entity.Post;
 import com.dotori.dotori.repository.PostRepository;
 import jakarta.transaction.Transactional;
@@ -73,5 +74,20 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePost(int id) {
         postRepository.deleteById(id);
+    }
+
+    @Override
+    public PageResponseDTO<PostListCommentCountDTO> listWithCommentCount(PageRequestDTO pageRequestDTO) {
+
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageabble("pid"); //게시글 번호를 기준으로 정렬
+        Page<PostListCommentCountDTO> result = postRepository.searchWithCommentCount(types, keyword, pageable);
+
+        return PageResponseDTO.<PostListCommentCountDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .postLists(result.getContent())
+                .total((int)result.getTotalElements())
+                .build();
     }
 }

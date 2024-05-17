@@ -26,7 +26,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">Writer</span>
-                        <input type="text" class="form-control" th:value="${dto.nickname}" readonly>
+                        <input type="text" class="form-control" th:value="${dto.nickName}" readonly>
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">RegDate</span>
@@ -132,7 +132,7 @@
 
     function printComments(page = 1, size = 10) {
         getList(pid, page, size).then(response => {
-            printList(response.dtoList);
+            printList(response.postLists);
             printPages(response);
         }).catch(error => {
             console.error(error);

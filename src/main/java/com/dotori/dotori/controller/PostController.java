@@ -3,6 +3,7 @@ package com.dotori.dotori.controller;
 import com.dotori.dotori.dto.PageRequestDTO;
 import com.dotori.dotori.dto.PageResponseDTO;
 import com.dotori.dotori.dto.PostDTO;
+import com.dotori.dotori.dto.PostListCommentCountDTO;
 import com.dotori.dotori.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,7 @@ public class PostController {
 
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model) {
-        PageResponseDTO<PostDTO> responseDTO = postService.list(pageRequestDTO);
-//        PageResponseDTO<PostDTO>responseDTO = postService.list(pageRequestDTO);
+        PageResponseDTO<PostListCommentCountDTO> responseDTO = postService.listWithCommentCount(pageRequestDTO);
         log.info(responseDTO);
         model.addAttribute("responseDTO", responseDTO);
     }

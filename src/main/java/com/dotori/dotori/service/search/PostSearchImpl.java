@@ -56,7 +56,7 @@ public class PostSearchImpl extends QuerydslRepositorySupport implements PostSea
                         booleanBuilder.or(post.content.contains(keyword)); // content like concat('%', keyword, '%')
                         break;
                     case "n" :
-                        booleanBuilder.or(post.nickname.contains(keyword)); // nickname like concat('%', keyword, '%')
+                        booleanBuilder.or(post.nickName.contains(keyword)); // nickName like concat('%', keyword, '%')
                         break;
                 }
             } // for end
@@ -74,41 +74,41 @@ public class PostSearchImpl extends QuerydslRepositorySupport implements PostSea
     }
 
     @Override
-    public Page<PostListCommentCountDTO> searchWithReplyCount(String[] types, String keyword, Pageable pageable) {
-
+    public Page<PostListCommentCountDTO> searchWithCommentCount(String[] types, String keyword, Pageable pageable) {
         QPost post = QPost.post;
         QComment comment = QComment.comment;
 
-        JPQLQuery<Comment> query = from(comment);
-        query.leftJoin(comment).on(comment.post.eq(post));
-        query.groupBy(comment);
+        JPQLQuery<PostListCommentCountDTO> query = from(post)
+                .leftJoin(comment).on(comment.post.eq(post))
+                .groupBy(post)
+                .select(Projections.bean(PostListCommentCountDTO.class,
+                        post.pid, post.content, post.nickName, post.regDate, comment.count().as("commentCount")));
 
-        if ((types != null && types.length >0) && keyword!= null) {
-            //검색 조건과 키워드가 있는 경우
-            BooleanBuilder booleanBuilder = new BooleanBuilder(); // (
-            for (String type: types) {
+        if ((types != null && types.length > 0) && keyword != null) {
+            BooleanBuilder booleanBuilder = new BooleanBuilder();
+            for (String type : types) {
                 switch (type) {
-                    case "c" :
-                        booleanBuilder.or(post.content.contains(keyword)); // content like concat('%', keyword, '%')
+                    case "c":
+                        booleanBuilder.or(post.content.contains(keyword));
                         break;
-                    case "n" :
-                        booleanBuilder.or(post.nickname.contains(keyword)); // nickname like concat('%', keyword, '%')
+                    case "n":
+                        booleanBuilder.or(post.nickName.contains(keyword));
                         break;
                 }
-            } // for end
+            }
             query.where(booleanBuilder);
-        } // if end
+        }
 
         query.where(post.pid.gt(0));
 
         JPQLQuery<PostListCommentCountDTO> dtojpqlQuery = query.select(Projections.bean(PostListCommentCountDTO.class,
-                post.pid, post.content, post.nickname, post.regdate, comment.count().as("commentCount")));
+                post.pid, post.content, post.nickName, post.regDate, comment.count().as("commentCount")));
 
-        this.getQuerydsl().applyPagination(pageable,dtojpqlQuery);
+        this.getQuerydsl().applyPagination(pageable, dtojpqlQuery);
         List<PostListCommentCountDTO> content = dtojpqlQuery.fetch();
 
         Long count = dtojpqlQuery.fetchCount();
 
-        return new PageImpl<>(content,pageable,count);
+        return new PageImpl<>(content, pageable, count);
     }
 }
