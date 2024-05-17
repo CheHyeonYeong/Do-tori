@@ -31,12 +31,13 @@ public class AuthDTO {
 
     private String provider;
 
-    // DTO 파일을 통하여 Entity를 생성하는 메소드
+    // DTO 파일을 통하여 Auth Entity를 생성하는 메소드
     public Auth toEntity() {
         return Auth.builder()
                 .nickName(this.nickName)
                 .email(this.email)
                 .provider(this.provider)
+                .social(true)
                 .build();
     }
 }

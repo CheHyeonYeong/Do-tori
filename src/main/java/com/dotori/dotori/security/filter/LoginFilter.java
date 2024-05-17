@@ -19,36 +19,42 @@ import java.util.Map;
 @Log4j2
 public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
+    // LoginFilter 생성자
     public LoginFilter(String defaultFilterProcessesUrl) {
         super(defaultFilterProcessesUrl);
     }
 
+    // 요청에서 JSON 데이터를 파싱하는 메서드
     private Map<String, String> parseRequstJSON(HttpServletRequest request) {
-
-        try (Reader reader = new InputStreamReader(request.getInputStream()) ){
+        try (Reader reader = new InputStreamReader(request.getInputStream())) {
             Gson gson = new Gson();
             return gson.fromJson(reader, Map.class);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
-
         return null;
     }
 
+    // 인증 시도 메서드
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException, IOException, ServletException {
         log.info("APILoginFilter attemptAuthentication");
 
-        if(request.getMethod().equalsIgnoreCase("GET")) {
-            //get은 처리하지 않아요
+        // GET 요청은 처리하지 않음
+        if (request.getMethod().equalsIgnoreCase("GET")) {
             log.info("Get Method not support");
             return null;
         }
 
+        // 요청에서 JSON 데이터 파싱
         Map<String, String> jsonData = parseRequstJSON(request);
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(jsonData.get("id"), jsonData.get("password"));
-        return getAuthenticationManager().authenticate(authenticationToken);
+        // 파싱된 데이터로 UsernamePasswordAuthenticationToken 생성
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(jsonData.get("id"), jsonData.get("password"));
 
+        // AuthenticationManager를 통해 인증 시도
+        return getAuthenticationManager().authenticate(authenticationToken);
     }
 }

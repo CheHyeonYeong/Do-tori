@@ -61,6 +61,7 @@ public class AuthController {
             auth = Auth.builder()
                     .email(email)
                     .nickName(nickName)
+                    .social(true)
                     .build();
             authRepository.save(auth);
         }else {

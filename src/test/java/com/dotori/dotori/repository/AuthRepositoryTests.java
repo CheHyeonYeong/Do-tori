@@ -31,6 +31,8 @@ public class AuthRepositoryTests {
                     .password(passwordEncoder.encode("1111"))
                     .nickName("tu" + i)
                     .email("test" + i + "@naver.com")
+                    .provider("naver")
+                    .social(true)
                     .build();
 
             authRepository.save(auth);

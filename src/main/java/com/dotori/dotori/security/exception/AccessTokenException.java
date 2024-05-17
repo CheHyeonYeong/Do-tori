@@ -8,50 +8,66 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
-public class AccessTokenException extends RuntimeException{
+public class AccessTokenException extends RuntimeException {
 
     Token_ERROR token_Error;
+
+    // 토큰 오류 유형을 나타내는 열거형
     public enum Token_ERROR {
-        //열거형 제작
+
+        // 토큰이 null이거나 너무 짧은 경우를 나타냅니다.
         UNACCEPT(401, "Token is null or too short"),
-        BADTYPE(401,"Token type Bearer"),
-        MALFORM(403,"Malformed Token"),
-        BADSIGN(403,"BadSignatured Toekn"),
-        EXPIRD(403,"Expired Token");
+
+        // 토큰 타입이 Bearer가 아닌 경우를 나타냅니다.
+        BADTYPE(401, "Token type Bearer"),
+
+        // 토큰 형식이 올바르지 않은 경우를 나타냅니다.
+        MALFORM(403, "Malformed Token"),
+
+        // 토큰 서명이 유효하지 않은 경우를 나타냅니다.
+        BADSIGN(403, "BadSignatured Token"),
+
+        // 토큰이 만료된 경우를 나타냅니다.
+        EXPIRD(403, "Expired Token");
 
         private int status;
         private String msg;
 
-
-        Token_ERROR(int status, String msg){
+        // 열거형 생성자
+        Token_ERROR(int status, String msg) {
             this.status = status;
             this.msg = msg;
         }
-        public int getStatus(){
+
+        // 상태 코드 반환
+        public int getStatus() {
             return status;
         }
-        public String getMsg(){
+
+        // 오류 메시지 반환
+        public String getMsg() {
             return msg;
         }
     }
 
-    public AccessTokenException(Token_ERROR error){
+    // AccessTokenException 생성자
+    public AccessTokenException(Token_ERROR error) {
         super(error.name());
         this.token_Error = error;
     }
-    public void sendResponseError(HttpServletResponse resp){
+
+    // 응답에 오류 정보 전송
+    public void sendResponseError(HttpServletResponse resp) {
         resp.setStatus(token_Error.getStatus());
         resp.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         Gson gson = new Gson();
         String responseStr = gson.toJson(Map.of("msg", token_Error.getMsg(), "time", new Date()));
 
-        try{
+        try {
             resp.getWriter().println(responseStr);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 }
