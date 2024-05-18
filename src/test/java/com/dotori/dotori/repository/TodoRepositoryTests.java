@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,7 @@ public class TodoRepositoryTests {
                     .content("title.............."+i)
                     .aid(i%10)
                     .done(false)
-                    .todoDate(LocalDateTime.now())
+                    .todoDate(LocalDate.now())
                     .build();
             todoRepository.save(todo);
         });
