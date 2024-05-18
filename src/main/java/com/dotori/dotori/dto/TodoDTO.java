@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Builder
 @AllArgsConstructor
@@ -30,7 +30,7 @@ public class TodoDTO {
     private boolean done;
 
     @Builder.Default
-    private LocalDateTime todoDate = LocalDateTime.now();
+    private LocalDate todoDate = LocalDate.now();
 
 
 }

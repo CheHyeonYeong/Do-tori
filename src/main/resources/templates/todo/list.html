@@ -192,6 +192,7 @@
                         });
                         document.body.appendChild(form);
                         form.submit();
+                        document.body.removeChild(form); //폼 제출후 제거
                     } else {
                         const inputs = todoDiv.querySelectorAll('input');
                         inputs.forEach(function(input) {
@@ -207,7 +208,9 @@
 
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Delete';
-                deleteButton.addEventListener('click', function() {
+                deleteButton.addEventListener('click', function(event) {
+                    event.preventDefault();
+
                     const form = document.createElement('form');
                     form.action = '/todo/delete';
                     form.method = 'post';
@@ -216,6 +219,7 @@
                     form.appendChild(idInputClone);
                     document.body.appendChild(form);
                     form.submit();
+                    document.body.removeChild(form); //폼 제출후 제거
                 });
 
                 todoDiv.appendChild(modifyButton);

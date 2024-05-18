@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -37,7 +38,7 @@ public class Todo {
     @CreatedDate
     @Builder.Default
     @Column(name = "todoDate")
-    private LocalDateTime todoDate = LocalDateTime.now();
+    private LocalDate todoDate = LocalDate.now();
 
     public void changeTodo(String category, String content, boolean done) {
         this.category = category;

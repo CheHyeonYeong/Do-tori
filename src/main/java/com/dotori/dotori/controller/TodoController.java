@@ -42,9 +42,9 @@ public class TodoController {
     }
 
     @PostMapping("/delete")
-    public String delete(@Valid TodoDTO todoDTO, RedirectAttributes redirectAttributes) {
-        log.info("Delete todo: " + todoDTO);
-        todoService.deleteTodo(todoDTO.getId());
+    public String delete(@RequestParam("id") int id, RedirectAttributes redirectAttributes) {
+        log.info("Delete todo: " + id);
+        todoService.deleteTodo(id);
         return "redirect:/todo/list";
 
     }
