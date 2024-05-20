@@ -26,12 +26,10 @@ import org.springframework.security.core.Authentication;
 
 @Controller
 @Log4j2
-@RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
     private final AuthRepository authRepository;
     private final AuthService authService;
 
@@ -106,15 +104,14 @@ public class AuthController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/api/info")
+    @GetMapping("/info")
     public String authInfo(Model model) {
         log.info("info commin");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String id = authentication.getName();
-        Auth auth = authRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("auth not found"));
-        model.addAttribute("auth", auth);
-        return "auth/info"; // 회원 정보를 보여주는 뷰 이름
+        AuthDTO authDTO = authService.info(id);
+        model.addAttribute("auth", authDTO);
+        return "auth/info";
     }
 
     //    @PreAuthorize("principal.username == #authDTO.id")        //이런 인증 절차가 아무것도 없어요ㅠㅠ
@@ -122,9 +119,8 @@ public class AuthController {
     public String updateGET(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String id = authentication.getName();
-        Auth auth = authRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("auth not found"));
-        model.addAttribute("auth", auth);
+        AuthDTO authDTO = authService.info(id);
+        model.addAttribute("auth", authDTO);
         return "auth/modify";
     }
 

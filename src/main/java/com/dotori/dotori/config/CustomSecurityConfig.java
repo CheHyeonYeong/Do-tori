@@ -1,23 +1,19 @@
 package com.dotori.dotori.config;
 
-import com.dotori.dotori.config.util.JWTUtil;
 import com.dotori.dotori.security.CustomUserDetailsService;
-import com.dotori.dotori.security.filter.LoginFilter;
-import com.dotori.dotori.security.filter.TokenCheckFilter;
 import com.dotori.dotori.security.handler.Custom403Handler;
-import com.dotori.dotori.security.handler.LoginSuccessHandler;
+import com.dotori.dotori.security.handler.CustomSocialLoginSuccessHandler;
 import com.dotori.dotori.service.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -25,7 +21,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
@@ -43,9 +39,8 @@ public class CustomSecurityConfig {
 
     private final DataSource dataSource;
     private final CustomUserDetailsService userDetailsService;
-    private final JWTUtil jwtUtil;
-    private final OAuth2UserService oAuth2UserService;
     private final OAuth2Service oAuth2Service;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
@@ -56,54 +51,23 @@ public class CustomSecurityConfig {
             form.loginPage("/auth/login"); // default login page가 아닌 다른 페이지로 바꿔주게끔 설정
         });
 
-        // AuthenticationManagerBuilder 설정
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(userDetailsService);
+        //csrf 설정
+        http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
 
-        // Get AuthenticationManager
-        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
-
-        // 인증 매니저 등록
-        http.authenticationManager(authenticationManager);
-
-        // API Login Filter 설정
-        LoginFilter apiLoginFilter = new LoginFilter("/generateToken");
-        apiLoginFilter.setAuthenticationManager(authenticationManager);
-        LoginSuccessHandler successHandler = new LoginSuccessHandler(jwtUtil);
-        apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
-
-        // APILoginFilter의 위치 조정 - UsernamePasswordAuthenticationFilter 이전에 동작해야 하는 필터이기 때문
-        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
-
-        // TokenCheckFilter 설정
-        http.addFilterBefore(
-                tokenCheckFilter(jwtUtil, userDetailsService),
-                UsernamePasswordAuthenticationFilter.class
-        );
-
-        // OAuth2 로그인 설정
-        http.oauth2Login(oauth2 -> oauth2
-                .loginPage("/auth/login")
-                .defaultSuccessUrl("/todo/list")
-                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService()))
-        );
-
-        // CSRF 토큰 비활성화
-        http.csrf(csrf -> csrf.disable());
-
-        // Remember-me 설정
-        http.rememberMe(rememberMe -> {
-            rememberMe.key("123456789")
+        //remember-me 설정
+        http.rememberMe(httpSecurityRememberMeConfigurer -> {
+            httpSecurityRememberMeConfigurer.key("123456789")           // DB에 저장해서 작업할 수 있어야 remember 되기 때문이다.
                     .tokenRepository(persistentTokenRepository())
                     .userDetailsService(userDetailsService)
-                    .tokenValiditySeconds(60 * 60 * 24 * 30); // 30일
+                    .tokenValiditySeconds(60*60);     // 30일 : 60*60*24*30, 1시간 : 60*60
         });
 
-        // CORS 설정
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        //exception Handler 설정
+        http.exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {
+            httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(accessDeniedHandler());
+        });
 
-        // Access Denied Handler 설정
-        http.exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler(accessDeniedHandler()));
+
 
         // OAuth2 로그인 설정
         http.oauth2Login(oauth2Login -> {
@@ -125,7 +89,7 @@ public class CustomSecurityConfig {
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
-        repo.setDataSource(dataSource);
+        repo.setDataSource(dataSource);         // 통신을 위함
         return repo;
     }
 
@@ -134,26 +98,13 @@ public class CustomSecurityConfig {
         return new Custom403Handler();
     }
 
-    // TokenCheckFilter 객체 생성
-    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, CustomUserDetailsService userDetailService) {return new TokenCheckFilter(userDetailService, jwtUtil);
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList("Authentication", "Cache-Control", "Content-Type"));
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://your-frontend-domain.com")); // CORS 허용 도메인
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
     @Bean
     public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService() {
         return new DefaultOAuth2UserService();
     }
 
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+        return new CustomSocialLoginSuccessHandler(passwordEncoder);
+    }
 }

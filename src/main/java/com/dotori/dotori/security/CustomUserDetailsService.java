@@ -12,8 +12,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -34,17 +36,21 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (result.isEmpty()) {
             throw new UsernameNotFoundException("username not found....");
         }
-
+        if(result.isEmpty()){
+            throw new UsernameNotFoundException(username);
+        }
         Auth auth = result.get();
-        // AuthSecurityDTO 객체 생성
-        AuthSecurityDTO authSecurityDTO = new AuthSecurityDTO(
+        AuthSecurityDTO authSecurityDTO;
+        authSecurityDTO = new AuthSecurityDTO(
+
                 auth.getAid(),
                 auth.getId(),
                 auth.getPassword(),
                 auth.getNickName(),
                 auth.getEmail(),
                 false,
-                List.of(new SimpleGrantedAuthority("ROLE_USER"))  // 사용자 권한 설정
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
+
         );
 
         log.info("userSecurityDTO : {}", authSecurityDTO);
