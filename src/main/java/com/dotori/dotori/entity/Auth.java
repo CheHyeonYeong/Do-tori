@@ -33,7 +33,7 @@ public class Auth {
     @ColumnDefault("false")
     private boolean social;
 
-    @Column(name = "provider", nullable = false)
+    @Column(name = "provider")
     private String provider; // 사용자가 로그인한 서비스(ex) google, naver..)
 
     public void setAuth(String id) {
