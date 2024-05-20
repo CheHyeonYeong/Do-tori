@@ -3,11 +3,18 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
       layout:decorate="~{layout/basic.html}">
-
+<style>
+    .search{
+        width: 100%;
+    }
+    .count{
+        float: right;
+    }
+</style>
 <div layout:fragment="content">
     <div class="search">
         <!--    검색 화면 추가 -->
-        <div class="row mt-3">
+        <div class="row mt-3 mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px">
             <form action="/post/list" method="get">
                 <div class="col">
                     <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
@@ -47,69 +54,43 @@
                     </div>
                 </div>
             </div>
-
+        </div>
     </div>  <!-- search div end -->
 
+    <!-- Floating Button -->
+    <button type="button" class="btn btn-primary btn-lg rounded-circle floating-btn"
+            style="position: fixed; bottom: 20px; right:5%"
+            onclick="redirectToNewPostPage()">
+        +
+    </button>
 
-    <div class = "row mt-3 list">
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <h1>Post List</h1>
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead> <!--테이블 목록 -->
-                        <tr>
-                            <th scope="col">PID</th>
-                            <th scope="col">CONTENT</th>
-                            <th scope="col">NICKNAME</th>
-                            <th scope="col">LIKECOUNT</th>
-                            <th scope="col">REDDATE</th>
-                        </tr>
-                        </thead>
-                        <tbody th:with="link = ${pageRequestDTO.getLink()}"> <!-- 실제 출력데이터-->
-                        <tr th:each="dto:${responseDTO.postLists}">
-                            <th scope="row">[[${dto.pid}]]</th>
-                            <td>
-                                <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|">[[${dto.content}]]</a>
-                                <span class="badge progress-bar-success" style="background-color: #0a53be">[[${dto.commentCount}]]</span>
-                            </td>
-                            <td>[[${dto.nickName}]]</td>
-                            <td>[[${dto.likeCount}]]</td>
-                            <td>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="float-end">
-                        <ul class="pagination flex-wrap">
-                            <li class="page-item" th:if="${responseDTO.prev}">
-                                <a class="page-link" th:data-num="${responseDTO.start - 1}"> Previous</a>
-                            </li>
-                            <th:block th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
-                                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
-                                    <a class="page-link" th:data-num="${i}">[[${i}]]</a>
-                                </li>
-                            </th:block>
-                            <li class="page-item" th:if="${responseDTO.next}">
-                                <a class="page-link" th:data-num="${responseDTO.end + 1}"> Next</a>
-                            </li>
-                        </ul>
-                    </div>
-
-                </div>
+    <div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px"
+         th:each="dto:${responseDTO.postLists}">
+        <div class="card-body">
+            <h5 class="card-title">[[${dto.nickName}]]</h5>
+            <div class="card-header" th:with="link = ${pageRequestDTO.getLink()}">
+                <p class="card-text" style="height: 200px">
+                    <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|">[[${dto.content}]]</a>
+                </p>
             </div>
+            <p class="hstack gap-3">
+                <span class="p-2">[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</span>
+                <span class="p-2 ms-auto">[[${dto.likeCount}]]</span>
+                <span class="p-2 badge progress-bar-success" style="background-color: #0a53be">
+                                [[${dto.commentCount}]]
+                    </span>
+            </p>
         </div>
     </div>
-
-        <!-- Floating Button -->
-        <button type="button" class="btn btn-primary btn-lg rounded-circle floating-btn" onclick="redirectToNewPostPage()">
-            +
-        </button>
-    </div> <!-- list end -->
-
-
+    <div class = "row mt-3 list">
+        <div class="float-end p-2">
+            <button id="load-more"
+                    class="pagination flex-wrap load-more row mt-3 mx-auto p-2 vstack gap-3 page-link">
+                더보기
+            </button>
+        </div>
+    </div>
+</div>
 </div> <!--<div layout:fragment="content" end>-->
 
 <script layout:fragment="script" th:inline="javascript">
@@ -156,7 +137,50 @@
         modal.show()
     }
 
+    document.addEventListener("DOMContentLoaded", function() {
+
+        var cardContainer = document.getElementById('card-container');
+        var loadMoreButton = document.getElementById('load-more');
+        var currentPostIndex = 0;
+        var postsPerPage = 5;  // 한번에 로드할 게시물 수
+
+        function loadPosts() {
+            var endIndex = currentPostIndex + postsPerPage;
+            for (var i = currentPostIndex; i < endIndex && i < posts.length; i++) {
+                var post = posts[i];
+                var card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">[[${dto.nickName}]]</h5>
+                        <div class="card-header" th:with="link = ${pageRequestDTO.getLink()}">
+                            <p class="card-text" style="height: 200px">
+                                <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|">[[${dto.content}]]</a>
+                            </p>
+                        </div>
+                        <p class="hstack gap-3">
+                            <span class="p-2">[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</span>
+                            <span class="p-2 ms-auto">[[${dto.likeCount}]]</span>
+                            <span class="p-2 badge progress-bar-success" style="background-color: #0a53be">
+                                            [[${dto.commentCount}]]
+                                </span>
+                        </p>
+                    </div>
+            `;
+                cardContainer.appendChild(card);
+            }
+            currentPostIndex = endIndex;
+
+            // 모든 게시물이 로드되면 "더보기" 버튼 숨김
+            if (currentPostIndex >= posts.length) {
+                loadMoreButton.style.display = 'none';
+            }
+        }
+        loadMoreButton.addEventListener('click', loadPosts);
+
+        // 페이지 로드 시 처음 몇 개의 게시물 로드
+        loadPosts();
+    });
 </script>
 
-</body>
 </html>
