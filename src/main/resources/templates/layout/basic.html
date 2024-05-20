@@ -18,12 +18,21 @@
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
 
     <style>
+        .active-nav-link {
+            font-weight: bold;
+            color: black; /* 현재 페이지의 링크 색상을 빨간색으로 설정 */
+        }
         .navbar-toggler{
             display: inline-block;
         }
         .navbar-nav {
             width: 100%;
             justify-content: center;
+        }
+        .menu-bar{
+            border-bottom: 2px solid black; /* 선의 두께와 색상을 설정합니다. */
+            padding: 10px; /* 내부 여백 설정 */
+            margin-bottom: 20px; /* 외부 여백 설정 */
         }
         .nav-item {
             flex: 1;
@@ -48,9 +57,14 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-                        <li class="nav-item active col "><a class="nav-link" href="#!">Do-tori</a></li>
+                        <li class="nav-item active col ">
+
+                            <a class="nav-link" href="/todo/list">
+                                <span class="menu-bar todo">Do-tori</span>
+                            </a>
+                        </li>
                         <li class="nav-item col">
-                            <a class="navbar-brand" href="#">
+                            <a class="navbar-brand">
                                 <svg width="63" height="41" viewBox="0 0 125 83" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <rect width="125" height="83" fill="url(#pattern0_218_111)"/>
                                     <rect width="125" height="83" fill="url(#pattern1_218_111)"/>
@@ -70,21 +84,24 @@
                                 </svg>
                             </a>
                         </li>
-                        <li class="nav-item active col "><a class="nav-link" href="#!">To-rest</a></li>
+                        <li class="nav-item active col ">
+                            <a class="nav-link" href="/post/list">
+                                <span class="menu-bar">To-rest</span>
+                            </a>
+                        </li>
                     </ul>
                     <div class="dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <svg width="46" height="46" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="28" cy="27.5" r="27" stroke="black"/>
                                 <circle cx="27.5" cy="19" r="6.5" stroke="black"/>
                                 <path d="M28.5 54.5H28.4738L28.4477 54.5027C23.8368 54.9881 19.3154 53.4102 15.9207 51.6202C14.2281 50.7277 12.8296 49.7899 11.8582 49.048C11.3719 48.6765 10.9976 48.358 10.7493 48.1226C10.6338 48.013 10.5521 47.9276 10.5005 47.8673C10.5723 37.9577 18.6776 29.5 28 29.5C37.3258 29.5 45.4337 37.964 45.4996 47.8784C45.4589 47.9289 45.395 48.0001 45.3039 48.0916C45.097 48.2993 44.7809 48.581 44.3617 48.9125C43.5249 49.5743 42.2992 50.4177 40.7624 51.2475C37.6863 52.9086 33.3934 54.5 28.5 54.5Z" stroke="black"/>
                             </svg>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#!">Action</a>
-                            <a class="dropdown-item" href="#!">Another action</a>
+                        <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item login" href="/auth/login">로그인</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#!">Something else here</a>
+                            <a class="dropdown-item join" href="/auth/join">회원가입</a>
                         </div>
                     </div>
                 </div>
@@ -98,6 +115,42 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var path = window.location.pathname;
+        var page = path.split("8080/").pop();
+
+        var navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(function (link) {
+            var href = link.getAttribute('href');
+            if (href === page) {
+                link.classList.add('active-nav-link');
+            }
+        });
+    });
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+        var isLoggedIn = false;  // 로그인 상태 변수 (예시로 false로 설정)
+
+        var navbarMenu = document.getElementById('mypage');
+
+        if (isLoggedIn) {
+        navbarMenu.innerHTML = `
+            <a class="dropdown-item login" href="/auth/login">로그인</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item join" href="/auth/join">회원가입</a>
+        `;
+    } else {
+        navbarMenu.innerHTML = `
+        <a class="dropdown-item login" href="/auth/info">MY PAGE</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item join" href="/auth/login">로그아웃</a>
+        `;
+    }
+    });
+</script>
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core theme JS-->
