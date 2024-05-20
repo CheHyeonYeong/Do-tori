@@ -74,7 +74,12 @@
                                 <div>
                                     <div>
                                         <span>Category</span>
-                                        <input type="text" name="category" class="form-control">
+                                        <select name="category" class="form-control">
+                                            <option value="No category">No category</option>
+                                            <option value="일정">일정</option>
+                                            <option value="공부">공부</option>
+                                            <option value="습관">습관</option>
+                                        </select>
 
                                         <span>ID</span>
                                         <input type="text" name="id" class="form-control">
@@ -106,8 +111,12 @@
                                     <div th:each="todo, iter : ${entry.value}">
                                         <div th:id="'todo-' + ${iter.index}" class="todo-item">
                                             <span>Category</span>
-                                            <input type="text" name="category" class="form-control"
-                                                   th:value="${todo.category}" readonly>
+                                            <select name="category" class="form-control">
+                                                <option value="No category" th:selected="${todo.category == 'No category'}">No category</option>
+                                                <option value="공부" th:selected="${todo.category == '공부'}">공부</option>
+                                                <option value="일정" th:selected="${todo.category == '일정'}">일정</option>
+                                                <option value="습관" th:selected="${todo.category == '습관'}">습관</option>
+                                            </select>
 
                                             <span>ID</span>
                                             <input type="text" name="id" class="form-control" th:value="${todo.id}"
