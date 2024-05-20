@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @Log4j2
@@ -26,7 +28,9 @@ public class TodoController {
     @GetMapping("/list")
     public void index(Model model) {
         List<TodoDTO> todos = todoService.getAllTodo();
-        model.addAttribute("todos", todos);
+        Map<String, List<TodoDTO>> todoCategory = todos.stream()
+                .collect(Collectors.groupingBy(TodoDTO::getCategory));
+        model.addAttribute("todoCategory", todoCategory);
     }
 
     @PostMapping("/register")

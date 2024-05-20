@@ -2,7 +2,7 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet'/>
     <style>
         #calendar {
             max-width: 900px;
@@ -10,15 +10,15 @@
         }
 
         .leftdiv {
-            float:left;
-            width:45%;
-            margin-right:10px;
+            float: left;
+            width: 45%;
+            margin-right: 10px;
         }
 
         .rightdiv {
-            display:inline-block;
-            width:45%;
-            margin-left:10px;
+            display: inline-block;
+            width: 45%;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -28,12 +28,14 @@
 
 
     <div class="container">
-<!--        nav bar-->
+        <!--        nav bar-->
 
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">Navbar</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                        aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
@@ -47,7 +49,6 @@
             </div>
         </nav>
     </div>
-
 
 
     <div class="container">
@@ -99,140 +100,155 @@
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">Todo List</h5>
-                            <form>
-                                <div th:each="todo, iter : ${todos}">
-                                    <div th:id="'todo-' + ${iter.index}" class="todo-item">
-                                        <span>Category</span>
-                                        <input type="text" name="category" class="form-control" th:value="${todo.category}" readonly>
+                            <div th:each="entry : ${todoCategory}">
+                                <h6 th:text="${entry.key}"></h6>
+                                <form>
+                                    <div th:each="todo, iter : ${entry.value}">
+                                        <div th:id="'todo-' + ${iter.index}" class="todo-item">
+                                            <span>Category</span>
+                                            <input type="text" name="category" class="form-control"
+                                                   th:value="${todo.category}" readonly>
 
-                                        <span>ID</span>
-                                        <input type="text" name="id" class="form-control" th:value="${todo.id}" readonly>
+                                            <span>ID</span>
+                                            <input type="text" name="id" class="form-control" th:value="${todo.id}"
+                                                   readonly>
 
-                                        <span>Aid</span>
-                                        <input type="text" name="aid" class="form-control" th:value="${todo.aid}" readonly>
+                                            <span>Aid</span>
+                                            <input type="text" name="aid" class="form-control" th:value="${todo.aid}"
+                                                   readonly>
 
-                                        <span>Content</span>
-                                        <input type="text" name="content" class="form-control" th:value="${todo.content}" readonly>
+                                            <span>Content</span>
+                                            <input type="text" name="content" class="form-control"
+                                                   th:value="${todo.content}" readonly>
 
-                                        <span>Done</span>
-                                        <input type="checkbox" name="done" class="form-control" th:checked="${todo.done}" readonly>
+                                            <span>Done</span>
+                                            <input type="checkbox" name="done" class="form-control"
+                                                   th:checked="${todo.done}" readonly>
 
-                                        <span>Todo Date:</span>
-                                        <input type="date" name="todoDate" class="form-control" th:value="${#temporals.format(todo.todoDate, 'yyyy-MM-dd')}" readonly>
+                                            <span>Todo Date:</span>
+                                            <input type="date" name="todoDate" class="form-control"
+                                                   th:value="${#temporals.format(todo.todoDate, 'yyyy-MM-dd')}"
+                                                   readonly>
+                                        </div>
+                                        <hr>
                                     </div>
-                                    <hr>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div> <!-- box2 div end-->
-        </div> <!-- row div end-->
-    </div> <!-- container div end-->
-</div>
+                </div> <!-- box2 div end-->
+            </div> <!-- row div end-->
+        </div> <!-- container div end-->
+    </div>
 
-<!--fullcalendar 라이브러리-->
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js'></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--fullcalendar 라이브러리-->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js'></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        console.log(calendarEl)
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            console.log(calendarEl)
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'ko', // 한국어 설정
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            events: [
-                {
-                    title: '회의',
-                    start: '2024-05-15T10:30:00',
-                    end: '2024-05-15T12:30:00'
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'ko', // 한국어 설정
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
-                {
-                    title: '점심',
-                    start: '2024-05-16T12:00:00'
-                },
-                {
-                    title: '프로젝트 마감',
-                    start: '2024-05-18'
-                }
-            ]
+                events: [
+                    {
+                        title: '회의',
+                        start: '2024-05-15T10:30:00',
+                        end: '2024-05-15T12:30:00'
+                    },
+                    {
+                        title: '점심',
+                        start: '2024-05-16T12:00:00'
+                    },
+                    {
+                        title: '프로젝트 마감',
+                        start: '2024-05-18'
+                    }
+                ]
+            });
+
+            calendar.render();
         });
+    </script>
+    <script>
+        // 각 todo 항목에 대한 클릭 이벤트 처리
+        document.querySelectorAll('.todo-item').forEach(function (todoDiv) {
+            let isModifyMode = false;
 
-        calendar.render();
-    });
-</script>
-<script>
-    // 각 todo 항목에 대한 클릭 이벤트 처리
-    document.querySelectorAll('.todo-item').forEach(function(todoDiv) {
-        let isModifyMode = false;
+            todoDiv.addEventListener('click', function () {
+                const buttons = todoDiv.querySelectorAll('button');
 
-        todoDiv.addEventListener('click', function() {
-            const buttons = todoDiv.querySelectorAll('button');
+                if (buttons.length === 0) {
+                    const modifyButton = document.createElement('button');
+                    modifyButton.textContent = 'Modify';
+                    modifyButton.addEventListener('click', function () {
+                        if (isModifyMode) {
+                            const form = document.createElement('form');
+                            form.action = '/todo/modify';
+                            form.method = 'post';
+                            const inputs = todoDiv.querySelectorAll('input');
+                            inputs.forEach(function (input) {
+                                const inputClone = input.cloneNode(true);
+                                form.appendChild(inputClone);
+                            });
 
-            if (buttons.length === 0) {
-                const modifyButton = document.createElement('button');
-                modifyButton.textContent = 'Modify';
-                modifyButton.addEventListener('click', function() {
-                    if (isModifyMode) {
-                        const form = document.createElement('form');
-                        form.action = '/todo/modify';
-                        form.method = 'post';
-                        const inputs = todoDiv.querySelectorAll('input');
-                        inputs.forEach(function(input) {
-                            const inputClone = input.cloneNode(true);
-                            form.appendChild(inputClone);
+                            // 카테고리 필드 추가
+                            const categorySelect = todoDiv.querySelector('select[name="category"]');
+                            const categorySelectClone = categorySelect.cloneNode(true);
+                            form.appendChild(categorySelectClone);
+
+                            document.body.appendChild(form);
+                            form.submit();
+                            document.body.removeChild(form); //폼 제출후 제거
+                        } else {
+                            const inputs = todoDiv.querySelectorAll('input');
+                            inputs.forEach(function (input) {
+                                input.removeAttribute('readonly');
+                            });
+                            isModifyMode = true;
+                        }
+                        const buttons = todoDiv.querySelectorAll('button');
+                        buttons.forEach(function (button) {
+                            button.remove();
                         });
+                    });
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.addEventListener('click', function (event) {
+                        event.preventDefault();
+
+                        const form = document.createElement('form');
+                        form.action = '/todo/delete';
+                        form.method = 'post';
+                        const idInput = todoDiv.querySelector('input[name="id"]');
+                        const idInputClone = idInput.cloneNode(true);
+                        form.appendChild(idInputClone);
                         document.body.appendChild(form);
                         form.submit();
                         document.body.removeChild(form); //폼 제출후 제거
-                    } else {
-                        const inputs = todoDiv.querySelectorAll('input');
-                        inputs.forEach(function(input) {
-                            input.removeAttribute('readonly');
-                        });
-                        isModifyMode = true;
-                    }
-                    const buttons = todoDiv.querySelectorAll('button');
-                    buttons.forEach(function(button) {
-                        button.remove();
                     });
-                });
 
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Delete';
-                deleteButton.addEventListener('click', function(event) {
-                    event.preventDefault();
-
-                    const form = document.createElement('form');
-                    form.action = '/todo/delete';
-                    form.method = 'post';
-                    const idInput = todoDiv.querySelector('input[name="id"]');
-                    const idInputClone = idInput.cloneNode(true);
-                    form.appendChild(idInputClone);
-                    document.body.appendChild(form);
-                    form.submit();
-                    document.body.removeChild(form); //폼 제출후 제거
-                });
-
-                todoDiv.appendChild(modifyButton);
-                todoDiv.appendChild(deleteButton);
-            }
+                    todoDiv.appendChild(modifyButton);
+                    todoDiv.appendChild(deleteButton);
+                }
+            });
         });
-    });
 
-    // 체크박스 상태 설정
-    document.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
-        checkbox.checked = checkbox.value === 'true';
-        checkbox.setAttribute('readonly', 'readonly');
-    });
-</script>
+        // 체크박스 상태 설정
+        document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+            checkbox.checked = checkbox.value === 'true';
+            checkbox.setAttribute('readonly', 'readonly');
+        });
+    </script>
 </body>
 </html>
