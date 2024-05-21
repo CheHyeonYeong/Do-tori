@@ -8,8 +8,11 @@ import java.util.function.Function;
 
 public enum OAuthAttributes {
 
+
+
     GOOGLE("google", (attribute) -> {
         AuthDTO authDTO = new AuthDTO();
+
         authDTO.setNickName((String)attribute.get("name"));
         authDTO.setEmail((String)attribute.get("email"));
 
