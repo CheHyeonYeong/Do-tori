@@ -4,6 +4,7 @@ import com.dotori.dotori.dto.AuthDTO;
 import com.dotori.dotori.entity.Auth;
 import com.dotori.dotori.repository.AuthRepository;
 import com.dotori.dotori.service.AuthService;
+import com.dotori.dotori.service.OAuth2Service;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.Authentication;
 
+import java.util.Map;
 
 
 @Controller
@@ -30,7 +32,7 @@ import org.springframework.security.core.Authentication;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthRepository authRepository;
+    private final OAuth2Service oAuth2Service;
     private final AuthService authService;
 
     // 로그인
@@ -45,33 +47,50 @@ public class AuthController {
     //github 로그인
     @GetMapping("/login/oauth2/code/github")
     public String oauth2LoginSuccess(Authentication authentication) {
-        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-
-        String email = oAuth2User.getAttribute("email");
-        String userName = oAuth2User.getAttribute("login");
-        String nickName = oAuth2User.getAttribute("name");
-
-        // 이메일을 기준으로 사용자 정보 조회
-        Auth auth = authRepository.findByEmail(email).orElse(null);
-
-        if (auth == null) {
-            // 사용자 정보가 없는 경우 새로운 사용자 생성
-            auth = Auth.builder()
-                    .email(email)
-                    .nickName(nickName)
-                    .social(true)
-                    .build();
-            authRepository.save(auth);
-        }else {
-            // 사용자 정보가 있는 경우 업데이트
-
-            auth.updateUser(nickName, email);
-            authRepository.save(auth);
-        }
+//        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+//
+//        String email = oAuth2User.getAttribute("email");
+//        String userName = oAuth2User.getAttribute("login");
+//        String nickName = oAuth2User.getAttribute("name");
+//
+//        // 이메일을 기준으로 사용자 정보 조회
+//        AuthDTO authDTO = authService.info(email);
+//
+//        if (authDTO == null) {
+//
+//            // 사용자 정보가 없는 경우 새로운 사용자 생성
+//            AuthDTO authDTONotNull = AuthDTO.builder()
+//                    .id(email)
+//                    .password("social")
+//                    .nickName(nickName)
+//                    .email(email)
+//                    .social(authDTO.isSocial())
+//                    .provider(authDTO.getProvider())
+//                    .build();
+//            Auth auth = authService.join(authDTONotNull);
+//        }else {
+//            // 사용자 정보가 있는 경우 업데이트
+//
+//            authDTO.updateUser(nickName, email);
+//            authService.modify(authDTO);
+//        }
 
         // 로그인 성공 후 메인 페이지로 리다이렉트
         return "redirect:/todo/list";
     }
+
+    @RequestMapping("/oauth")
+    public class UserController {
+        @GetMapping("/loginInfo")
+        public String getJson(Authentication authentication) {
+            OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+
+            Map<String, Object> attributes = oAuth2User.getAttributes();
+
+            return attributes.toString();
+        }
+    }
+
 
 
     // 회원 가입
