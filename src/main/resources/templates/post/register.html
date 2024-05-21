@@ -9,10 +9,10 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <h1>post Register</h1>
+                    <h1>Post Register</h1>
                 </div>
                 <div class="card-body">
-                    <form action="/post/register" method="post">
+                    <form action="/post/register" method="post" enctype="multipart/form-data">
 
                         <div class="input-group mb-3">
                             <span class="input-group-text">Content</span>
@@ -22,6 +22,10 @@
                             <span class="input-group-text">Writer</span>
                             <input type="text" name="nickName"
                                    class="form-control" placeholder="nickName">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Image</span>
+                            <input type="file" name="file" class="form-control">
                         </div>
                         <div class="my-4">
                             <div class="float-end">

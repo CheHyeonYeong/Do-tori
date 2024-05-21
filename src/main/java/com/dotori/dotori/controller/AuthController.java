@@ -44,7 +44,7 @@ public class AuthController {
         }
     }
 
-    //github 로그인
+    // github 로그인  - 나중에 수정예정 (방식이 다름)
     @GetMapping("/login/oauth2/code/github")
     public String oauth2LoginSuccess(Authentication authentication) {
 //        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();

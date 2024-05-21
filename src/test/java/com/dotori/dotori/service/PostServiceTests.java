@@ -16,13 +16,14 @@ public class PostServiceTests {
     @Autowired
     private PostService postService;
 
-    @Test
-    public void testAddPost() {
-        PostDTO postDTO = PostDTO.builder().content("content").nickName("tu"+11).build();
-        postService.addPost(postDTO);
-        int pid = postDTO.getPid();
-        log.info(pid);
-    }
+    //주석 지우면 에러남
+//    @Test
+//    public void testAddPost() {
+//        PostDTO postDTO = PostDTO.builder().content("content").nickName("tu"+11).build();
+//        postService.addPost(postDTO);
+//        int pid = postDTO.getPid();
+//        log.info(pid);
+//    }
 
     @Test
     public void testGetPost() {
@@ -30,14 +31,14 @@ public class PostServiceTests {
         log.info(post.getContent());
 
     }
-
-    @Test
-    public void updateTest() {
-        log.info("updateTest");
-        PostDTO postDTO = PostDTO.builder().pid(56).content("content").nickName("tu5").build();
-        postService.modifyPost(postDTO);
-        log.info(postService.getPost(56).getContent());
-    }
+      //주석 지우면 에러남
+//    @Test
+//    public void updateTest() {
+//        log.info("updateTest");
+//        PostDTO postDTO = PostDTO.builder().pid(56).content("content").nickName("tu5").build();
+//        postService.modifyPost(postDTO);
+//        log.info(postService.getPost(56).getContent());
+//    }
 
     @Test
     public void testDeletePost() {

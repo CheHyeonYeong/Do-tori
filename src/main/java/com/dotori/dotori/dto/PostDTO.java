@@ -29,4 +29,6 @@ public class PostDTO {
     @Builder.Default
     private LocalDateTime regDate = LocalDateTime.now();
     private LocalDateTime modDate;
+
+    private String thumbnail;
 }

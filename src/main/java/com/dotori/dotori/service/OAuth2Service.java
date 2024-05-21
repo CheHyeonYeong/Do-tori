@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -29,15 +30,15 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
         OAuth2UserService oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
-        String registrationId = userRequest.getClientRegistration().getRegistrationId(); // 로그인을 수행한 서비스의 이름
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
         String userNameAttributeName = userRequest
                 .getClientRegistration()
                 .getProviderDetails()
                 .getUserInfoEndpoint()
-                .getUserNameAttributeName(); // PK가 되는 정보
+                .getUserNameAttributeName();
 
-        Map<String, Object> attributes = oAuth2User.getAttributes(); // 사용자가 가지고 있는 정보
+        Map<String, Object> attributes = oAuth2User.getAttributes();
 
         AuthDTO authDTO = OAuthAttributes.extract(registrationId, attributes);
         authDTO.setProvider(registrationId);
@@ -68,9 +69,8 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
     }
 
     public Auth updateOrSaveUser(AuthDTO authDTO) {
-        Auth auth = authRepository
-                .findUserByEmailAndProvider(authDTO.getEmail(), authDTO.getProvider())
-                .map(value -> value.updateUser(authDTO.getNickName(), authDTO.getEmail()))
+        Auth auth = authRepository.findByEmail(authDTO.getEmail())
+                .map(entity -> entity.updateUser(authDTO.getNickName(), authDTO.getEmail()))
                 .orElse(authDTO.toEntity());
 
         return authRepository.save(auth);
