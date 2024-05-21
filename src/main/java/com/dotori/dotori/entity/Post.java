@@ -44,9 +44,19 @@ public class Post{
     @Column(name = "modDate")
     private LocalDateTime modDate;
 
-    public void changePost(String content, int likeCount) {
+
+    @Column(name = "thumbnail")
+    private String thumbnail;
+
+    public void changePost(String content, int likeCount, String thumbnail) {
         this.content = content;
         this.likeCount = likeCount;
+        this.thumbnail = thumbnail;
     }
+
+    public void changeThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
 
 }

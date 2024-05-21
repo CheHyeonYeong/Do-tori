@@ -10,9 +10,9 @@
                 <div class="card-header">
                 </div>
                 <div class="card-body">
-                    <form th:action="@{/post/modify}" method="post" id="f1">
+                    <form th:action="@{/post/modify}" method="post" id="f1" enctype="multipart/form-data">
 
-                        <div class="input-group mb-3">
+                    <div class="input-group mb-3">
                             <span class="input-group-text">Bno</span>
                             <input type="text" class="form-control" name = "pid" th:value="${dto.pid}" readonly>
                             <!--/* th는 el을 사용할 때, html에 직접적으로 할 때 [[${}]]이렇게 */-->
@@ -32,6 +32,16 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text">ModDate</span>
                             <input type="text" class="form-control"   th:value="${#temporals.format(dto.modDate, 'yyyy-MM-dd  HH:mm:ss')}" readonly />
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Image</span>
+                            <input type="file" class="form-control" name="file">
+                        </div>
+                        <div class="input-group mb-3" th:if="${dto.thumbnail}">
+                            <span class="input-group-text">Current Image</span>
+                            <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" alt="Thumbnail" width="200">
+                            <button type="button" class="btn btn-danger removeImageBtn">Remove Image</button>
                         </div>
 
                         <div class="my-4">
@@ -91,6 +101,17 @@
         formObj.method = "post"
         formObj.submit();
     },false)
+
+    document.querySelector(".removeImageBtn")?.addEventListener("click", function (e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        const inputFile = document.querySelector("input[name='file']");
+        inputFile.value = "";
+
+        const imageElement = document.querySelector(".input-group img");
+        imageElement.parentElement.remove();
+    },false);
 
 </script>
 

@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -34,21 +35,17 @@ public class PostController {
     public void registerGet(Model model) {
         // + 버튼을 누르면 글 등록 페이지로 들어감
     }
-
     @PostMapping("/register")
-    public String registerPost(@Valid PostDTO postDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-
-        //값 검증 이후 확인
-        if(bindingResult.hasErrors()) {     //검증시 에러가 있는 경우
+    public String registerPost(@Valid PostDTO postDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes, MultipartFile file) throws Exception {
+        if (bindingResult.hasErrors()) {
             log.error("has Error");
-            redirectAttributes.addFlashAttribute("errors",bindingResult.getAllErrors());
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/post/register";
         }
 
-        log.info("Post register"+postDTO.getContent());
-        int pid = postService.addPost(postDTO);
+        log.info("Post register" + postDTO.getContent());
+        int pid = postService.addPost(postDTO, file);
         redirectAttributes.addFlashAttribute("result", pid);
-        //bno 가 들어왔는지 확인하려고 할 뿐이라서 따로 안 쓸 것 같다~
 
         return "redirect:/post/list";
     }
@@ -57,22 +54,22 @@ public class PostController {
     public void read(int pid, PageRequestDTO pageRequestDTO, Model model) {
         PostDTO postDTO = postService.getPost(pid);
         log.info(postDTO);
-        model.addAttribute("dto",postDTO);
+        model.addAttribute("dto", postDTO);
     }
 
     @PostMapping("/modify")
-    public String modify(PageRequestDTO pageRequestDTO,@Valid PostDTO postDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        log.info("Post Modify commin");
-        if(bindingResult.hasErrors()) {
+    public String modify(PageRequestDTO pageRequestDTO, @Valid PostDTO postDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes, MultipartFile file) throws Exception {
+        log.info("Post Modify coming");
+        if (bindingResult.hasErrors()) {
             log.error("has Error");
             String link = pageRequestDTO.getLink();
-            redirectAttributes.addFlashAttribute("errors",bindingResult.getAllErrors());
-            redirectAttributes.addAttribute("pid",postDTO.getPid());
-            return "redirect:/post/modify?"+link;
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            redirectAttributes.addAttribute("pid", postDTO.getPid());
+            return "redirect:/post/modify?" + link;
         }
-        postService.modifyPost(postDTO);
-        redirectAttributes.addFlashAttribute("result","modify success");
-        redirectAttributes.addAttribute("pid",postDTO.getPid());
+        postService.modifyPost(postDTO, file);
+        redirectAttributes.addFlashAttribute("result", "modify success");
+        redirectAttributes.addAttribute("pid", postDTO.getPid());
 
         return "redirect:/post/read";
     }

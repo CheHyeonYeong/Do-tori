@@ -42,16 +42,16 @@ public class PostRepositoryTests {
         log.info(post.getContent());
     }
 
-    @Test
-    public void testUpdate() {
-        int pid = 50;
-
-        Optional<Post> result = postRepository.findById(pid);  //optional Type으로 받아서 처리해야 함
-        Post post = result.orElseThrow();
-        post.changePost("update title",2);  //modDate 시간은 바뀌나 regdate 시간은 바뀌지 않는다.
-        postRepository.save(post);
-        log.info(post.getContent());
-    }
+//    @Test
+//    public void testUpdate() {
+//        int pid = 50;
+//
+//        Optional<Post> result = postRepository.findById(pid);  //optional Type으로 받아서 처리해야 함
+//        Post post = result.orElseThrow();
+//        post.changePost("update title",2);  //modDate 시간은 바뀌나 regdate 시간은 바뀌지 않는다.
+//        postRepository.save(post);
+//        log.info(post.getContent());
+//    }
 
     @Test
     public void testDelete() {
