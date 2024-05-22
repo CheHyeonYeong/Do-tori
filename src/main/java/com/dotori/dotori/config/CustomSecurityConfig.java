@@ -46,9 +46,18 @@ public class CustomSecurityConfig {
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
         log.info("configure -> Security FilterChain");
 
+        // 권한 설정
+        http.authorizeRequests(authorize -> authorize
+                .requestMatchers("/auth/**").permitAll()
+                .anyRequest().authenticated()
+        );
+
         // 사용자 로그인 페이지
         http.formLogin(form -> {
-            form.loginPage("/auth/login"); // default login page가 아닌 다른 페이지로 바꿔주게끔 설정
+            form.loginPage("/auth/login") // default login page가 아닌 다른 페이지로 바꿔주게끔 설정
+                    .loginProcessingUrl("/auth/login") // 로그인 폼이 제출되는 URL 설정
+                    .defaultSuccessUrl("/todo/list") // 로그인 성공 후 기본으로 리다이렉트될 URL 설정
+                    .permitAll(); // 로그인 페이지에 대한 접근 허용
         });
 
         // 로그아웃 기능

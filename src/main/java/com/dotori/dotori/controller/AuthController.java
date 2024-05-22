@@ -40,11 +40,13 @@ public class AuthController {
     // 로그인
     @GetMapping("/login")
     public void loginGet(String error, String logout) {
+        log.info("login get...");
         log.info("logout : " + logout);
         if(logout != null){
             log.info("user logout..........");
         }
     }
+
 
 
     @RequestMapping("/oauth")
