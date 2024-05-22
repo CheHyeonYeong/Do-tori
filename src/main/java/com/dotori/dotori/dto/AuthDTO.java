@@ -2,6 +2,7 @@ package com.dotori.dotori.dto;
 
 import com.dotori.dotori.entity.Auth;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -19,6 +20,8 @@ public class AuthDTO {
     private String id;
 
     @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+            message = "비밀번호는 최소 8자 이상이어야 하며, 영문 대/소문자, 숫자, 특수문자를 모두 포함해야 합니다.")
     private String password;
 
     @NotBlank(message = "닉네임은 필수 입력 값입니다.")
