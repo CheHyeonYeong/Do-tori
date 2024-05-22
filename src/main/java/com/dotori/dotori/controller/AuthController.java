@@ -44,40 +44,6 @@ public class AuthController {
         }
     }
 
-    // github 로그인  - 나중에 수정예정 (방식이 다름)
-    @GetMapping("/login/oauth2/code/github")
-    public String oauth2LoginSuccess(Authentication authentication) {
-//        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-//
-//        String email = oAuth2User.getAttribute("email");
-//        String userName = oAuth2User.getAttribute("login");
-//        String nickName = oAuth2User.getAttribute("name");
-//
-//        // 이메일을 기준으로 사용자 정보 조회
-//        AuthDTO authDTO = authService.info(email);
-//
-//        if (authDTO == null) {
-//
-//            // 사용자 정보가 없는 경우 새로운 사용자 생성
-//            AuthDTO authDTONotNull = AuthDTO.builder()
-//                    .id(email)
-//                    .password("social")
-//                    .nickName(nickName)
-//                    .email(email)
-//                    .social(authDTO.isSocial())
-//                    .provider(authDTO.getProvider())
-//                    .build();
-//            Auth auth = authService.join(authDTONotNull);
-//        }else {
-//            // 사용자 정보가 있는 경우 업데이트
-//
-//            authDTO.updateUser(nickName, email);
-//            authService.modify(authDTO);
-//        }
-
-        // 로그인 성공 후 메인 페이지로 리다이렉트
-        return "redirect:/todo/list";
-    }
 
     @RequestMapping("/oauth")
     public class UserController {

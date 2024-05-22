@@ -24,8 +24,10 @@ public class Auth {
 
     private String password;
 
-    @Column(unique = true, name = "username", nullable = false)
+    @Column(name = "nickName", nullable = false)
     private String nickName;
+
+    // 진짜 이름 받아서 추가하기
 
     @Column(unique = true)
     private String email;
