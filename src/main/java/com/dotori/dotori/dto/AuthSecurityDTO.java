@@ -4,42 +4,31 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
-
 
 @Getter
 @Setter
 @ToString
-public class AuthSecurityDTO extends User {
+public class AuthSecurityDTO extends User implements OAuth2User {
 
     private int aid;
     private String id;
-    private String password;
     private String nickName;
     private String email;
     private boolean social;
 
     private Map<String, Object> props;
-
-    public AuthSecurityDTO(int aid, String id, String password, String nickName, String email, boolean social, Collection<GrantedAuthority> authorities) {
-        super(id, password, authorities);
+    public AuthSecurityDTO(int aid, String id, String password, String nickName, String email, boolean social, Collection<? extends GrantedAuthority> authorities) {
+        super(id == null ? "" : id, password == null ? "" : password, authorities);
         this.aid = aid;
         this.id = id;
-        this.password = password;
         this.nickName = nickName;
         this.email = email;
         this.social = social;
-    }
-
-    @Override
-    public Collection<GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
@@ -61,4 +50,15 @@ public class AuthSecurityDTO extends User {
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return props;
+    }
+
+    @Override
+    public String getName() {
+        return id;
+    }
+
 }

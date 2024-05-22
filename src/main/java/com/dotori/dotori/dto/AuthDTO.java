@@ -34,6 +34,8 @@ public class AuthDTO {
     // DTO 파일을 통하여 Social 로그인 시 Auth Entity를 생성하는 메소드
     public Auth toEntity() {
         return Auth.builder()
+                .id(this.email)
+                .password("1234")
                 .nickName(this.nickName)
                 .email(this.email)
                 .provider(this.provider)
