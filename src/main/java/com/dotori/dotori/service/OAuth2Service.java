@@ -1,6 +1,7 @@
 package com.dotori.dotori.service;
 
 import com.dotori.dotori.dto.AuthDTO;
+import com.dotori.dotori.dto.AuthSecurityDTO;
 import com.dotori.dotori.entity.Auth;
 import com.dotori.dotori.entity.OAuthAttributes;
 import com.dotori.dotori.repository.AuthRepository;
@@ -40,20 +41,22 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
 
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
+
         AuthDTO authDTO = OAuthAttributes.extract(registrationId, attributes);
         authDTO.setProvider(registrationId);
 
-        updateOrSaveUser(authDTO);
+        Auth auth = updateOrSaveUser(authDTO);
 
-        Map<String, Object> customAttribute =
-                getCustomAttribute(registrationId, userNameAttributeName, attributes, authDTO);
-
-        return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
-                customAttribute,
-                userNameAttributeName);
+        return (OAuth2User) new AuthSecurityDTO(
+                auth.getAid(),
+                auth.getId(),
+                auth.getPassword(),
+                auth.getNickName(),
+                auth.getEmail(),
+                auth.isSocial(),
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
+        );
     }
-
     public Map getCustomAttribute(String registrationId,
                                   String userNameAttributeName,
                                   Map<String, Object> attributes,

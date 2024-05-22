@@ -1,6 +1,7 @@
 package com.dotori.dotori.controller;
 
 import com.dotori.dotori.dto.AuthDTO;
+import com.dotori.dotori.dto.AuthSecurityDTO;
 import com.dotori.dotori.entity.Auth;
 import com.dotori.dotori.repository.AuthRepository;
 import com.dotori.dotori.service.AuthService;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -90,22 +92,16 @@ public class AuthController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/info")
-    public String authInfo(Model model) {
-        log.info("info commin");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String id = authentication.getName();
-        AuthDTO authDTO = authService.info(id);
-        model.addAttribute("auth", authDTO);
+    public String authInfo(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Model model) {
+        log.info("info coming");
+        model.addAttribute("auth", authSecurityDTO);
         return "auth/info";
     }
 
     //    @PreAuthorize("principal.username == #authDTO.id")        //이런 인증 절차가 아무것도 없어요ㅠㅠ
     @GetMapping("/modify")
-    public String updateGET(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String id = authentication.getName();
-        AuthDTO authDTO = authService.info(id);
-        model.addAttribute("auth", authDTO);
+    public String updateGET(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Model model) {
+        model.addAttribute("auth", authSecurityDTO);
         return "auth/modify";
     }
 

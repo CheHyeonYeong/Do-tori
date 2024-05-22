@@ -21,22 +21,22 @@
     <hr>
     <div class="input-group mb-3">
         <span class="input-group-text">아이디</span>
-        <input type="text" th:value="${auth.id}" name="id" class="form-control" readonly>
+        <input type="text" th:value="${#authentication.principal.id}" name="id" class="form-control" readonly>
     </div>
 
     <div class="input-group mb-3">
         <span class="input-group-text">패스워드</span>
-        <input type="password" th:value="${auth.password}" name="password" class="form-control" readonly>
+        <input type="password" th:value="${#authentication.principal.password}" name="password" class="form-control" readonly>
     </div>
 
     <div class="input-group mb-3">
         <span class="input-group-text">닉네임</span>
-        <input type="text" th:value="${auth.nickName}" name="nickName" class="form-control" readonly>
+        <input type="text" th:value="${#authentication.principal.nickName}" name="nickName" class="form-control" readonly>
     </div>
 
     <div class="input-group mb-3">
         <span class="input-group-text">이메일</span>
-        <input type="email" th:value="${auth.email}" name="email" class="form-control" readonly>
+        <input type="email" th:value="${#authentication.principal.email}" name="email" class="form-control" readonly>
     </div>
 
     <a th:href="@{/auth/modify}" class="text-decoration-none">

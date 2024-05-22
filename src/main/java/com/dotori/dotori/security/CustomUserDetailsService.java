@@ -50,7 +50,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 auth.getEmail(),
                 false,
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
-
         );
 
         log.info("userSecurityDTO : {}", authSecurityDTO);
