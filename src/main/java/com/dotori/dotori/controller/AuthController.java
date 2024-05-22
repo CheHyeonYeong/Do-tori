@@ -69,12 +69,19 @@ public class AuthController {
     }
 
     @PostMapping("/join")
-    public String authJoinPost(AuthDTO authDTO, RedirectAttributes redirectAttributes) {
+    public String authJoinPost(@Valid  AuthDTO authDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.info("join post.....");
         log.info(authDTO);
 
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/auth/join";
+        }
+
+
         try {
             authService.join(authDTO);
+
         } catch (AuthService.MidExistException me) {
             redirectAttributes.addFlashAttribute("error", "id");
             return "redirect:/auth/join";
