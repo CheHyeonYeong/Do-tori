@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/basic.html}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,42 +12,89 @@
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+        .login-container {
+            display: flex;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+        }
+        .image-section {
+            background-color: #f0e6d2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px; /* 패딩 값을 조정하세요 */
+        }
+        .image-section img {
+            max-width: 300px; /* 원하는 최대 너비로 설정하세요 */
+            max-height: 300px; /* 원하는 최대 높이로 설정하세요 */
+            object-fit: contain; /* 이미지 비율 유지를 위해 추가 */
+        }
+        .form-section {
+            padding: 40px;
+            flex: 1;
+        }
+        .form-section .input-group {
+            margin-bottom: 15px;
+        }
+        .form-section .btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .form-section .btn-primary {
+            margin-top: 20px;
+        }
+        .form-section .float-end {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+    </style>
 </head>
-<div layout:fragment="content">
-    <div class="card align-self-center">
-
-        <div class="card-header">
-            Login Page
-        </div>
-        <div class="card-body">
-            <th:block th:if="${param.logout != null}">
-                <h1>Logout...........</h1>
-            </th:block>
-
-            <form id="registerForm" action="/auth/login" method="post">
-                <div class="input-group mb-3">
-                    <span class="input-group-text">아이디</span>
-                    <input type="text" name="username" class="form-control" placeholder="USER ID">
-                </div>
-                <div class="input-group mb-3">
-                    <span class="input-group-text">패스워드</span>
-                    <input type="password" name="password" class="form-control" placeholder="PASSWORD">
-                </div>
-
-                <div class="my-4">
-
-                    <a href="/oauth2/authorization/github" class="btn btn-sm btn-success active"  role="button">GitHub로 로그인</a>
-                    <a href="/oauth2/authorization/google" class="btn btn-sm btn-success active" role="button">Google Login</a><br>
-                    <a href="/oauth2/authorization/naver" class="btn btn-sm btn-success active" role="button">Naver Login</a><br>
-
-                    <div class="float-end">
-                        <button type="submit" class="btn btn-primary submitBtn">LOGIN</button>
+<div class="login-container">
+    <div class="image-section">
+        <img th:src="@{/assets/dotori_image.png}" alt="도토리 이미지">
+    </div>
+    <div class="form-section">
+        <div class="card align-self-center">
+            <div class="card-body">
+                <form id="registerForm" action="/auth/login" method="post">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">아이디</span>
+                        <input type="text" name="username" class="form-control" placeholder="USER ID">
                     </div>
-                </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">패스워드</span>
+                        <input type="password" name="password" class="form-control" placeholder="PASSWORD">
+                    </div>
 
-            </form>
+                    <div class="my-4">
+                        <a href="/oauth2/authorization/google" class="btn btn-sm btn-success active" role="button">Google Login</a><br>
+                        <a href="/oauth2/authorization/naver" class="btn btn-sm btn-success active" role="button">Naver Login</a><br>
+
+                        <div class="float-end">
+                            <button type="submit" class="btn btn-primary submitBtn">LOGIN</button>
+                            <a href="/auth/join" class="btn btn-primary">JOIN</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-
+<script th:if="${param.logout != null}">
+    alert("그 동안 저희 서비스를 이용해주셔서 감사합니다. 안녕히 가세요.");
+</script>
 </html>
