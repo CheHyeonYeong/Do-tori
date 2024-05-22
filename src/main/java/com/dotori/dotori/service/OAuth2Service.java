@@ -49,7 +49,7 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
                 getCustomAttribute(registrationId, userNameAttributeName, attributes, authDTO);
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority("USER")),
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
                 customAttribute,
                 userNameAttributeName);
     }
@@ -69,10 +69,19 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
     }
 
     public Auth updateOrSaveUser(AuthDTO authDTO) {
-        Auth auth = authRepository.findByEmail(authDTO.getEmail())
-                .map(entity -> entity.updateUser(authDTO.getNickName(), authDTO.getEmail()))
-                .orElse(authDTO.toEntity());
+        return authRepository.findByEmail(authDTO.getEmail())
+                .map(entity -> updateExistingUser(entity, authDTO))
+                .orElseGet(() -> createNewUser(authDTO));
+    }
 
-        return authRepository.save(auth);
+
+    public Auth updateExistingUser(Auth existingAuth, AuthDTO authDTO) {
+        existingAuth.updateUser(authDTO.getNickName(), authDTO.getEmail());
+        return authRepository.save(existingAuth);
+    }
+
+    public Auth createNewUser(AuthDTO authDTO) {
+        Auth newAuth = authDTO.toEntity();
+        return authRepository.save(newAuth);
     }
 }

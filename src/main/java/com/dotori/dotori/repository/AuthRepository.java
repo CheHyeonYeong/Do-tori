@@ -14,7 +14,7 @@ public interface AuthRepository extends JpaRepository<Auth, Integer> {
     Optional<Auth> findById(String id);
 
     Optional<Auth> findByEmail(String email);
-
+    Optional<Auth> findByNickName(String nickName);
     Optional<Auth> findUserByEmailAndProvider(String email, String provider);
 
     boolean existsById(String id);
@@ -29,5 +29,6 @@ public interface AuthRepository extends JpaRepository<Auth, Integer> {
     @Modifying
     @Transactional
     void deleteById(@Param("id") String id);
+
 
 }
