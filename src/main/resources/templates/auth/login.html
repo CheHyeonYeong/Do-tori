@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Simple Sideber - Login</title>
+    <title>Simple Sidebar - Login</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
     <!-- Core theme CSS (includes Bootstrap)-->
@@ -61,8 +61,34 @@
             justify-content: flex-end;
             gap: 10px;
         }
+        .social-login {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .social-login img {
+            width: 40px; /* 원하는 아이콘 크기로 설정하세요 */
+            height: 40px;
+            object-fit: contain;
+        }
+        .social-login a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            flex: 1;
+            margin: 0 5px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            transition: background-color 0.3s ease;
+        }
+        .social-login a:hover {
+            background-color: #e2e6ea;
+        }
+
     </style>
 </head>
+<body>
 <div class="login-container">
     <div class="image-section">
         <img th:src="@{/assets/dotori_image.png}" alt="도토리 이미지">
@@ -80,14 +106,18 @@
                         <input type="password" name="password" class="form-control" placeholder="PASSWORD">
                     </div>
 
-                    <div class="my-4">
-                        <a href="/oauth2/authorization/google" class="btn btn-sm btn-success active" role="button">Google Login</a><br>
-                        <a href="/oauth2/authorization/naver" class="btn btn-sm btn-success active" role="button">Naver Login</a><br>
+                    <div class="social-login">
+                        <a href="/oauth2/authorization/google">
+                            <img th:src="@{/assets/googleIcon.png}" alt="Google Login">
+                        </a>
+                        <a href="/oauth2/authorization/naver">
+                            <img th:src="@{/assets/naverIcon.png}"  alt="Naver Login">
+                        </a>
+                    </div>
 
-                        <div class="float-end">
-                            <button type="submit" class="btn btn-primary submitBtn">LOGIN</button>
-                            <a href="/auth/join" class="btn btn-primary">JOIN</a>
-                        </div>
+                    <div class="float-end">
+                        <button type="submit" class="btn btn-primary submitBtn">LOGIN</button>
+                        <a href="/auth/join" class="btn btn-primary">JOIN</a>
                     </div>
                 </form>
             </div>
@@ -95,6 +125,7 @@
     </div>
 </div>
 <script th:if="${param.logout != null}">
-    alert("그 동안 저희 서비스를 이용해주셔서 감사합니다. 안녕히 가세요.");
+    alert("저희 서비스를 이용해주셔서 감사합니다. 안녕히가세요.");
 </script>
+</body>
 </html>
