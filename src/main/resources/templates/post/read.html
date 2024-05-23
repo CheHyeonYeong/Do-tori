@@ -6,6 +6,44 @@
 
 <head>
     <title>Board Read</title>
+    <style>
+        .modify-button{
+            margin: 0 auto;
+            width: 50%;
+        }
+        .img-fluid{
+            max-width: 50%;
+            height: auto;
+        }
+        .body-content{
+            width: 50%;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        .input-group-comment{
+            margin: 0 auto;
+            width: 50%;
+            position: relative;
+            display: flex;
+        }
+        .commentContent{
+            height: 100px;
+            width: 100%;
+        }
+        .addCommentBtn{
+            position: absolute;
+            top: 40px;
+            bottom: 15px;
+            right: 10px;
+        }
+        .commentList{
+            margin: 0 auto;
+            width: 50%;
+        }
+        .commentPaging{
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
@@ -13,60 +51,49 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    Board Read
+                    <h5 class="card-title">[[${dto.nickName}]]</h5>
                 </div>
                 <div class="card-body">
                     <div class="input-group mb-3">
-                        <span class="input-group-text">Pid</span>
-                        <input type="text" class="form-control" th:value="${dto.pid}" readonly>
+                        <input type="hidden" class="form-control" th:value="${dto.pid}" readonly>
+                    </div>
+                    <div class="input-group mb-3" style="display: block; text-align: center">
+                        <div class="body-content">[[${dto.content}]]</div>
+                        <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}"  class="img-fluid">
                     </div>
                     <div class="input-group mb-3">
-                        <span class="input-group-text">Content</span>
-                        <textarea class="form-control col-sm-5" rows="5" readonly>[[${dto.content}]]</textarea>
-                        <br>
-                        <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" alt="Thumbnail" class="img-fluid">
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">Writer</span>
-                        <input type="text" class="form-control" th:value="${dto.nickName}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">RegDate</span>
-                        <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate,'yyyy-MM-dd HH:mm:ss')}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">ModDate</span>
-                        <input type="text" class="form-control" th:value="${#temporals.format(dto.modDate,'yyyy-MM-dd HH:mm:ss')}" readonly>
-                    </div>
-
-                    <div class="my-4" th:with="user=${#authentication.principal}">
-                        <div class="float-end" th:with="link=${pageRequestDTO != null ? pageRequestDTO.getLink() : ''}">
-                            <a th:href="|@{/post/list}?${link}|" class="text-decoration-none">
-                                <button type="button" class="btn btn-primary">List</button>
-                            </a>
-                            <a th:href="|@{/post/modify(pid=${dto.pid})}&${link}|" class="text-decoration-none">
-                                <button type="button" class="btn btn-secondary">Modify</button>
-                            </a>
+                        <div class="date">
+                            <span> [[${#temporals.format(dto.regDate,'yyyy-MM-dd HH:mm:ss')}]] 작성 /&nbsp;</span>
+                        </div>
+                        <div class="date">
+                            <span id="ModDate"> - [[${#temporals.format(dto.modDate,'yyyy-MM-dd HH:mm:ss')}]] 수정</span>
                         </div>
                     </div>
                 </div> <!--end card-body -->
             </div><!--end card -->
+
+            <div class="my-4 modify-button" th:with="user=${#authentication.principal}">
+                <div class="float-end" th:with="link=${pageRequestDTO != null ? pageRequestDTO.getLink() : ''}">
+                    <a th:href="|@{/post/list}?${link}|" class="text-decoration-none">
+                        <button type="button" class="btn btn-primary">List</button>
+                    </a>
+                    <a th:href="|@{/post/modify(pid=${dto.pid})}&${link}|" class="text-decoration-none">
+                        <button type="button" class="btn btn-secondary">Modify</button>
+                    </a>
+                </div>
+            </div>
         </div> <!--end col -->
     </div> <!--end row -->
 
-<!--    댓글 처리 영역 만들기-->
+    <!--    댓글 처리 영역 만들기-->
+
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="my-4">
-                <div class="input-group mb-3">
-                    <span class="input-group-text">Comment Text</span>
-                    <input type="text" class="form-control commentContent">
+                <div class="input-group-comment mb-3">
+                    <button type="button" class="btn btn-outline-info addCommentBtn">등록하기</button>
+                    <input type="text" class="form-control commentContent" placeholder="댓글을 입력하세요">
                 </div>
-                <div class="input-group mb-3">
-                    <span class="input-group-text">Writer</span>
-                    <input type="text" class="form-control nickname">
-                </div>
-                <button type="button" class="btn btn-outline-info addCommentBtn">Register</button>
             </div>
             <ul class="list-group commentList">
 
@@ -95,16 +122,16 @@
 
         if(dtoList && dtoList.length > 0) {
             for (const dto of dtoList) {
-                str +=`<li class="list-group-item d-flex justify-content-between commentItem">
+                str +=`<li class=" d-flex justify-content-between commentItem">
                     <div>
-                        <span class="col-2">${dto.id}</span>
+                        <p class="col-2">${dto.nickName}</p>
                         <span class="col-6" data-id="${dto.id}">${dto.content}</span>
-                        <span class="col-2">${dto.nickName}</span>
                     </div>
                     <div>
                         <button type="button" class="btn btn-danger removeBtn" data-id="${dto.id}">Remove</button>
                     </div>
-                </li>`;
+                </li>
+                <hr>`;
             }
         }
         commentList.innerHTML = str;
@@ -147,13 +174,11 @@
     document.querySelector(".addCommentBtn").addEventListener("click", function () {
         const commentObj = {
             pid: pid,
-            content: document.querySelector(".commentContent").value,
-            nickName: document.querySelector(".nickname").value
+            content: document.querySelector(".commentContent").value
         };
         addComment(commentObj).then(response => {
             alert(response.id);
             document.querySelector(".commentContent").value = '';
-            document.querySelector(".nickname").value = '';
             printComments();
         }).catch(error => {
             console.error(error);
