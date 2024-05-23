@@ -40,11 +40,10 @@ public class TodoController {
 
         Map<String, List<TodoDTO>> sortedTodoCategory = new LinkedHashMap<>();
         for (String category : categoryOrder) {
-            if (todoCategory.containsKey(category)) {
-                sortedTodoCategory.put(category, todoCategory.get(category));
-            }
+            sortedTodoCategory.put(category, todoCategory.getOrDefault(category, List.of()));
         }
         model.addAttribute("todoCategory", sortedTodoCategory);
+        model.addAttribute("categoryOrder", categoryOrder);
     }
 
     @PostMapping("/register")
