@@ -7,6 +7,9 @@
 <head>
     <title>Board Read</title>
     <style>
+        .name{
+            font-weight: bold;
+        }
         .modify-button{
             margin: 0 auto;
             width: 50%;
@@ -122,9 +125,9 @@
 
         if(dtoList && dtoList.length > 0) {
             for (const dto of dtoList) {
-                str +=`<li class=" d-flex justify-content-between commentItem">
+                str +=`<li class="d-flex justify-content-between commentItem">
                     <div>
-                        <p class="col-2">${dto.nickName}</p>
+                        <p class="col-2 name">[[${#authentication.principal.nickName}]]</p>
                         <span class="col-6" data-id="${dto.id}">${dto.content}</span>
                     </div>
                     <div>

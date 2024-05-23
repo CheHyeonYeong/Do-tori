@@ -2,58 +2,54 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{layout/basic.html}">
+<style>
+    .name{
+        font-weight: bold;
+    }
+    .float-end{
+        margin: 0 auto;
+        width: 50%;
+    }
 
+</style>
 <div layout:fragment="content">
     <div class="row mt-3">
         <div class="col">
-            <div class="card">
-                <div class="card-header">
-                </div>
-                <div class="card-body">
-                    <form th:action="@{/post/modify}" method="post" id="f1" enctype="multipart/form-data">
-
-                    <div class="input-group mb-3">
-                            <span class="input-group-text">Bno</span>
-                            <input type="text" class="form-control" name = "pid" th:value="${dto.pid}" readonly>
-                            <!--/* th는 el을 사용할 때, html에 직접적으로 할 때 [[${}]]이렇게 */-->
-                        </div>
+            <form th:action="@{/post/modify}" method="post" id="f1" enctype="multipart/form-data">
+                <div class="card">
+                    <div class="card-header">
                         <div class="input-group mb-3">
-                            <span class="input-group-text">Contnet</span>
-                            <textarea class="form-control col-sm-5"  name = "content"  rows="5" /> [[${dto.content}]]</textarea>
+                            <div class="name">[[${#authentication.principal.nickName}]] </div>
                         </div>
+                    </div>
+                    <div class="card-body">
                         <div class="input-group mb-3">
-                            <span class="input-group-text">Writer</span>
-                            <input type="text" class="form-control"  name = "nickName"  th:value="${dto.nickName}" readonly />
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">RegDate</span>
-                            <input type="text" class="form-control"  th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd  HH:mm:ss')}" readonly />
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">ModDate</span>
-                            <input type="text" class="form-control"   th:value="${#temporals.format(dto.modDate, 'yyyy-MM-dd  HH:mm:ss')}" readonly />
-                        </div>
-
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">Image</span>
-                            <input type="file" class="form-control" name="file">
-                        </div>
-                        <div class="input-group mb-3" th:if="${dto.thumbnail}">
-                            <span class="input-group-text">Current Image</span>
-                            <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" alt="Thumbnail" width="200">
-                            <button type="button" class="btn btn-danger removeImageBtn">Remove Image</button>
-                        </div>
-
-                        <div class="my-4">
-                            <div class="float-end"  th:with="link = ${pageRequestDTO.getLink()}">
-                                <button type="button" class="btn btn-primary listBtn">List</button>
-                                <button type="button" class="btn btn-secondary modBtn">Modify</button>
-                                <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                            <div class="input-group mb-3">
+                                <textarea class="col-sm-5" rows="20" style="width: 100%; resize: none; border: none" name="content">[[${dto.content}]]</textarea>
                             </div>
                         </div>
-                    </form>
-                </div><!-- cardbody end-->
-            </div> <!--end card-->
+
+                        <div th:if="${dto.thumbnail != null}">
+                                <span class="input-group-text" style="width: 20%; display: inline">첨부된 사진</span>
+                                <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" alt="Thumbnail" width="40">
+                                <button type="button" class="btn btn-danger removeImageBtn">X</button>
+                        </div>
+                        <div th:unless="${dto.thumbnail != null}">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Image</span>
+                                <input type="file" class="form-control" name="file">
+                            </div>
+                        </div>
+                    </div><!-- cardbody end-->
+                </div> <!--end card-->
+                <div class="my-4">
+                    <div class="float-end"  th:with="link = ${pageRequestDTO.getLink()}" style="margin: 0 auto; width: 37%">
+                        <button type="button" class="btn btn-primary listBtn">List</button>
+                        <button type="button" class="btn btn-secondary modBtn">Modify</button>
+                        <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                    </div>
+                </div>
+            </form>
         </div><!--end col-->
     </div><!--end row-->
 </div><!--content end-->
@@ -112,6 +108,23 @@
         const imageElement = document.querySelector(".input-group img");
         imageElement.parentElement.remove();
     },false);
+
+    const imgInsert = document.querySelector('.img-insert')
+
+    function insertButton(){
+        let thumbnail= [[${dto.thumbnail}]];
+
+        if (thumbnail != null){
+            imgInsert.innerHTML = `<div class="input-group mb-3 " th:if="${dto.thumbnail}">
+                                <span class="input-group-text">첨부된 사진</span>
+                                <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" alt="Thumbnail" width="50">
+                                <button type="button" class="btn btn-danger removeImageBtn">X</button>
+                            </div>`;
+        } else {
+            imgInsert.innerHTML = `<span class="input-group-text ">Image</span>
+                            <input type="file" class="form-control " name="file">`
+        }
+    }
 
 </script>
 

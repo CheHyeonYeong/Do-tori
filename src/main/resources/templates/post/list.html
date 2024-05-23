@@ -59,7 +59,7 @@
     <!-- Floating Button -->
     <button type="button" class="btn btn-primary btn-lg rounded-circle floating-btn"
             style="position: fixed; bottom: 20px; right:5%"
-            onclick="redirectToNewPostPage()">
+            onclick="location.href = '/post/register'">
         +
     </button>
 
@@ -99,7 +99,7 @@
 
     function redirectToNewPostPage() {
         // 새 게시글 작성 페이지로 이동
-        window.location.href = '/post/register';
+        window.location.href = '';
     }
 
     document.querySelector('.pagination').addEventListener("click", function (e){

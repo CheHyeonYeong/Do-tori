@@ -7,35 +7,30 @@
 <div layout:fragment="content">
     <div class="row mt-3">
         <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <h1>Post Register</h1>
+            <form action="/post/register" method="post" enctype="multipart/form-data">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="input-group mb-3">
+                            <div style="font-weight: bold">[[${#authentication.principal.nickName}]] </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <textarea class="col-sm-5" rows="20" style="width: 100%; resize: none; border: none" name="content"></textarea>
+                        </div>
+                    </div><!-- cardbody end-->
+                </div> <!--end card-->
+                <div class="insert input-group mb-3" style="margin: 0 auto; width: 50%">
+                    <span class="input-group-text">Image</span>
+                    <input type="file" name="file" class="form-control">
                 </div>
-                <div class="card-body">
-                    <form action="/post/register" method="post" enctype="multipart/form-data">
-
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">Content</span>
-                            <textarea class="form-control col-sm-5" rows="5" name="content"></textarea>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">Writer</span>
-                            <input type="text" name="nickName"
-                                   class="form-control" placeholder="nickName">
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">Image</span>
-                            <input type="file" name="file" class="form-control">
-                        </div>
-                        <div class="my-4">
-                            <div class="float-end">
-                                <button type="submit" class="btn btn-danger">Submit</button>
-                                <button type="reset" class="btn btn-secondary">Reset</button>
-                            </div>
-                        </div>
-                    </form>
-                </div><!-- cardbody end-->
-            </div> <!--end card-->
+                <div class="insert my-4" style="margin: 0 auto; width: 50%">
+                    <div class="float-end">
+                        <button type="submit" class="btn btn-danger">Submit</button>
+                        <button type="reset" class="btn btn-secondary">Reset</button>
+                    </div>
+                </div>
+            </form>
         </div><!--end col-->
     </div><!--end row-->
 </div><!--content end-->
