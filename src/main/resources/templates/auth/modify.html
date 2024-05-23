@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/basic.html}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,36 +12,230 @@
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
+
+    <style>
+        .content_layout {
+            display: flex;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .aside {
+            width: 20%;
+            height: 100vh;
+            background-color: #CCBFB2;
+        }
+
+        .auth, .auth_modify, .auth_logout {
+            width: 95%;
+            margin: 16px auto 0;
+            padding: 24px 25px;
+            border-radius: 20px;
+            background-color: #F4F4F4;
+            display: flex;
+            align-items: center;
+        }
+
+        .auth, .auth_logout {
+            position: relative;
+        }
+        .aside_menu_film {
+            background-color: #F0ECE8;
+            opacity: 0.7;
+            position: absolute;
+            z-index: 100;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 20px;
+
+            transition: 0.5s;
+        }
+        .auth:hover .aside_menu_film {
+            opacity: 0;
+            z-index: -10;
+        }
+        .auth_logout:hover .aside_menu_film {
+            opacity: 0;
+            z-index: -10;
+        }
+
+        .auth {
+            justify-content: space-between;
+            padding: 22px 25px;
+        }
+
+        .auth_aside_txt {
+            margin-left: 16px;
+
+            cursor: pointer;
+        }
+
+        .icon_box {
+            display: flex;
+            align-items: center;
+        }
+
+        .main_info {
+            width: 80%;
+        }
+        .main_info_container {
+            width: 44%;
+            margin: 0 auto;
+        }
+
+        .title {
+            display: inline-block;
+            padding: 16px 24px;
+            background-color: #f5f0ea;
+            border: 1px solid #000;
+            border-radius: 20px;
+            text-align: center;
+
+            margin-bottom: 56px;
+        }
+
+        .mb {
+            display: flex;
+            margin-bottom: 24px;
+        }
+        .input-group-txt {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20%;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            margin-right: 20px;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #000;
+            border-bottom: 1px solid #000;
+        }
+
+        .logout, .info {
+            border: none;
+        }
+
+        .form-con {
+            width: 80%;
+            padding: 0 8px;
+            background-color: #DFDFDF;
+            border: 0;
+            border-radius: 10px;
+        }
+
+        .btn_box {
+            display: flex;
+            justify-content: right;
+            margin-top: 40px;
+        }
+        .btn {
+            margin-left: 18px;
+            padding: 12px 60px;
+            border: none;
+        }
+        .closeBtn {
+            background-color: #d9d9d9;
+            color: #000;
+        }
+        .closeBtn:hover {
+            background-color: #adadad;
+        }
+        .modifyBtn {
+            background-color: #ccbfb2;
+            color: #000;
+        }
+        .modifyBtn:hover {
+            background-color: #928980;
+        }
+    </style>
+
 </head>
 
-<div layout:fragment="content">
-    <br>
-    <h1 class="title">User Modify</h1>
-    <hr>
-    <form th:action="@{/auth/modify}" method="post" id="f1">
-        <div class="input-group mb-3">
-            <span class="input-group-text">아이디</span>
-            <input type="text" th:value="${auth.id}" name="id" class="form-control" readonly>
+<div layout:fragment="content" class="content_layout">
+
+    <aside class="aside">
+        <div class="auth">
+            <span class="aside_menu_film"></span>
+            <div class="icon_box">
+                <svg width="31" height="31" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="28" cy="27.5" r="27" stroke="black"></circle>
+                    <circle cx="27.5" cy="19" r="6.5" stroke="black"></circle>
+                    <path d="M28.5 54.5H28.4738L28.4477 54.5027C23.8368 54.9881 19.3154 53.4102 15.9207 51.6202C14.2281 50.7277 12.8296 49.7899 11.8582 49.048C11.3719 48.6765 10.9976 48.358 10.7493 48.1226C10.6338 48.013 10.5521 47.9276 10.5005 47.8673C10.5723 37.9577 18.6776 29.5 28 29.5C37.3258 29.5 45.4337 37.964 45.4996 47.8784C45.4589 47.9289 45.395 48.0001 45.3039 48.0916C45.097 48.2993 44.7809 48.581 44.3617 48.9125C43.5249 49.5743 42.2992 50.4177 40.7624 51.2475C37.6863 52.9086 33.3934 54.5 28.5 54.5Z" stroke="black"></path>
+                </svg>
+                <form action="/auth/info" method="post">
+                    <button type="submit" class="auth_aside_txt info">[[${#authentication.principal.id}]]</button>
+                </form>
+            </div>
         </div>
 
-        <div class="input-group mb-3">
-            <span class="input-group-text">패스워드</span>
-            <input type="password" name="password" th:value="${auth.password}" class="form-control">
+        <div class="auth_modify">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="25">
+                <g id="_01_align_center" data-name="01 align center">
+                    <path d="M22.94,1.06a3.626,3.626,0,0,0-5.124,0L0,18.876V24H5.124L22.94,6.184A3.627,3.627,0,0,0,22.94,1.06ZM4.3,22H2V19.7L15.31,6.4l2.3,2.3ZM21.526,4.77,19.019,7.277l-2.295-2.3L19.23,2.474a1.624,1.624,0,0,1,2.3,2.3Z"/>
+                </g>
+            </svg>
+            <span class="auth_aside_txt">
+                회원 정보 수정
+            </span>
         </div>
 
-        <div class="input-group mb-3">
-            <span class="input-group-text">닉네임</span>
-            <input type="text" name="nickName" th:value="${auth.nickName}" class="form-control">
+        <div class="auth_logout">
+            <span class="aside_menu_film"></span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="25">
+                <g id="_01_align_center" data-name="01 align center">
+                    <path d="M15,24H9V20.487a9,9,0,0,1-2.849-1.646L3.107,20.6l-3-5.2L3.15,13.645a9.1,9.1,0,0,1,0-3.29L.107,8.6l3-5.2L6.151,5.159A9,9,0,0,1,9,3.513V0h6V3.513a9,9,0,0,1,2.849,1.646L20.893,3.4l3,5.2L20.85,10.355a9.1,9.1,0,0,1,0,3.29L23.893,15.4l-3,5.2-3.044-1.758A9,9,0,0,1,15,20.487Zm-4-2h2V18.973l.751-.194A6.984,6.984,0,0,0,16.994,16.9l.543-.553,2.623,1.515,1-1.732-2.62-1.513.206-.746a7.048,7.048,0,0,0,0-3.75l-.206-.746,2.62-1.513-1-1.732L17.537,7.649,16.994,7.1a6.984,6.984,0,0,0-3.243-1.875L13,5.027V2H11V5.027l-.751.194A6.984,6.984,0,0,0,7.006,7.1l-.543.553L3.84,6.134l-1,1.732L5.46,9.379l-.206.746a7.048,7.048,0,0,0,0,3.75l.206.746L2.84,16.134l1,1.732,2.623-1.515.543.553a6.984,6.984,0,0,0,3.243,1.875l.751.194Zm1-6a4,4,0,1,1,4-4A4,4,0,0,1,12,16Zm0-6a2,2,0,1,0,2,2A2,2,0,0,0,12,10Z"/>
+                </g>
+            </svg>
+            <form action="/auth/logout" method="post">
+                <button type="submit" class="auth_aside_txt logout">
+                    로그아웃
+                </button>
+            </form>
         </div>
+    </aside>
 
-        <div class="input-group mb-3">
-            <span class="input-group-text">이메일</span>
-            <input type="email" name="email" th:value="${auth.email}" class="form-control">
+    <div class="main_info">
+        <div class="main_info_container">
+            <h4 class="title">회원 정보 수정</h4>
+
+            <form th:action="@{/auth/modify}" method="post" id="f1">
+                <div class="mb">
+                    <span class="input-group-txt">아이디</span>
+                    <input type="text" th:value="${#authentication.principal.id}" name="id" class="form-con" readonly>
+                </div>
+
+                <div class="mb">
+                    <span class="input-group-txt">비밀번호</span>
+                    <input type="password" name="password" id="password" class="form-con">
+                </div>
+
+                <div class="mb">
+                    <span class="input-group-txt">비밀번호 확인</span>
+                    <input type="password" id="passwordConfirm" class="form-con">
+                </div>
+
+                <div class="mb">
+                    <span class="input-group-txt">닉네임</span>
+                    <input type="text" th:value="${#authentication.principal.nickName}" name="nickName" class="form-con">
+                </div>
+
+                <div class="mb">
+                    <span class="input-group-txt">이메일</span>
+                    <input type="email" th:value="${#authentication.principal.email}" name="email" class="form-con" readonly>
+                </div>
+
+                <div class="btn_box">
+                    <input type="button" value="취소" class="btn btn-primary closeBtn">
+                    <input type="submit" value="수정" class="btn btn-primary modifyBtn">
+                    <input type="button" value="탈퇴" class="btn btn-danger removeBtn">
+                </div>
+            </form>
         </div>
-
-        <input type="submit" value="회원정보 수정" class="btn btn-primary">
-        <input type="button" value="회원탈퇴" class="btn btn-danger removeBtn">
-    </form>
+    </div>
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
@@ -56,5 +249,41 @@
         formObj.method = 'post'
         formObj.submit()
     }, false)
+
+    document.querySelector(".closeBtn").addEventListener("click", function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        formObj.reset()
+        self.location = `/auth/info`
+
+    }, false)
+
+    document.querySelector(".modifyBtn").addEventListener("click", function (e) {
+        e.preventDefault()
+
+        const passwordInput = document.getElementById('password');
+        const passwordConfirmInput = document.getElementById('passwordConfirm');
+        const password = passwordInput.value;
+        const passwordConfirm = passwordConfirmInput.value;
+
+        // 비밀번호 유효성 검사
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            alert("비밀번호는 최소 8자 이상이어야 하며, 영문 대/소문자, 숫자, 특수문자를 모두 포함해야 합니다.");
+            passwordInput.focus();
+            return;
+        }
+        // 비밀번호 일치 여부 검사
+        if (password !== passwordConfirm) {
+            alert("비밀번호가 일치하지 않습니다.");
+            passwordConfirmInput.focus();
+            return;
+        }
+
+        document.getElementById('f1').submit();
+
+    }, false)
+
 </script>
 </html>

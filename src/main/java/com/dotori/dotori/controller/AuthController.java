@@ -6,6 +6,7 @@ import com.dotori.dotori.entity.Auth;
 import com.dotori.dotori.repository.AuthRepository;
 import com.dotori.dotori.service.AuthService;
 import com.dotori.dotori.service.OAuth2Service;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,10 +19,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.Authentication;
 
@@ -36,6 +34,7 @@ public class AuthController {
 
     private final OAuth2Service oAuth2Service;
     private final AuthService authService;
+    private final PasswordEncoder passwordEncoder;
 
     // 로그인
     @GetMapping("/login")
@@ -46,8 +45,6 @@ public class AuthController {
             log.info("user logout..........");
         }
     }
-
-
 
     @RequestMapping("/oauth")
     public class UserController {
@@ -80,7 +77,6 @@ public class AuthController {
             return "redirect:/auth/join";
         }
 
-
         try {
             authService.join(authDTO);
 
@@ -99,7 +95,7 @@ public class AuthController {
         return "redirect:/auth/login";
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("principal.username == #authSecurityDTO.id")
     @GetMapping("/info")
     public String authInfo(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Model model) {
         log.info("info coming");
@@ -107,7 +103,12 @@ public class AuthController {
         return "auth/info";
     }
 
-    //    @PreAuthorize("principal.username == #authDTO.id")        //이런 인증 절차가 아무것도 없어요ㅠㅠ
+    @PostMapping("/info")
+    public String PostauthInfo(@Valid AuthDTO authDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        return "redirect:/auth/info";
+    }
+
+    @PreAuthorize("principal.username == #authSecurityDTO.id")        //이런 인증 절차가 아무것도 없어요ㅠㅠ
     @GetMapping("/modify")
     public String updateGET(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Model model) {
         model.addAttribute("auth", authSecurityDTO);

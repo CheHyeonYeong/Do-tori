@@ -34,11 +34,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // 사용자 정보가 없는 경우 예외 처리
         if (result.isEmpty()) {
-            throw new UsernameNotFoundException("username not found....");
+            throw new UsernameNotFoundException("username not found : " + username);
         }
-        if(result.isEmpty()){
-            throw new UsernameNotFoundException(username);
-        }
+
         Auth auth = result.get();
         AuthSecurityDTO authSecurityDTO;
         authSecurityDTO = new AuthSecurityDTO(

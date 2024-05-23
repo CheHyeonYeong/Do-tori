@@ -96,7 +96,7 @@
     <div class="form-section">
         <div class="card align-self-center">
             <div class="card-body">
-                <form id="registerForm" action="/auth/login" method="post">
+                <form id="registerForm" th:action="@{/auth/login}" method="post">
                     <div class="input-group mb-3">
                         <span class="input-group-text">아이디</span>
                         <input type="text" name="username" class="form-control" placeholder="USER ID">
