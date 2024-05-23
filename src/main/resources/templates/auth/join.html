@@ -1,52 +1,132 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/basic.html}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Simple Sideber - Login</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
     <title>Join Page</title>
+    <style>
+        body {
+            background-image: url("/assets/joinBg.png");
+            background-repeat: no-repeat;
+        }
+        .cont {
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+        }
+        .main {
+            width: 85%;
+            display: flex;
+            align-items: center;
+            margin: 0 auto;
+        }
+        .logo {
+            width: 50%;
+        }
+        .join_container {
+            width: 40%;
+            margin-top: 100px;
+        }
+        #registerForm {
+            width: 100%;
+        }
+
+        .mb {
+            display: flex;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+        .input-group-txt {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20%;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            margin-right: 20px;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #000;
+            border-bottom: 1px solid #000;
+        }
+
+        .form-con {
+            width: 60%;
+            padding: 0 8px;
+            background-color: #fff;
+            border: 0;
+            border-radius: 10px;
+        }
+
+        .btn_box {
+            width: 85%;
+            display: flex;
+            justify-content: right;
+            margin-top: 24px;
+        }
+        .btn {
+            background-color: #fff;
+            color: #000;
+            padding: 12px 20px;
+            border: none;
+        }
+        .btn:hover {
+            background-color: #9d9d9d;
+        }
+
+    </style>
 </head>
 
-<div layout:fragment="content">
-    <div class="row mt-3">
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    JOIN
+<div layout:fragment="content" class="cont">
+    <div class="main">
+        <div class="logo">
+            <img th:src="@{/assets/dotori_image.png}" alt="도토리 이미지">
+        </div>
+
+        <div class="join_container">
+            <form id="registerForm" action="/auth/join" method="post">
+                <div class="mb">
+                    <span class="input-group-txt">아이디</span>
+                    <input type="text" name="id" class="form-con">
                 </div>
-                <div class="card-body">
-                    <form id="registerForm" action="/auth/join" method="post">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">ID</span>
-                            <input type="text" name="id" class="form-control">
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">PW</span>
-                            <input type="password" name="password" id="password" class="form-control">
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">PW Confirm</span>
-                            <input type="password" id="passwordConfirm" class="form-control">
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">NICKNAME</span>
-                            <input type="text" name="nickName" class="form-control">
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">EMAIL</span>
-                            <input type="email" name="email" class="form-control">
-                        </div>
-                        <div class="my-4">
-                            <div class="float-end">
-                                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
-                                <button type="reset" class="btn btn-secondary">Reset</button>
-                            </div>
-                        </div>
-                    </form>
+
+                <div class="mb">
+                    <span class="input-group-txt">비밀번호</span>
+                    <input type="password" name="password" id="password" class="form-con">
                 </div>
-            </div>
+
+                <div class="mb">
+                    <span class="input-group-txt">비밀번호 확인</span>
+                    <input type="password" id="passwordConfirm" class="form-con">
+                </div>
+
+                <div class="mb">
+                    <span class="input-group-txt">닉네임</span>
+                    <input type="text" name="nickName" class="form-con">
+                </div>
+
+                <div class="mb">
+                    <span class="input-group-txt">이메일</span>
+                    <input type="email" name="email" class="form-con">
+                </div>
+
+                <div class="btn_box">
+                    <button type="submit" class="btn btn-primary submitBtn">가입하기</button>
+                </div>
+            </form>
         </div>
     </div>
+
 </div>
 
 <script layout:fragment="script" th:inline="javascript">

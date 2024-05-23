@@ -62,8 +62,8 @@ public class CustomSecurityConfig {
 
         // 로그아웃 기능
         http.logout(logout -> logout
-                .logoutUrl("/auth/login?logout") // 로그아웃 요청 URL
-                .logoutSuccessUrl("/auth/login") // 로그아웃 성공 후 리다이렉트 URL
+                .logoutUrl("/auth/logout") // 로그아웃 요청 URL
+                .logoutSuccessUrl("/auth/login?logout") // 로그아웃 성공 후 리다이렉트 URL
                 .invalidateHttpSession(true) // 로그아웃 시 세션 무효화
                 .deleteCookies("JSESSIONID") // 로그아웃 시 JSESSIONID 쿠키 삭제
         );
@@ -72,12 +72,13 @@ public class CustomSecurityConfig {
         http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
 
         //remember-me 설정
-        http.rememberMe(httpSecurityRememberMeConfigurer -> {
-            httpSecurityRememberMeConfigurer.key("123456789")           // DB에 저장해서 작업할 수 있어야 remember 되기 때문이다.
-                    .tokenRepository(persistentTokenRepository())
-                    .userDetailsService(userDetailsService)
-                    .tokenValiditySeconds(60*60);     // 30일 : 60*60*24*30, 1시간 : 60*60
-        });
+//        http.rememberMe(httpSecurityRememberMeConfigurer -> {
+//            httpSecurityRememberMeConfigurer.key("123456789")           // DB에 저장해서 작업할 수 있어야 remember 되기 때문이다.
+//                    .tokenRepository(persistentTokenRepository())
+//                    .userDetailsService(userDetailsService)
+//                    .tokenValiditySeconds(60*60);     // 30일 : 60*60*24*30, 1시간 : 60*60
+//        });
+
 
         //exception Handler 설정
         http.exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {
@@ -103,12 +104,12 @@ public class CustomSecurityConfig {
         return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
-        JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
-        repo.setDataSource(dataSource);         // 통신을 위함
-        return repo;
-    }
+//    @Bean
+//    public PersistentTokenRepository persistentTokenRepository() {
+//        JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
+//        repo.setDataSource(dataSource);         // 통신을 위함
+//        return repo;
+//    }
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
