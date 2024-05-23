@@ -50,7 +50,7 @@ public class TodoServiceImpl implements TodoService{
     public void updateTodo(TodoDTO todoDTO) {
         Optional<Todo> result = todoRepository.findById(todoDTO.getId());
         Todo todo = result.orElseThrow();
-        todo.changeTodo(todoDTO.getCategory(), todoDTO.getContent(), todoDTO.isDone());
+        todo.changeTodo(todoDTO.getCategory(), todoDTO.getContent(), todoDTO.isDone(), todoDTO.getTodoDate());
         todoRepository.save(todo);
 
         log.info("Todo Service : Todo updated " + todo, " TodoDTO : "+todoDTO);

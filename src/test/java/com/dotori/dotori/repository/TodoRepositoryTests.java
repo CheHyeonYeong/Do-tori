@@ -61,8 +61,9 @@ public class TodoRepositoryTests {
         int id = 1;
         Optional<Todo> result = todoRepository.findById(id);
         Todo todo = result.orElseThrow();
+        LocalDate updateTodoDate = LocalDate.now();
 
-        todo.changeTodo("update category", "update content", true);
+        todo.changeTodo("update category", "update content", true, updateTodoDate);
         todoRepository.save(todo);
     }
 

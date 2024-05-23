@@ -40,10 +40,11 @@ public class Todo {
     @Column(name = "todoDate")
     private LocalDate todoDate = LocalDate.now();
 
-    public void changeTodo(String category, String content, boolean done) {
+    public void changeTodo(String category, String content, boolean done, LocalDate todoDate) {
         this.category = category;
         this.content = content;
         this.done = done;
+        this.todoDate = todoDate;
     }
 
 }
