@@ -4,9 +4,15 @@
 <head>
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet'/>
     <style>
+        body {
+            background-color: #F5F0EA;
+        }
+
         #calendar {
-            max-width: 900px;
-            margin: 40px auto;
+            padding: 15px;
+            border-radius: 5%;
+            background-color: #ffffff;
+            margin: 20px 20px 0px 50px;
         }
 
         .leftdiv {
@@ -20,6 +26,38 @@
             width: 45%;
             margin-left: 10px;
         }
+
+        /*일요일 글씨 색상*/
+        .fc-day-sun a {
+            color: #FF3131;
+        }
+
+        /*캘린더 색상*/
+        .fc-day-today {
+            background-color: #CCBFB2 !important;
+        }
+
+        .fc-day.selected {
+            background-color: #F5F0EA;
+        }
+
+        /* 툴바 버튼 색상 */
+        .fc-header-toolbar .fc-button {
+            background-color: #ffffff;
+            border-color: #ffffff;
+            color: #000000;
+        }
+
+        .dotori_img{
+            width: 30px;
+            height: 30px;"
+        }
+
+        /* .card-body{
+             margin-top: 10px;
+             margin-right: 5px;
+             margin-left: 50px;
+         }*/
     </style>
 </head>
 <body>
@@ -28,35 +66,11 @@
 
 
     <div class="container">
-        <!--        nav bar-->
-
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Navbar</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
-                        aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <div class="navbar-nav">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                        <a class="nav-link" href="#">Features</a>
-                        <a class="nav-link" href="#">Pricing</a>
-                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </div>
-
-
-    <div class="container">
         <div class="row">
             <div class="col-md-6 leftdiv">
                 <div class="p-3 border bg-light">
                     <div class="card">
-                        <div class="card-header">Calender</div>
+                        <div class="card-header"></div>
                         <div class="card-body">
                             <div id="calendar"></div>
                         </div>
@@ -67,65 +81,67 @@
             <div class="col-md-6 rightdiv">
                 <div class="p-3 border bg-light">
                     <div class="card">
-                        <div class="card-header">
-                            Todo insert Form
 
-                            <form action="/todo/register" method="post">
-                                <div>
-                                    <div>
-                                        <span>Category</span>
-                                        <select name="category" class="form-control">
-                                            <option value="No category">No category</option>
-                                            <option value="일정">일정</option>
-                                            <option value="공부">공부</option>
-                                            <option value="습관">습관</option>
-                                        </select>
-
-                                        <span>ID</span>
-                                        <input type="text" name="id" class="form-control">
-
-                                        <span>Aid</span>
-                                        <input type="text" name="aid" class="form-control">
-
-                                        <span>Content</span>
-                                        <input type="text" name="content" class="form-control">
-
-                                        <span>Done</span>
-                                        <input type="checkbox" name="done" class="form-control">
-
-                                        <span>Todo Date:</span>
-                                        <input type="date" name="todoDate" class="form-control">
-                                    </div>
-                                    <hr>
-                                    <button type="submit" class="btn btn-danger">Submit</button>
-                                </div>
-                            </form>
-
-
-                        </div>
                         <div class="card-body">
-                            <h5 class="card-title">Todo List</h5>
+                            <h2 class="card-title">Todo List</h2>
+                            <h3 id="selectedDate"></h3>
+                            <div class="card-header">
+
+                                <form action="/todo/register" method="post">
+                                    <div>
+                                        <div>
+                                            <select name="category" class="form-control">
+                                                <option value="No category">No category</option>
+                                                <option value="일정">일정</option>
+                                                <option value="공부">공부</option>
+                                                <option value="습관">습관</option>
+                                            </select>
+
+                                            <input type="hidden" name="aid"
+                                                   th:value="${#authentication.principal.aid}"
+                                                   class="form-control" readonly>
+
+                                            <span>Content</span>
+                                            <input type="text" name="content" class="form-control">
+
+
+                                            <input type="checkbox" name="done" class="form-control" style="display:none">
+
+                                            <span>Todo Date:</span>
+                                            <input type="date" name="todoDate" id="todoDateInput" class="form-control">
+
+
+                                            <button type="submit" class="btn btn-danger" style="background: none; border: none; padding: 0; cursor: pointer;">
+                                                <img th:src="@{/assets/plus.png}" alt="submit" style="width: 20px; height: 20px; ">
+                                            </button>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                </form>
+                            </div>
                             <div th:each="entry : ${todoCategory}">
-                                <h6 th:text="${entry.key}"></h6>
+                                <h4 th:text="${entry.key}"></h4>
                                 <form>
                                     <div th:each="todo, iter : ${entry.value}">
                                         <div th:id="'todo-' + ${iter.index}" class="todo-item">
-                                            <span>Category</span>
-                                            <select name="category" class="form-control">
-                                                <option value="No category" th:selected="${todo.category == 'No category'}">No category</option>
+
+                                            <select name="category" class="form-control" style="display:none">
+                                                <option value="No category"
+                                                        th:selected="${todo.category == 'No category'}">No category
+                                                </option>
                                                 <option value="공부" th:selected="${todo.category == '공부'}">공부</option>
                                                 <option value="일정" th:selected="${todo.category == '일정'}">일정</option>
                                                 <option value="습관" th:selected="${todo.category == '습관'}">습관</option>
                                             </select>
 
-                                            <span>ID</span>
-                                            <input type="text" name="id" class="form-control" th:value="${todo.id}"
+                                            <input type="hidden" name="id" class="form-control" th:value="${todo.id}"
                                                    readonly>
 
-                                            <span>Aid</span>
-                                            <input type="text" name="aid" class="form-control" th:value="${todo.aid}"
+                                            <input type="hidden" name="aid" class="form-control"
+                                                   th:value="${todo.aid}"
                                                    readonly>
 
+                                            <img th:src="@{/assets/dotori_image.png}" class="dotori_img">
                                             <span>Content</span>
                                             <input type="text" name="content" class="form-control"
                                                    th:value="${todo.content}" readonly>
@@ -136,10 +152,9 @@
 
                                             <span>Todo Date:</span>
                                             <input type="date" name="todoDate" class="form-control"
-                                                   th:value="${#temporals.format(todo.todoDate, 'yyyy-MM-dd')}"
-                                                   readonly>
+                                                   th:value="${#temporals.format(todo.todoDate, 'yyyy-MM-dd')}">
+                                            <hr>
                                         </div>
-                                        <hr>
                                     </div>
                                 </form>
                             </div>
@@ -149,115 +164,164 @@
             </div> <!-- row div end-->
         </div> <!-- container div end-->
     </div>
+</div>
 
-    <!--fullcalendar 라이브러리-->
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js'></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!--fullcalendar 라이브러리-->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js'></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-            console.log(calendarEl)
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        console.log(calendarEl)
 
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'ko', // 한국어 설정
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                events: [
-                    {
-                        title: '회의',
-                        start: '2024-05-15T10:30:00',
-                        end: '2024-05-15T12:30:00'
-                    },
-                    {
-                        title: '점심',
-                        start: '2024-05-16T12:00:00'
-                    },
-                    {
-                        title: '프로젝트 마감',
-                        start: '2024-05-18'
-                    }
-                ]
-            });
+        var calendar = new FullCalendar.Calendar(calendarEl, {
 
-            calendar.render();
+            headerToolbar: {
+                left: 'prev',
+                center: 'title',
+                right: 'today next'
+            },
+            //캘린더 요일 변경
+            dayHeaderContent: function (cell) {
+                var weekday = cell.date.getDay();
+                var koreanWeekdays = ['일', '월', '화', '수', '목', '금', '토'];
+                return koreanWeekdays[weekday];
+            },
+            dayCellContent: function (cell) {
+                var date = cell.date;
+                var day = date.getDate();
+                return day;
+            },
+            //캘린더 클릭하면 날짜 선택
+            dateClick: function (info) {
+                var selectedDate = info.dateStr;
+                filterTodoList(selectedDate);
+
+                // 이전에 선택된 날짜의 배경색 초기화
+                var selectedElements = document.querySelectorAll('.fc-day.selected');
+                selectedElements.forEach(function (element) {
+                    element.classList.remove('selected');
+                });
+
+                // 클릭한 날짜에 배경색 적용
+                info.dayEl.classList.add('selected');
+
+                // 선택한 날짜 표시
+                var dateParts = selectedDate.split('-');
+                var year = dateParts[0];
+                var month = parseInt(dateParts[1]);
+                var day = parseInt(dateParts[2]);
+
+                var weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+                var weekday = weekdays[new Date(selectedDate).getDay()];
+
+                var formattedDate = month + '월 ' + day + '일(' + weekday + ')';
+
+                var selectedDateElement = document.getElementById('selectedDate');
+                selectedDateElement.textContent = formattedDate;
+
+                // Todo insertForm의 TodoDate 입력 필드 업데이트
+                var todoDateInput = document.getElementById('todoDateInput');
+                todoDateInput.value = selectedDate;
+            }
         });
-    </script>
-    <script>
-        // 각 todo 항목에 대한 클릭 이벤트 처리
-        document.querySelectorAll('.todo-item').forEach(function (todoDiv) {
-            let isModifyMode = false;
 
-            todoDiv.addEventListener('click', function () {
-                const buttons = todoDiv.querySelectorAll('button');
+        calendar.render();
 
-                if (buttons.length === 0) {
-                    const modifyButton = document.createElement('button');
-                    modifyButton.textContent = 'Modify';
-                    modifyButton.addEventListener('click', function () {
-                        if (isModifyMode) {
-                            const form = document.createElement('form');
-                            form.action = '/todo/modify';
-                            form.method = 'post';
-                            const inputs = todoDiv.querySelectorAll('input');
-                            inputs.forEach(function (input) {
-                                const inputClone = input.cloneNode(true);
-                                form.appendChild(inputClone);
-                            });
+        // todo/list 처음 들어갈 때, 당일 날짜에 해당하는 목록 필터링
+        var today = new Date().toISOString().split('T')[0];
+        filterTodoList(today);
 
-                            // 카테고리 필드 추가
-                            const categorySelect = todoDiv.querySelector('select[name="category"]');
-                            const categorySelectClone = categorySelect.cloneNode(true);
-                            form.appendChild(categorySelectClone);
+    });
 
-                            document.body.appendChild(form);
-                            form.submit();
-                            document.body.removeChild(form); //폼 제출후 제거
-                        } else {
-                            const inputs = todoDiv.querySelectorAll('input');
-                            inputs.forEach(function (input) {
-                                input.removeAttribute('readonly');
-                            });
-                            isModifyMode = true;
-                        }
-                        const buttons = todoDiv.querySelectorAll('button');
-                        buttons.forEach(function (button) {
-                            button.remove();
-                        });
-                    });
 
-                    const deleteButton = document.createElement('button');
-                    deleteButton.textContent = 'Delete';
-                    deleteButton.addEventListener('click', function (event) {
-                        event.preventDefault();
+    // 날짜에 해당하는 리스트만 표시
+    function filterTodoList(selectedDate) {
+        var todoItems = document.querySelectorAll('.todo-item');
+        todoItems.forEach(function (item) {
+            var todoDate = item.querySelector('input[name="todoDate"]').value;
+            if (todoDate === selectedDate) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
 
+</script>
+<script>
+    // 각 todo 항목에 대한 클릭 이벤트 처리
+    document.querySelectorAll('.todo-item').forEach(function (todoDiv) {
+        let isModifyMode = false;
+
+        todoDiv.addEventListener('click', function () {
+            const buttons = todoDiv.querySelectorAll('button');
+
+            if (buttons.length === 0) {
+                const modifyButton = document.createElement('button');
+                modifyButton.textContent = '수정';
+                modifyButton.addEventListener('click', function () {
+                    if (isModifyMode) {
                         const form = document.createElement('form');
-                        form.action = '/todo/delete';
+                        form.action = '/todo/modify';
                         form.method = 'post';
-                        const idInput = todoDiv.querySelector('input[name="id"]');
-                        const idInputClone = idInput.cloneNode(true);
-                        form.appendChild(idInputClone);
+                        const inputs = todoDiv.querySelectorAll('input');
+                        inputs.forEach(function (input) {
+                            const inputClone = input.cloneNode(true);
+                            form.appendChild(inputClone);
+                        });
+
+                        // 카테고리 필드 추가
+                        const categorySelect = todoDiv.querySelector('select[name="category"]');
+                        const categorySelectClone = categorySelect.cloneNode(true);
+                        form.appendChild(categorySelectClone);
+
+
                         document.body.appendChild(form);
                         form.submit();
                         document.body.removeChild(form); //폼 제출후 제거
+                    } else {
+                        const inputs = todoDiv.querySelectorAll('input');
+                        inputs.forEach(function (input) {
+                            input.removeAttribute('readonly');
+                        });
+                        isModifyMode = true;
+                    }
+                    const buttons = todoDiv.querySelectorAll('button');
+                    buttons.forEach(function (button) {
+                        button.remove();
                     });
+                });
 
-                    todoDiv.appendChild(modifyButton);
-                    todoDiv.appendChild(deleteButton);
-                }
-            });
-        });
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = '삭제';
+                deleteButton.addEventListener('click', function (event) {
+                    event.preventDefault();
 
-        // 체크박스 상태 설정
-        document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
-            checkbox.checked = checkbox.value === 'true';
-            checkbox.setAttribute('readonly', 'readonly');
-        });
-    </script>
+                    const form = document.createElement('form');
+                    form.action = '/todo/delete';
+                    form.method = 'post';
+                    const idInput = todoDiv.querySelector('input[name="id"]');
+                    const idInputClone = idInput.cloneNode(true);
+                    form.appendChild(idInputClone);
+                    document.body.appendChild(form);
+                    form.submit();
+                    document.body.removeChild(form); //폼 제출후 제거
+                });
+
+                todoDiv.appendChild(modifyButton);
+                todoDiv.appendChild(deleteButton);
+            }
+        })
+    });
+
+    // 체크박스 상태 설정
+    document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+        checkbox.checked = checkbox.value === 'true';
+        checkbox.setAttribute('readonly', 'readonly');
+    });
+</script>
 </body>
 </html>

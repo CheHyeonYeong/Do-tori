@@ -6,12 +6,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,12 +27,24 @@ public class TodoController {
     private final TodoService todoService;
 
     // 전체 toodo를 보여주는 controller
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/list")
     public void index(Model model) {
         List<TodoDTO> todos = todoService.getAllTodo();
+
+        // 카테고리 순서대로 배열
+        List<String> categoryOrder = List.of("No category", "일정", "공부", "습관");
+
         Map<String, List<TodoDTO>> todoCategory = todos.stream()
                 .collect(Collectors.groupingBy(TodoDTO::getCategory));
-        model.addAttribute("todoCategory", todoCategory);
+
+        Map<String, List<TodoDTO>> sortedTodoCategory = new LinkedHashMap<>();
+        for (String category : categoryOrder) {
+            if (todoCategory.containsKey(category)) {
+                sortedTodoCategory.put(category, todoCategory.get(category));
+            }
+        }
+        model.addAttribute("todoCategory", sortedTodoCategory);
     }
 
     @PostMapping("/register")
