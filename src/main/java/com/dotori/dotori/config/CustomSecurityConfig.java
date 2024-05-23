@@ -46,9 +46,9 @@ public class CustomSecurityConfig {
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
         log.info("configure -> Security FilterChain");
 
-        // 권한 설정
-        http.authorizeRequests(authorize -> authorize
-                .requestMatchers("/auth/**").permitAll()
+//         권한 설정
+        http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/auth/**").permitAll().requestMatchers("/assets/**").permitAll()
                 .anyRequest().authenticated()
         );
 
@@ -63,7 +63,7 @@ public class CustomSecurityConfig {
         // 로그아웃 기능
         http.logout(logout -> logout
                 .logoutUrl("/auth/login?logout") // 로그아웃 요청 URL
-                .logoutSuccessUrl("/") // 로그아웃 성공 후 리다이렉트 URL
+                .logoutSuccessUrl("/auth/login") // 로그아웃 성공 후 리다이렉트 URL
                 .invalidateHttpSession(true) // 로그아웃 시 세션 무효화
                 .deleteCookies("JSESSIONID") // 로그아웃 시 JSESSIONID 쿠키 삭제
         );
