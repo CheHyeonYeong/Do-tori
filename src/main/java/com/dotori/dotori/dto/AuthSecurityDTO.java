@@ -21,6 +21,7 @@ public class AuthSecurityDTO extends User implements OAuth2User {
     private String email;
     private boolean social;
 
+
     private Map<String, Object> props;
     public AuthSecurityDTO(int aid, String id, String password, String nickName, String email, boolean social, Collection<? extends GrantedAuthority> authorities) {
         super(id == null ? "" : id, password == null ? "" : password, authorities);

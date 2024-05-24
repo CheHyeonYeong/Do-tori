@@ -2,7 +2,10 @@ package com.dotori.dotori.service;
 
 
 import com.dotori.dotori.dto.AuthDTO;
+import com.dotori.dotori.dto.AuthSecurityDTO;
+import com.dotori.dotori.dto.PostDTO;
 import com.dotori.dotori.entity.Auth;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface AuthService {
     static class MidExistException extends Exception {
@@ -37,5 +40,5 @@ public interface AuthService {
     AuthDTO info(String id);
     void modify(AuthDTO authDTO);
     void remove(String id);
-
+    void updateProfileImage(String id, MultipartFile profileImage);
 }

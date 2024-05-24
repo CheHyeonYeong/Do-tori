@@ -46,7 +46,7 @@ public class CustomSecurityConfig {
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
         log.info("configure -> Security FilterChain");
 
-//         권한 설정
+        // 권한 설정
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/auth/**").permitAll().requestMatchers("/assets/**").permitAll()
                 .anyRequest().authenticated()
@@ -72,12 +72,12 @@ public class CustomSecurityConfig {
         http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
 
         //remember-me 설정
-//        http.rememberMe(httpSecurityRememberMeConfigurer -> {
-//            httpSecurityRememberMeConfigurer.key("123456789")           // DB에 저장해서 작업할 수 있어야 remember 되기 때문이다.
-//                    .tokenRepository(persistentTokenRepository())
-//                    .userDetailsService(userDetailsService)
-//                    .tokenValiditySeconds(60*60);     // 30일 : 60*60*24*30, 1시간 : 60*60
-//        });
+        http.rememberMe(httpSecurityRememberMeConfigurer -> {
+            httpSecurityRememberMeConfigurer.key("123456789")           // DB에 저장해서 작업할 수 있어야 remember 되기 때문이다.
+                    .tokenRepository(persistentTokenRepository())
+                    .userDetailsService(userDetailsService)
+                    .tokenValiditySeconds(60*60);     // 30일 : 60*60*24*30, 1시간 : 60*60
+        });
 
 
         //exception Handler 설정
@@ -104,12 +104,12 @@ public class CustomSecurityConfig {
         return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
-//    @Bean
-//    public PersistentTokenRepository persistentTokenRepository() {
-//        JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
-//        repo.setDataSource(dataSource);         // 통신을 위함
-//        return repo;
-//    }
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
+        repo.setDataSource(dataSource);         // 통신을 위함
+        return repo;
+    }
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {

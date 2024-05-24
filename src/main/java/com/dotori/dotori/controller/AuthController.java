@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,9 +21,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.Authentication;
 
+import java.io.File;
 import java.util.Map;
 
 
@@ -107,6 +110,27 @@ public class AuthController {
     public String PostauthInfo(@Valid AuthDTO authDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         return "redirect:/auth/info";
     }
+    
+    @PreAuthorize("principal.username == #authSecurityDTO.id")
+    @GetMapping("/modifyPwCheck")
+    public String modifyPwCheck(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Model model) {
+        log.info("modifyPwCheck coming...");
+        model.addAttribute("auth", authSecurityDTO);
+        return "auth/modifyPwCheck";
+    }
+
+    @PostMapping("/modifyPwCheck")
+    public String pwCheck(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, @RequestParam("password") String password, HttpSession session, RedirectAttributes redirectAttributes) {
+        AuthDTO authDTO = authService.info(authSecurityDTO.getId());
+
+        if(password != null && passwordEncoder.matches(password, authDTO.getPassword())){
+            return "redirect:/auth/modify";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "비밀번호가 일치하지 않습니다.");
+            return "redirect:/auth/modifyPwCheck";
+        }
+
+    }
 
     @PreAuthorize("principal.username == #authSecurityDTO.id")        //이런 인증 절차가 아무것도 없어요ㅠㅠ
     @GetMapping("/modify")
@@ -124,6 +148,22 @@ public class AuthController {
             return "redirect:/auth/modify";
         }
         authService.modify(authDTO);
+
+        // Authentication 객체 업데이트
+        // SecurityContextHolder로부터 현재 인증 정보(Authentication)를 가져옵니다.
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 현재 인증 정보에서 Principal을 가져와 AuthSecurityDTO로 캐스팅합니다.
+        AuthSecurityDTO updatedAuthSecurityDTO = (AuthSecurityDTO) authentication.getPrincipal();
+        // 수정된 정보(authDTO)에서 닉네임을 가져와 AuthSecurityDTO의 닉네임을 업데이트합니다.
+        updatedAuthSecurityDTO.setNickName(authDTO.getNickName());
+
+        // 업데이트된 AuthSecurityDTO, 기존 인증 정보의 자격 증명(Credentials)과 권한(Authorities)을 사용하여
+        // 새로운 UsernamePasswordAuthenticationToken을 생성합니다.
+        // 이렇게 생성된 새로운 인증 정보를 SecurityContextHolder에 설정함으로써 인증 정보를 업데이트합니다.
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(updatedAuthSecurityDTO, authentication.getCredentials(), authentication.getAuthorities())
+        );
+
         redirectAttributes.addAttribute("aid",authDTO.getAid());
         return "redirect:/auth/info";
     }

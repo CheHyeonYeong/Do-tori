@@ -1,7 +1,10 @@
 package com.dotori.dotori.service;
 
 import com.dotori.dotori.dto.AuthDTO;
+import com.dotori.dotori.dto.AuthSecurityDTO;
+import com.dotori.dotori.dto.PostDTO;
 import com.dotori.dotori.entity.Auth;
+import com.dotori.dotori.entity.Post;
 import com.dotori.dotori.repository.AuthRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.Optional;
 
 @Log4j2
@@ -73,4 +78,31 @@ public class AuthServiceImpl implements AuthService {
         authRepository.deleteById(id);
     }
 
+    @Override
+    public void updateProfileImage(String id, MultipartFile profileImage) {
+
+        Auth auth = authRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+        try{
+            auth.changeProfileImage(uploadImage(profileImage));
+        }
+        catch (Exception e){
+            log.info(e.getMessage());
+        }
+
+            authRepository.save(auth);
+
+    }
+
+    private String uploadImage(MultipartFile file) throws Exception {
+        String originalName = file.getOriginalFilename();
+        String fileName = System.currentTimeMillis() + "_" + originalName;
+        String savePath = System.getProperty("user.dir") + "/src/main/resources/static/images/";
+        if (!new File(savePath).exists()) {
+            new File(savePath).mkdir();
+        }
+        String filePath = savePath + fileName;
+        file.transferTo(new File(filePath));
+        return fileName;
+    }
 }

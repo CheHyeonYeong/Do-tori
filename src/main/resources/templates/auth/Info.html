@@ -14,6 +14,13 @@
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
 
     <style>
+        a {
+            color: #000;
+        }
+        a:hover {
+            color: #000;
+        }
+
         .content_layout {
             display: flex;
             align-items: center;
@@ -94,11 +101,14 @@
             border-radius: 20px;
             text-align: center;
         }
-        .svg_box {
+        .profile_box {
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 19px auto 80px;
+        }
+        .profile_box>img {
+            cursor: pointer;
         }
 
         .mb {
@@ -120,7 +130,7 @@
             border-bottom: 1px solid #000;
         }
 
-        .logout, .modify {
+        .logout {
             border: none;
         }
 
@@ -161,7 +171,7 @@
                 </svg>
                 <span class="auth_aside_txt">[[${#authentication.principal.id}]]</span>
             </div>
-            <a th:href="@{/todo/list.html}" class="todo_list_btn">&gt;TODOLIST</a>
+            <a th:href="@{/todo/list}" class="todo_list_btn">&gt;TODOLIST</a>
         </div>
 
         <div class="auth_modify">
@@ -171,11 +181,9 @@
                     <path d="M22.94,1.06a3.626,3.626,0,0,0-5.124,0L0,18.876V24H5.124L22.94,6.184A3.627,3.627,0,0,0,22.94,1.06ZM4.3,22H2V19.7L15.31,6.4l2.3,2.3ZM21.526,4.77,19.019,7.277l-2.295-2.3L19.23,2.474a1.624,1.624,0,0,1,2.3,2.3Z"/>
                 </g>
             </svg>
-            <form action="/auth/modify" method="post">
-                <button type="submit" class="auth_aside_txt modify">
-                    회원 정보 수정
-                </button>
-            </form>
+            <a th:href="@{/auth/modifyPwCheck}" class="text-decoration-none auth_aside_txt">
+                회원 정보 수정
+            </a>
         </div>
 
         <div class="auth_logout">
@@ -197,13 +205,16 @@
         <div class="main_info_container">
             <h4 class="title">MYPAGE</h4>
 
-            <div class="svg_box">
-                <svg width="178" height="178" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="28" cy="27.5" r="27" stroke="black"></circle>
-                    <circle cx="27.5" cy="19" r="6.5" stroke="black"></circle>
-                    <path d="M28.5 54.5H28.4738L28.4477 54.5027C23.8368 54.9881 19.3154 53.4102 15.9207 51.6202C14.2281 50.7277 12.8296 49.7899 11.8582 49.048C11.3719 48.6765 10.9976 48.358 10.7493 48.1226C10.6338 48.013 10.5521 47.9276 10.5005 47.8673C10.5723 37.9577 18.6776 29.5 28 29.5C37.3258 29.5 45.4337 37.964 45.4996 47.8784C45.4589 47.9289 45.395 48.0001 45.3039 48.0916C45.097 48.2993 44.7809 48.581 44.3617 48.9125C43.5249 49.5743 42.2992 50.4177 40.7624 51.2475C37.6863 52.9086 33.3934 54.5 28.5 54.5Z" stroke="black"></path>
-                </svg>
+            <div class="profile_box">
+                <input type="file" name="file" id="profileImageInput" class="form-control" style="display: none;">
+                <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" onclick="document.getElementById('profileImageInput').click();">
             </div>
+
+<!--            <form th:action="@{/profile-image}" method="post" enctype="multipart/form-data">-->
+<!--                <input type="hidden" name="id" th:value="${auth.id}"/>-->
+<!--                <input type="file" name="profileImage"/>-->
+<!--                <button type="submit">Update Profile Image</button>-->
+<!--            </form>-->
 
             <div class="info_box">
                 <div class="mb">
@@ -228,7 +239,7 @@
             </div>
 
             <div class="btn_box">
-                <a th:href="@{/auth/modify}" class="text-decoration-none">
+                <a th:href="@{/auth/modifyPwCheck}" class="text-decoration-none">
                     <input type="button" value="회원정보 수정" class="btn btn-primary">
                 </a>
             </div>

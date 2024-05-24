@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 
@@ -33,6 +34,8 @@ public class AuthDTO {
     private boolean social;
 
     private String provider;
+
+    private MultipartFile profileImage;
 
     // DTO 파일을 통하여 Social 로그인 시 Auth Entity를 생성하는 메소드
     public Auth toEntity() {
