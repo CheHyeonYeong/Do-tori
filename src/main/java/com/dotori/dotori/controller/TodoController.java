@@ -55,13 +55,17 @@ public class TodoController {
         }
         log.info("registered todo");
         todoService.addTodo(todo);
+
+        redirectAttributes.addAttribute("selectedDate", todo.getTodoDate().toString());
         return "redirect:/todo/list";
     }
 
     @PostMapping("/delete")
-    public String delete(@RequestParam("id") int id, RedirectAttributes redirectAttributes) {
+    public String delete(@RequestParam("id") int id, @RequestParam("todoDate") String todoDate, RedirectAttributes redirectAttributes) {
         log.info("Delete todo: " + id);
         todoService.deleteTodo(id);
+
+        redirectAttributes.addAttribute("selectedDate", todoDate);
         return "redirect:/todo/list";
 
     }
@@ -70,6 +74,8 @@ public class TodoController {
     public String modify(@Valid TodoDTO todoDTO, RedirectAttributes redirectAttributes) {
         log.info("Modify todo: " + todoDTO);
         todoService.updateTodo(todoDTO);
+
+        redirectAttributes.addAttribute("selectedDate", todoDTO.getTodoDate().toString());
         return "redirect:/todo/list";
     }
 
