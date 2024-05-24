@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<!--static에 있는 템플릿의 index.html을 복사... basic.html 로...
-    xmlns 을 설정하여 thymeleaf 태그와 레이아웃 사용할 수 있게 설정!
- -->
+
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -9,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Simple Sidebar - Start Bootstrap Template</title>
 
     <!-- thymeleaf 형식으로 경로 수정 => th:href = "@{경로}" -->
     <!-- Favicon-->
@@ -21,26 +18,6 @@
         .active-nav-link {
             font-weight: bold;
             color: black; /* 현재 페이지의 링크 색상을 빨간색으로 설정 */
-        }
-        .navbar-toggler{
-            display: inline-block;
-        }
-        .navbar-nav {
-            width: 100%;
-            justify-content: center;
-        }
-        .menu-bar{
-            border-bottom: 2px solid black; /* 선의 두께와 색상을 설정합니다. */
-            padding: 10px; /* 내부 여백 설정 */
-            margin-bottom: 20px; /* 외부 여백 설정 */
-        }
-        .nav-item {
-            flex: 1;
-            text-align: center;
-        }
-        .dropdown{
-            right: 0;
-            display: inline-block;
         }
     </style>
 </head>
@@ -131,30 +108,28 @@
     });
 
 
-        document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function() {
         var isLoggedIn = false;  // 로그인 상태 변수 (예시로 false로 설정)
 
         var navbarMenu = document.getElementById('mypage');
 
         if (isLoggedIn) {
-        navbarMenu.innerHTML = `
+            navbarMenu.innerHTML = `
             <a class="dropdown-item login" href="/auth/login">로그인</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item join" href="/auth/join">회원가입</a>
         `;
-    } else {
-        navbarMenu.innerHTML = `
+        } else {
+            navbarMenu.innerHTML = `
         <a class="dropdown-item login" href="/auth/info">MY PAGE</a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item join" href="/auth/login">로그아웃</a>
         `;
-    }
+        }
     });
 </script>
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Core theme JS-->
-<script th:src="@{/js/scripts.js}"></script>
 
 <!-- 스크립트 작업 내용을 추가할 때 사용!!! -->
 <th:block layout:fragment="script">
