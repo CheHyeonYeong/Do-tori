@@ -14,6 +14,13 @@
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
 
     <style>
+        a {
+            color: #000;
+        }
+        a:hover {
+            color: #000;
+        }
+
         .content_layout {
             display: flex;
             align-items: center;
@@ -66,6 +73,11 @@
             padding: 22px 25px;
         }
 
+        .icon_box {
+            display: flex;
+            align-items: center;
+        }
+
         .auth_aside_txt {
             margin-left: 16px;
 
@@ -109,6 +121,11 @@
             color: #000;
             border-bottom: 1px solid #000;
         }
+
+        .logout, .info {
+            border: none;
+        }
+
         .form-con {
             width: 80%;
             padding: 0 8px;
@@ -149,7 +166,9 @@
                     <circle cx="27.5" cy="19" r="6.5" stroke="black"></circle>
                     <path d="M28.5 54.5H28.4738L28.4477 54.5027C23.8368 54.9881 19.3154 53.4102 15.9207 51.6202C14.2281 50.7277 12.8296 49.7899 11.8582 49.048C11.3719 48.6765 10.9976 48.358 10.7493 48.1226C10.6338 48.013 10.5521 47.9276 10.5005 47.8673C10.5723 37.9577 18.6776 29.5 28 29.5C37.3258 29.5 45.4337 37.964 45.4996 47.8784C45.4589 47.9289 45.395 48.0001 45.3039 48.0916C45.097 48.2993 44.7809 48.581 44.3617 48.9125C43.5249 49.5743 42.2992 50.4177 40.7624 51.2475C37.6863 52.9086 33.3934 54.5 28.5 54.5Z" stroke="black"></path>
                 </svg>
-                <span class="auth_aside_txt">[[${#authentication.principal.id}]]</span>
+                <form action="/auth/info" method="post">
+                    <button type="submit" class="auth_aside_txt info">[[${#authentication.principal.id}]]</button>
+                </form>
             </div>
         </div>
 
@@ -171,9 +190,11 @@
                     <path d="M15,24H9V20.487a9,9,0,0,1-2.849-1.646L3.107,20.6l-3-5.2L3.15,13.645a9.1,9.1,0,0,1,0-3.29L.107,8.6l3-5.2L6.151,5.159A9,9,0,0,1,9,3.513V0h6V3.513a9,9,0,0,1,2.849,1.646L20.893,3.4l3,5.2L20.85,10.355a9.1,9.1,0,0,1,0,3.29L23.893,15.4l-3,5.2-3.044-1.758A9,9,0,0,1,15,20.487Zm-4-2h2V18.973l.751-.194A6.984,6.984,0,0,0,16.994,16.9l.543-.553,2.623,1.515,1-1.732-2.62-1.513.206-.746a7.048,7.048,0,0,0,0-3.75l-.206-.746,2.62-1.513-1-1.732L17.537,7.649,16.994,7.1a6.984,6.984,0,0,0-3.243-1.875L13,5.027V2H11V5.027l-.751.194A6.984,6.984,0,0,0,7.006,7.1l-.543.553L3.84,6.134l-1,1.732L5.46,9.379l-.206.746a7.048,7.048,0,0,0,0,3.75l.206.746L2.84,16.134l1,1.732,2.623-1.515.543.553a6.984,6.984,0,0,0,3.243,1.875l.751.194Zm1-6a4,4,0,1,1,4-4A4,4,0,0,1,12,16Zm0-6a2,2,0,1,0,2,2A2,2,0,0,0,12,10Z"/>
                 </g>
             </svg>
-            <span class="auth_aside_txt">
-                로그아웃
-            </span>
+            <form action="/auth/logout" method="post">
+                <button type="submit" class="auth_aside_txt logout">
+                    로그아웃
+                </button>
+            </form>
         </div>
     </aside>
 
@@ -187,11 +208,6 @@
                     <input type="password" name="password" id="password" class="form-con">
                 </div>
 
-                <div class="mb">
-                    <span class="input-group-txt">비밀번호 확인</span>
-                    <input type="password" id="passwordConfirm" class="form-con">
-                </div>
-
                 <div class="btn_box">
                     <input type="submit" value="확인" class="btn btn-primary checkBtn">
                 </div>
@@ -201,25 +217,9 @@
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
-
-    document.querySelector(".checkBtn").addEventListener("click", function (e) {
-        e.preventDefault()
-
-        const passwordInput = document.getElementById('password');
-        const passwordConfirmInput = document.getElementById('passwordConfirm');
-        const password = passwordInput.value;
-        const passwordConfirm = passwordConfirmInput.value;
-
-        // 비밀번호 일치 여부 검사
-        if (password !== passwordConfirm) {
-            alert("비밀번호가 일치하지 않습니다.");
-            passwordConfirmInput.focus();
-            return;
-        }
-
-        document.getElementById('f1').submit();
-
-    }, false)
-
+    const error = [[${error}]];
+     if (error) {
+         alert("비밀번호가 일치하지 않습니다.")
+     }
 </script>
 </html>

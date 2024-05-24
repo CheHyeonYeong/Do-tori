@@ -248,6 +248,8 @@
         formObj.action = `/auth/delete`
         formObj.method = 'post'
         formObj.submit()
+
+        alert("회원 탈퇴 완료. 감사했습니다.")
     }, false)
 
     document.querySelector(".closeBtn").addEventListener("click", function (e) {
@@ -282,6 +284,8 @@
         }
 
         document.getElementById('f1').submit();
+
+        alert("정보 수정 완료 !")
 
     }, false)
 
