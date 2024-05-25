@@ -10884,3 +10884,39 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
     display: inline-block;
   }
 }
+
+
+
+/*habbit tracket*/
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+}
+#contribution-graph {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.week {
+  display: flex;
+  flex-direction: column;
+}
+.day {
+  width: 15px;
+  height: 15px;
+  margin: 2px;
+}
+.q0 { background-color: #ebedf0; }
+.q1 { background-color: #CCBFB2; }
+.q2 { background-color: #725852; }
+
+.month-label {
+  width: 100%;
+  text-align: center;
+  margin: 5px 0;
+  font-weight: bold;
+}
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
