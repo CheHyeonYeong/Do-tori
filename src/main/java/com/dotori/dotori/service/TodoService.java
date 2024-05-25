@@ -13,4 +13,5 @@ public interface TodoService {
     TodoDTO readOneTodo(int id);
     void updateTodo(TodoDTO todoDTO);
     void deleteTodo(int id);
+    List<TodoDTO> getTodoByAid(int aid);
 }

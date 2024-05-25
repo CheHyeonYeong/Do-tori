@@ -60,4 +60,10 @@ public class TodoServiceImpl implements TodoService{
     public void deleteTodo(int id) {
         todoRepository.deleteById(id);
     }
+
+    @Override
+    public List<TodoDTO> getTodoByAid(int aid) {
+        List<Todo> todos = todoRepository.findByAid(aid);
+        return todos.stream().map(todo -> modelMapper.map(todo, TodoDTO.class)).collect(Collectors.toList());
+    }
 }
