@@ -10892,7 +10892,7 @@ body {
   font-family: Arial, sans-serif;
   background-color: #f7f7f7;
 }
-#contribution-graph {
+#contribution {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
@@ -10919,4 +10919,12 @@ body {
 .header {
   text-align: center;
   margin-bottom: 20px;
+}
+.date {
+  position: absolute;
+}
+.habbit-contents{
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
 }

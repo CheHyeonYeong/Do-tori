@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var formattedDate = month + '월 ' + day + '일(' + weekday + ')';
 
             var selectedDateElement = document.getElementById('selectedDate');
+            selectedDateElement.innerHTML = '';
             selectedDateElement.textContent = formattedDate;
 
             // Todo insertForm의 TodoDate 입력 필드 업데이트
@@ -56,6 +57,20 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     calendar.render();
+
+    // 그래프가 렌더링될 컨테이너 요소를 가져옴
+    const contribution = document.getElementById('contribution');
+
+    calendar.on('datesSet', function (info) {
+        var startDate = new Date(info.start);
+        startDate.setDate(startDate.getDate() + 15);
+        var currentMonth = startDate.getMonth();
+        var currentYear = startDate.getUTCFullYear();
+        var daysInMonth = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0).getDate();
+
+        // 그래프 렌더링 함수 호출
+        renderGraph(currentMonth, currentYear, daysInMonth);
+    });
 
     //해당날짜로 리다이렉트 추가
     var urlParams = new URLSearchParams(window.location.search);
@@ -68,6 +83,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var today = new Date().toISOString().split('T')[0];
         filterTodoList(today);
     }
+
+
 
 });
 
@@ -185,3 +202,149 @@ document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) 
     checkbox.checked = checkbox.hasAttribute('checked');
     checkbox.setAttribute('readonly', 'readonly');
 });
+
+
+// 주어진 년도와 월에 해당하는 일 수를 반환하는 함수입니다.
+function generateRandomData(startDate, daysInMonth) {
+    var data = [];
+    for (var i = 1; i <= daysInMonth; i++) {
+        var date = new Date(startDate.getFullYear(), startDate.getMonth(), i);
+        var count =  // 해당 done 개수
+        data.push({ date: date, count: count });
+    }
+    return data;
+}
+// 카테고리 별로 날짜마다 done의 개수를 세는 함수
+function countDoneByCategoryAndDate() {
+    var categoryDoneCountByDate = {
+        'No category': {},
+        '일정': {},
+        '공부': {},
+        '습관': {}
+    };
+
+    $('.todo-item').each(function() {
+        var category = $(this).find('select[name="category"]').val();
+        var todoDate = $(this).find('input[name="todoDate"]').val();
+        var isDone = $(this).find('input[name="done"]').prop('checked');
+
+        var formattedDate = todoDate.split('-').join('');
+
+        if (category in categoryDoneCountByDate && formattedDate) {
+            if (!(formattedDate in categoryDoneCountByDate[category])) {
+                categoryDoneCountByDate[category][formattedDate] = 0;
+            }
+            if (isDone) {
+                categoryDoneCountByDate[category][formattedDate]++;
+            }
+        }
+    });
+
+    return categoryDoneCountByDate;
+}
+
+
+function findXPositionOfClass(specialClass) {
+    let elements = document.querySelectorAll(`.${specialClass}`);
+    let xPositions;
+    elements.forEach(element => {
+        let rect = element.getBoundingClientRect();
+        console.log(`${specialClass} element X position: ${rect.x}`);
+        xPositions = rect.x;
+    });
+    return xPositions;
+}
+
+
+// 그래프 렌더링 함수
+function renderGraph(currentMonth, currentYear, daysInMonth) {
+    // 그래프가 렌더링될 컨테이너 요소를 가져옴
+    const contribution = document.getElementById('contribution');
+
+    // 월 레이블 변경
+    let monthDiv = contribution.querySelector('.month-label');
+    monthDiv.innerHTML = `<h3>${currentYear}.${currentMonth < 9 ? '0' + (currentMonth + 1) : currentMonth + 1}</h3>`;
+
+    let graphContainer = document.getElementById('habbit-tracker');
+
+    // 초기화
+    graphContainer.innerHTML = '';
+
+    // 요소 생성
+    let dateRangeDiv = document.createElement('div');
+    dateRangeDiv.className = 'date-range';
+
+    // 카테고리별로 컨테이너 생성
+    let categories = ['No category', '일정', '공부', '습관'];
+    let categoryContainers = {};
+
+    categories.forEach(category => {
+        let categoryDiv = document.createElement('div');
+        categoryDiv.className = 'category-container';
+        categoryDiv.id = category.replace(' ', '-').toLowerCase(); // id를 소문자와 하이픈으로 설정
+        categoryDiv.innerHTML = `${category === 'No category' ? '없음&nbsp;' : category + '&nbsp;'}`;
+
+        // flex를 이용하여 왼쪽 정렬 및 간격 조정
+        categoryDiv.style.display = 'flex';
+        categoryDiv.style.justifyContent = 'flex-start';
+        categoryDiv.style.gap = '4px';
+
+        graphContainer.appendChild(categoryDiv);
+        categoryContainers[category] = categoryDiv;
+    });
+
+    var result = countDoneByCategoryAndDate();
+
+    // 현재 달의 모든 날짜에 대해 Div 생성
+    for (let day = 1; day <= daysInMonth; day++) {
+        let currentDate = new Date(currentYear, currentMonth, day);
+        let year = currentDate.getFullYear();
+        let month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        let dayString = String(currentDate.getDate()).padStart(2, '0');
+        let formattedDate = `${year}${month}${dayString}`;
+
+        categories.forEach(category => {
+            let doneCount = result[category][formattedDate] || 0;
+            let className = '';
+
+            if (doneCount === 0) {
+                className = 'day q0';
+            } else if (doneCount >= 1 && doneCount <= 4) {
+                className = 'day q1';
+            } else {
+                className = 'day q2';
+            }
+
+            if(day == 10){
+                className += ' tenth'
+            } else if(day == 20){
+                className += ' twentieth'
+            } else if(day == 30){
+                className += ' thirtieth'
+            }
+
+
+            let dayDiv = document.createElement('div');
+            dayDiv.className = className;
+            dayDiv.title = `${formattedDate}: ${doneCount} done tasks`;
+            categoryContainers[category].appendChild(dayDiv);
+        });
+    }
+
+    // 모든 요소가 생성된 후에 X 위치 가져오기
+    let tenthXPosition = findXPositionOfClass('tenth');
+    let twentiethXPosition = findXPositionOfClass('twentieth');
+    let thirtiethXPosition = findXPositionOfClass('thirtieth');
+
+    // 가져온 X 위치를 이용하여 span 요소의 위치 조정
+    let dateSpans = document.querySelectorAll('.date-range .date');
+    dateSpans.forEach((dateSpan, index) => {
+        if (index === 0) {
+            dateSpan.style.left = `${tenthXPosition}px`;
+        } else if (index === 1) {
+            dateSpan.style.left = `${twentiethXPosition}px`;
+        } else if (index === 2) {
+            dateSpan.style.left = `${thirtiethXPosition}px`;
+        }
+    });
+}
