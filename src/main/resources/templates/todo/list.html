@@ -13,10 +13,15 @@
     }
 
     #calendar {
-        padding: 15px;
+        padding: 30px;
         border-radius: 5%;
         background-color: #ffffff;
-        margin: 20px 20px 0px 50px;
+        margin: 20px 20px 0px -20px;
+        width: 110%;
+        height: 120%;
+    }
+    .fc-toolbar-title{
+        font-weight: bolder;
     }
 
     .leftdiv {
@@ -31,13 +36,30 @@
         margin-left: 10px;
     }
 
-
-    .btn btn-danger {
-
+    @media (max-width: 768px) {
+        .leftdiv{
+            width: 100%;
+            margin: 10px 0px 0px 30px;
+        }
+        .rightdiv {
+            width: 100%;
+            margin: 10px 0px 0px -50px;
+        }
     }
+
     /*일요일 글씨 색상*/
     .fc-day-sun a {
         color: #FF3131;
+    }
+
+    /* 월요일부터 토요일까지 글씨 색상 */
+    .fc-day-mon a,
+    .fc-day-tue a,
+    .fc-day-wed a,
+    .fc-day-thu a,
+    .fc-day-fri a,
+    .fc-day-sat a {
+        color: #000000;
     }
 
     /*캘린더 색상*/
@@ -57,18 +79,18 @@
     }
 
     .dotori_img {
-        width: 30px;
-        height: 30px;
-    "
+        width: 10%;
+        height: 30%;
     }
 
     .todolist-container {
-        height: 500px;
-        display: flex;
-        flex-direction: column;
+        width: 120%;
+        margin: 0px 0px 20px 40px;
     }
 
     .todolist-content {
+        height: 300px;
+        width: 110%;
         flex: 1;
         overflow-y: auto;
     }
@@ -81,7 +103,6 @@
     .todolist-content::-webkit-scrollbar-thumb {
         height: 15%; /* 스크롤바의 길이 */
         background: #725852; /* 스크롤바의 색상 */
-
         border-radius: 10px;
     }
 
@@ -89,9 +110,31 @@
         background: #C2C2C2; /*스크롤바 뒷 배경 색상*/
     }
 
-    .habittracker-container {
-        height: 500px;
+
+    .habit-container {
+        margin-left: 60px;
     }
+
+    .row-cols-1{
+        padding: 20px 0px 0px 0px;
+    }
+
+    /* 수정, 삭제버튼*/
+    .modify-button, .delete-button {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        color: #212529;
+        padding: 5px 10px;
+        margin-left: 5px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .modify-button:hover, .delete-button:hover {
+        background-color: #e2e6ea;
+    }
+
 
 </style>
 
@@ -156,11 +199,9 @@
 
 </nav>
 
-
-
 <div layout:fragment="content">
     <div class="container">
-        <div class="row">
+        <div class="row-cols-1">
             <div class="col-md-6 leftdiv">
                 <div>
                     <div>
@@ -173,17 +214,18 @@
 
 
             <div class="col-md-6 rightdiv">
-                <div class="row">
+                <div class="row" style="margin-left: 10px;">
                     <div>
 
                         <div class="todolist-container">
-                            <h2 id="selectedDate"></h2>
+                            <h4 id="selectedDate" style="margin: 20px 0px 22px 0px; font-weight: bolder;"></h4>
                             <div>
 
                                 <form action="/todo/register" method="post">
                                     <div class="form-row align-items-center">
-                                        <div class="col-auto">
-                                            <select name="category" class="form-control"  style="width: 20%;" >
+                                        <div class="row" style="margin-left: 2px;">
+
+                                            <select name="category" class="form-control" style="width: 18%">
                                                 <option value="No category">No category</option>
                                                 <option value="일정">일정</option>
                                                 <option value="공부">공부</option>
@@ -194,19 +236,24 @@
                                                    th:value="${#authentication.principal.aid}"
                                                    class="form-control" readonly>
 
-                                            <input type="text" name="content" class="form-control" placeholder="Content"  style="width: 30%;">
+                                            &nbsp
+                                            <input type="text" name="content" class="form-control" placeholder="Content"
+                                                   style="width: 30%;
+                                                   border-width: 0 0 0.1em; background-color:transparent; border-radius: 0px;">
 
+                                            &nbsp &nbsp
                                             <input type="checkbox" name="done" class="form-control"
                                                    style="display:none">
 
-                                            <span>Todo Date:</span>
-                                            <input type="date" name="todoDate" id="todoDateInput" class="form-control"  style="width: 30%;">
 
+                                            <input type="date" name="todoDate" id="todoDateInput" class="form-control"
+                                                   style="width: 21%;">
 
+                                            &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
                                             <button type="submit" class="btn btn-danger"
-                                                    style="background: none; border: none; padding: 0; cursor: pointer; vertical-align: middle; float: right;">
-<!--                                                <img th:src="@{/assets/vector.svg}" alt="submit"-->
-<!--                                                     style="width: 20px; height: 20px;">-->
+                                                    style="background: none; border: none; padding: 0; cursor: pointer; width: 17%; height: 17%;">
+                                                <img th:src="@{/assets/plus.png}" alt="submit"
+                                                     style="width: 17%; height: 17%;">
                                             </button>
 
                                         </div>
@@ -217,7 +264,7 @@
 
                             <div class="todolist-content">
                                 <div th:each="category : ${categoryOrder}">
-                                    <h4 th:text="${category}"></h4>
+                                    <h6 th:text="${category}" style="margin-bottom: 20px"></h6>
 
                                     <form>
                                         <div th:each="todo, iter : ${todoCategory.get(category)}">
@@ -243,20 +290,26 @@
                                                        th:value="${todo.aid}"
                                                        readonly>
 
-                                                <img th:src="@{/assets/dotori_image.png}" class="dotori_img" style="vertical-align: middle;">
+                                                <img th:src="@{/assets/dotori_image.png}" class="dotori_img"
+                                                     style="display: inline-block; width: 6%; height: 7%;">
 
                                                 <input type="text" name="content" class="form-control"
-                                                       th:value="${todo.content}" readonly>
+                                                       th:value="${todo.content}" readonly
+                                                       style="display: inline-block; width: 25%; margin-right: 10px;">
 
-                                                <span>Done</span>
-                                                <input type="checkbox" name="done" class="form-control"
-                                                       th:checked="${todo.done}" readonly>
+                                                <div class="form-check form-check-inline" style="margin: 0px;">
+                                                    <input class="form-check-input" type="checkbox" name="done"
+                                                           th:checked="${todo.done}" readonly
+                                                           style="display: inline-block;">
+                                                    <label class="form-check-label"></label>
+                                                </div>
 
-                                                <span>Todo Date:</span>
+                                                <span> 날짜 선택 :</span>
                                                 <input type="date" name="todoDate" class="form-control"
                                                        th:value="${#temporals.format(todo.todoDate, 'yyyy-MM-dd')}"
-                                                       readonly>
-                                                <hr align="left" style="width: 65%">
+                                                       readonly
+                                                       style="display: inline-block; width: 18%; margin-right: 10px;">
+                                                <hr align="left" style="width: 68%">
                                             </div>
                                         </div>
                                     </form>
@@ -266,20 +319,20 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="habit-container">
                     <!-- 해빗트래커 공간 -->
                     <div class="col-md-6">
                         <div>
-                            <div class="habittracker-container">
-                                <h2> Habbit Tracker</h2>
+                            <div class="habit-main">
+                                <h2> Habit Tracker</h2>
                             </div>
                         </div>
                     </div>
 
                 </div>
 
-            </div> <!-- box2 div end-->
-        </div> <!-- row div end-->
+            </div> <!-- ol-md-6 rightdiv end-->
+        </div> <!-- row-cols-1 end-->
     </div> <!-- container div end-->
 </div>
 
@@ -383,12 +436,16 @@
     document.querySelectorAll('.todo-item').forEach(function (todoDiv) {
         let isModifyMode = false;
 
+
         todoDiv.addEventListener('click', function () {
+            event.stopPropagation(); // 이벤트 버블링 중지
+
             const buttons = todoDiv.querySelectorAll('button');
 
             if (buttons.length === 0) {
                 const modifyButton = document.createElement('button');
                 modifyButton.textContent = '수정';
+                modifyButton.classList.add('modify-button');
 
                 modifyButton.addEventListener('click', function () {
                     if (isModifyMode) {
@@ -426,6 +483,8 @@
 
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = '삭제';
+                deleteButton.classList.add('delete-button');
+
                 deleteButton.addEventListener('click', function (event) {
                     event.preventDefault();
 
@@ -444,12 +503,28 @@
                     document.body.appendChild(form);
                     form.submit();
                     document.body.removeChild(form); //폼 제출후 제거
-                });
+                })
 
-                todoDiv.appendChild(modifyButton);
-                todoDiv.appendChild(deleteButton);
+                // TodoDate 날짜 옆에 버튼 추가
+                const todoDateInput = todoDiv.querySelector('input[name="todoDate"]');
+                todoDateInput.insertAdjacentElement('afterend', deleteButton);
+                todoDateInput.insertAdjacentElement('afterend', modifyButton);
+
             }
         })
+    });
+
+    // 다른 곳을 클릭하면 수정/삭제 버튼 제거
+    document.addEventListener('click', function (event) {
+        const todoItems = document.querySelectorAll('.todo-item');
+        todoItems.forEach(function (todoDiv) {
+            const buttons = todoDiv.querySelectorAll('button');
+            if (!todoDiv.contains(event.target) && buttons.length > 0) {
+                buttons.forEach(function (button) {
+                    button.remove();
+                });
+            }
+        });
     });
 
     // 체크박스 상태 설정
@@ -457,6 +532,7 @@
         checkbox.checked = checkbox.hasAttribute('checked');
         checkbox.setAttribute('readonly', 'readonly');
     });
+
 </script>
 
 </html>
