@@ -113,11 +113,8 @@
     }
 
     .habit-container {
-        width: 110%;
+        width: 140%;
         margin-left: 60px;
-        background-color: white;
-        border-radius: 10px;
-        padding: 20px;
     }
 
     .row-cols-1{
@@ -157,7 +154,7 @@
                 <div class="row" style="margin-left: 10px;">
                     <div>
                         <div class="todolist-container">
-                            <h4 id="selectedDate" style="margin: 20px 0px 22px 0px; font-weight: bolder;"></h4>
+                            <h4 id="selectedDate" style="margin: 20px 0px 22px 0px; font-weight: bolder;"> </h4>
                             <div>
                                 <form action="/todo/register" method="post">
                                     <div class="form-row align-items-center">
@@ -199,6 +196,7 @@
                                     </div>
                                 </form>
                             </div>
+
                             <div class="todolist-content">
                                 <div th:each="category : ${categoryOrder}">
                                     <h6 th:text="${category}" style="margin-bottom: 20px"></h6>
@@ -256,11 +254,24 @@
                 </div>
 
                 <div class="habit-container">
-                        <h2> Habit Tracker</h2>
-                        <div id="contribution-graph"></div>
-                        <script th:src="@{/js/habbitTracker.js}"></script>
+                    <div id="contribution">
+                        <div class="month-label">June</div>
+
+                    </div>
+                    <div class="habbit-contents">
+                        <div class="date-range">
+                            <span class="date">10</span>
+                            <span class="date">20</span>
+                            <span class="date">30</span>
+                        </div>
+                        <div>&nbsp;</div>
+                        <div id="habbit-tracker">
+
+                        </div>
+                    </div>
+
                 </div>  <!-- habit-container-->
-            </div> <!-- ol-md-6 rightdiv end-->
+            </div> <!-- col-md-6 rightdiv end-->
         </div> <!-- row-cols-1 end-->
     </div> <!-- container div end-->
 </div>
@@ -271,5 +282,21 @@
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js'></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script th:src="@{/js/todo.js}"></script>
+<script>
+    var currentDate = new Date();
+    var currentMonth = currentDate.getMonth();
+    var currentYear = currentDate.getUTCFullYear();
+    var day = currentDate.getDate();
+    var weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+    var weekday = weekdays[new Date(currentDate).getDay()];
+    var daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    renderGraph(currentMonth, currentYear, daysInMonth);
+
+    var formattedDate = currentMonth + '월 ' + day + '일(' + weekday + ')';
+
+    var selectedDateElement = document.getElementById('selectedDate');
+    selectedDateElement.textContent = formattedDate;
+</script>
 
 </html>
