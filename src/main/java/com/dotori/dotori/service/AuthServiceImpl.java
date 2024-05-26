@@ -65,13 +65,6 @@ public class AuthServiceImpl implements AuthService {
         Auth auth = authOptional.orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         AuthDTO authDTO = modelMapper.map(auth, AuthDTO.class);
 
-//        try {
-//            String profile = uploadImage(profileImage);
-//            auth.changeProfileImage(uploadImage(profileImage));
-//        } catch (Exception e) {
-//            log.info(e.getMessage());
-//        }
-
         log.info("info AuthDTO : " + authDTO);
         authDTO.setId(auth.getId());
         return authDTO;
