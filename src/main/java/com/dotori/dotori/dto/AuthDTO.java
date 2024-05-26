@@ -35,7 +35,7 @@ public class AuthDTO {
 
     private String provider;
 
-    private MultipartFile profileImage;
+    private String profileImage;
 
     // DTO 파일을 통하여 Social 로그인 시 Auth Entity를 생성하는 메소드
     public Auth toEntity() {

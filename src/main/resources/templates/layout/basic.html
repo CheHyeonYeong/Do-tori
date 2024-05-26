@@ -19,6 +19,15 @@
             font-weight: bold;
             color: black; /* 현재 페이지의 링크 색상을 빨간색으로 설정 */
         }
+        .profile-image {
+            width : 46px;
+            height : 46px;
+            border-radius : 50%;
+        }
+        .default-profile-image {
+            width : 46px;
+            height : 46px;
+        }
     </style>
 </head>
 <body>
@@ -69,11 +78,8 @@
                     </ul>
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <svg width="46" height="46" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="28" cy="27.5" r="27" stroke="black"/>
-                                <circle cx="27.5" cy="19" r="6.5" stroke="black"/>
-                                <path d="M28.5 54.5H28.4738L28.4477 54.5027C23.8368 54.9881 19.3154 53.4102 15.9207 51.6202C14.2281 50.7277 12.8296 49.7899 11.8582 49.048C11.3719 48.6765 10.9976 48.358 10.7493 48.1226C10.6338 48.013 10.5521 47.9276 10.5005 47.8673C10.5723 37.9577 18.6776 29.5 28 29.5C37.3258 29.5 45.4337 37.964 45.4996 47.8784C45.4589 47.9289 45.395 48.0001 45.3039 48.0916C45.097 48.2993 44.7809 48.581 44.3617 48.9125C43.5249 49.5743 42.2992 50.4177 40.7624 51.2475C37.6863 52.9086 33.3934 54.5 28.5 54.5Z" stroke="black"/>
-                            </svg>
+                            <img th:if="${#authentication.principal.profileImage != null}" th:src="@{/images/{profileImage}(profileImage=${#authentication.principal.profileImage})}" class="profile profile-image" />
+                            <img th:if="${#authentication.principal.profileImage == null}" th:src="@{/assets/Profile.png}" class="profile default-profile-image" />
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item login" href="/auth/login">로그인</a>

@@ -94,44 +94,38 @@
 
         .title {
             display: inline-block;
-            padding: 16px 24px;
+            padding: 1rem 1.2rem;
             background-color: #f5f0ea;
             border: 1px solid #000;
             border-radius: 20px;
             text-align: center;
 
-            margin-bottom: 56px;
+            margin-bottom: 3rem;
         }
 
         .mb {
             display: flex;
-            margin-bottom: 24px;
-        }
-        .input-group-txt {
-            display: flex;
             align-items: center;
-            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        .mb span {
+            display: inline-block;
             width: 20%;
-            padding-top: 8px;
-            padding-bottom: 8px;
-            margin-right: 20px;
-            font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.5;
-            color: #000;
+            text-align: center;
             border-bottom: 1px solid #000;
+            padding-bottom: 4px;
+        }
+        .mb input {
+            width: 70%; /* 입력 칸의 좌우 길이 조정 */
+            margin: 0 auto; /* 가운데 정렬 */
+            border-radius: 10px;
+            border: none;
+            padding: 0.5rem;
+            background-color: #d9d9d9;
         }
 
         .logout, .info {
             border: none;
-        }
-
-        .form-con {
-            width: 80%;
-            padding: 0 8px;
-            background-color: #DFDFDF;
-            border: 0;
-            border-radius: 10px;
         }
 
         .btn_box {
@@ -151,7 +145,115 @@
         .checkBtn:hover {
             background-color: #928980;
         }
+
+        .toggle-btn{
+            width: 40px;
+            height: 30px;
+            cursor: pointer;
+
+            display: none;
+            position: absolute;
+            top: 1%;
+            left: 0;
+            z-index: 1000;
+            margin: 10px;
+        }
+        .trigger{
+            width: 40px;
+            height: 20px;
+            cursor: pointer;
+
+            /*display: none;*/
+
+            position: relative;
+        }
+        .trigger span{
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: #CCBFB2;
+
+            transition: 0.3s;
+        }
+
+        .trigger span:nth-child(1){
+            top: 0;
+        }
+        .trigger span:nth-child(2){
+            top: 50%;
+        }
+        .trigger span:nth-child(3){
+            top: 100%;
+        }
+
+        .toggle-btn.active .trigger span:nth-child(1){
+            transform: rotate(45deg);
+            top: 50%;
+        }
+        .toggle-btn.active .trigger span:nth-child(2){
+            opacity: 0;
+        }
+        .toggle-btn.active .trigger span:nth-child(3){
+            transform: rotate(-45deg);
+            top: 50%;
+        }
+
+        @media (max-width: 1260px) {
+            .auth, .auth_modify, .auth_logout {
+                padding: 8px;
+                border-radius: 8px;
+            }
+            .auth .icon_box span {
+                display: none;
+            }
+
+        }
+        @media (max-width: 768px) {
+            .aside {
+                visibility: hidden;
+                z-index: -1;
+                opacity: 0;
+            }
+            .toggle-btn {
+                display: block;
+            }
+
+            .main_info {
+                width: 100%;
+            }
+            .main_info_container {
+                width: 80%;
+                margin: 0;
+            }
+            .main_info_container.active {
+                margin: auto;
+            }
+            .aside.active {
+                z-index: 11;
+                opacity: 1;
+                visibility: visible;
+                position: absolute;
+                width: 35%;
+            }
+            .toggle-btn.active {
+                left: 38%;
+            }
+        }
     </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.querySelector('.toggle-btn');
+            const aside = document.querySelector('.aside');
+            const info = document.querySelector('.main_info_container')
+
+            toggleBtn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                aside.classList.toggle('active');
+                info.classList.toggle('active');
+            });
+        });
+    </script>
 
 </head>
 
@@ -166,8 +268,8 @@
                     <circle cx="27.5" cy="19" r="6.5" stroke="black"></circle>
                     <path d="M28.5 54.5H28.4738L28.4477 54.5027C23.8368 54.9881 19.3154 53.4102 15.9207 51.6202C14.2281 50.7277 12.8296 49.7899 11.8582 49.048C11.3719 48.6765 10.9976 48.358 10.7493 48.1226C10.6338 48.013 10.5521 47.9276 10.5005 47.8673C10.5723 37.9577 18.6776 29.5 28 29.5C37.3258 29.5 45.4337 37.964 45.4996 47.8784C45.4589 47.9289 45.395 48.0001 45.3039 48.0916C45.097 48.2993 44.7809 48.581 44.3617 48.9125C43.5249 49.5743 42.2992 50.4177 40.7624 51.2475C37.6863 52.9086 33.3934 54.5 28.5 54.5Z" stroke="black"></path>
                 </svg>
-                <form action="/auth/info" method="post">
-                    <button type="submit" class="auth_aside_txt info">[[${#authentication.principal.id}]]</button>
+                <form th:action="@{/auth/info}" method="post">
+                    <button type="submit" class="auth_aside_txt info">[[${#authentication.principal.nickName}]]</button>
                 </form>
             </div>
         </div>
@@ -198,6 +300,12 @@
         </div>
     </aside>
 
+    <div class="toggle-btn">
+        <div class="trigger">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+
     <div class="main_info">
         <div class="main_info_container">
             <h4 class="title">회원 정보 수정</h4>
@@ -218,8 +326,8 @@
 
 <script layout:fragment="script" th:inline="javascript">
     const error = [[${error}]];
-     if (error) {
-         alert("비밀번호가 일치하지 않습니다.")
-     }
+    if (error) {
+        alert("비밀번호가 일치하지 않습니다.")
+    }
 </script>
 </html>

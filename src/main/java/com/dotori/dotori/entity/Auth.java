@@ -1,5 +1,6 @@
 package com.dotori.dotori.entity;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @DynamicUpdate // Entity update시, 원하는 데이터만 update하기 위함
 @AllArgsConstructor
@@ -58,6 +60,18 @@ public class Auth {
 
     public void changeSocial(boolean social) {
         this.social = social;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void ProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     public void changeProfileImage(String profileImage) { this.profileImage = profileImage; }
