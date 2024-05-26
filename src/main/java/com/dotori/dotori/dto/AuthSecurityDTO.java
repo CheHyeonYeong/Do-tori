@@ -20,16 +20,18 @@ public class AuthSecurityDTO extends User implements OAuth2User {
     private String nickName;
     private String email;
     private boolean social;
+    private String profileImage;
 
 
     private Map<String, Object> props;
-    public AuthSecurityDTO(int aid, String id, String password, String nickName, String email, boolean social, Collection<? extends GrantedAuthority> authorities) {
+    public AuthSecurityDTO(int aid, String id, String password, String nickName, String email, boolean social, String profileImage, Collection<? extends GrantedAuthority> authorities) {
         super(id == null ? "" : id, password == null ? "" : password, authorities);
         this.aid = aid;
         this.id = id;
         this.nickName = nickName;
         this.email = email;
         this.social = social;
+        this.profileImage = profileImage;
     }
 
     @Override

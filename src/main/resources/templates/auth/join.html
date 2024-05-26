@@ -15,118 +15,158 @@
     <title>Join Page</title>
     <style>
         body {
-            background-image: url("/assets/joinBg.png");
-            background-repeat: no-repeat;
-        }
-        .cont {
             display: flex;
             justify-content: center;
+            align-items: center;
             height: 100vh;
+            margin: 0;
+            background-color: #ffffff;
+            position: relative;
         }
-        .main {
-            width: 85%;
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: calc(47% - 15px); /* .login-container의 border-radius를 고려하여 너비 조정 */
+            height: 100%;
+            background-color: #CCBFB2;
+            z-index: -1;
+        }
+        .main-container {
             display: flex;
             align-items: center;
-            margin: 0 auto;
+            max-width: 80%;
+            width: 100%;
+            height: 80vh;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 8px solid #fff;
         }
         .logo {
-            width: 50%;
-        }
-        .join_container {
-            width: 40%;
-            margin-top: 100px;
-        }
-        #registerForm {
-            width: 100%;
-        }
-
-        .mb {
-            display: flex;
-            margin-bottom: 24px;
-            width: 100%;
-        }
-        .input-group-txt {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 20%;
-            padding-top: 8px;
-            padding-bottom: 8px;
-            margin-right: 20px;
-            font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.5;
-            color: #000;
-            border-bottom: 1px solid #000;
+            flex: 1;
+            position: relative;
+            background-color: #CCBFB2;
+            border-right: none; /* 오른쪽 테두리 제거 */
+            height: 90vh;
+        }
+        .logo img {
+            max-width: 90%;
+            height: auto;
         }
 
-        .form-con {
-            width: 60%;
-            padding: 0 8px;
-            background-color: #fff;
-            border: 0;
+        .join_container {
+            background-color: #f9f6f1;
+            padding: 5%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 90vh;
+        }
+        #registerForm {
+            margin-top: 30px;
+        }
+        .join_container .mb {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .join_container .mb span {
+            display: inline-block;
+            width: 20%;
+            text-align: center;
+            border-bottom: 1px solid #000;
+            padding-bottom: 4px;
+        }
+        .join_container .mb input {
+            width: 70%; /* 입력 칸의 좌우 길이 조정 */
+            margin: 0 auto; /* 가운데 정렬 */
             border-radius: 10px;
+            border: none;
+            padding: 4px;
         }
 
         .btn_box {
-            width: 85%;
             display: flex;
             justify-content: right;
-            margin-top: 24px;
+            align-items: center;
+            width: 90%; /* 버튼 컨테이너의 좌우 길이 조정 */
+            margin: 2rem auto 0; /* 가운데 정렬 */
         }
-        .btn {
-            background-color: #fff;
-            color: #000;
-            padding: 12px 20px;
-            border: none;
+        .btn_box .btn {
+            width: 30%; /* 버튼 너비 조정 */
+            border: #ffffff;
+            color: #000000;
+            background-color: #ffffff;
         }
         .btn:hover {
             background-color: #9d9d9d;
         }
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                max-width: 90%;
+                height: auto;
+            }
+            .logo {
+                height: 250px;
+                border-right: none;
+                border-bottom: 2px solid #fff;
+            }
+            .logo img {
+                max-width: 30%;
+            }
+            .join_container {
+                width: 100%;
+                padding: 30px;
+            }
+        }
 
     </style>
 </head>
-
-<div layout:fragment="content" class="cont">
-    <div class="main">
-        <div class="logo">
-            <img th:src="@{/assets/dotori_image.png}" alt="도토리 이미지">
-        </div>
-
-        <div class="join_container">
-            <form id="registerForm" action="/auth/join" method="post">
-                <div class="mb">
-                    <span class="input-group-txt">아이디</span>
-                    <input type="text" name="id" class="form-con">
-                </div>
-
-                <div class="mb">
-                    <span class="input-group-txt">비밀번호</span>
-                    <input type="password" name="password" id="password" class="form-con">
-                </div>
-
-                <div class="mb">
-                    <span class="input-group-txt">비밀번호 확인</span>
-                    <input type="password" id="passwordConfirm" class="form-con">
-                </div>
-
-                <div class="mb">
-                    <span class="input-group-txt">닉네임</span>
-                    <input type="text" name="nickName" class="form-con">
-                </div>
-
-                <div class="mb">
-                    <span class="input-group-txt">이메일</span>
-                    <input type="email" name="email" class="form-con">
-                </div>
-
-                <div class="btn_box">
-                    <button type="submit" class="btn btn-primary submitBtn">가입하기</button>
-                </div>
-            </form>
-        </div>
+<div class="main-container">
+    <div class="logo">
+        <img th:src="@{/assets/dotori_image.png}" alt="도토리 이미지">
     </div>
 
+    <div class="join_container">
+        <form id="registerForm" th:action="@{/auth/join}" method="post">
+            <div class="mb">
+                <span class="input-group-txt">아이디</span>
+                <input type="text" name="id" class="form-con">
+            </div>
+
+            <div class="mb">
+                <span class="input-group-txt">비밀번호</span>
+                <input type="password" name="password" id="password" class="form-con">
+            </div>
+
+            <div class="mb">
+                <span class="input-group-txt">비밀번호 확인</span>
+                <input type="password" id="passwordConfirm" class="form-con">
+            </div>
+
+            <div class="mb">
+                <span class="input-group-txt">닉네임</span>
+                <input type="text" name="nickName" class="form-con">
+            </div>
+
+            <div class="mb">
+                <span class="input-group-txt">이메일</span>
+                <input type="email" name="email" class="form-con">
+            </div>
+
+            <div class="btn_box">
+                <button type="submit" class="btn btn-primary submitBtn">가입하기</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script layout:fragment="script" th:inline="javascript">

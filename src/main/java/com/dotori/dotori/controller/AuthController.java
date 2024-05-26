@@ -6,6 +6,7 @@ import com.dotori.dotori.entity.Auth;
 import com.dotori.dotori.repository.AuthRepository;
 import com.dotori.dotori.service.AuthService;
 import com.dotori.dotori.service.OAuth2Service;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import org.springframework.security.core.Authentication;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Controller
@@ -38,8 +40,11 @@ public class AuthController {
     private final OAuth2Service oAuth2Service;
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthRepository authRepository;
+    private final HttpServletResponse httpServletResponse;
 
     // 로그인
+    @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
     public void loginGet(String error, String logout) {
         log.info("login get...");
@@ -65,11 +70,13 @@ public class AuthController {
 
     // 회원 가입
 
+    @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
     public void authJoinGet() {
         log.info("join get....");
     }
 
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
     public String authJoinPost(@Valid  AuthDTO authDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.info("join post.....");
@@ -98,19 +105,52 @@ public class AuthController {
         return "redirect:/auth/login";
     }
 
+
+
     @PreAuthorize("principal.username == #authSecurityDTO.id")
     @GetMapping("/info")
     public String authInfo(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Model model) {
         log.info("info coming");
         model.addAttribute("auth", authSecurityDTO);
+
+        String id = authSecurityDTO.getId();
+        Optional<Auth> authOptional = authRepository.findById(id);
+        if (authOptional.isPresent()) {
+            Auth auth = authOptional.get();
+            model.addAttribute("auth", auth);
+        } else {
+            model.addAttribute("auth", new Auth());
+        }
+
         return "auth/info";
     }
 
+    @PreAuthorize("principal.username == #authSecurityDTO.id")
     @PostMapping("/info")
-    public String PostauthInfo(@Valid AuthDTO authDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String PostauthInfo(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, RedirectAttributes redirectAttributes, Model model) {
+        authService.info(authSecurityDTO.getId());
+        model.addAttribute("auth", authSecurityDTO);
         return "redirect:/auth/info";
     }
-    
+
+    @PreAuthorize("principal.username == #authSecurityDTO.id")
+    @PostMapping("/profile-image")
+    public String updateProfileImage(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, @RequestParam("file") MultipartFile file, Authentication authentication, RedirectAttributes redirectAttributes, Model model, HttpServletResponse response) {
+
+        try {
+            String authId = authentication.getName();
+            authService.updateProfileImage(authId, file);
+            redirectAttributes.addFlashAttribute("message", "Profile image updated successfully");
+            model.addAttribute("auth", authSecurityDTO);
+            log.info("여기다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to update profile image");
+        }
+
+        return "redirect:/auth/info";
+    }
+
     @PreAuthorize("principal.username == #authSecurityDTO.id")
     @GetMapping("/modifyPwCheck")
     public String modifyPwCheck(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Model model) {
