@@ -341,7 +341,7 @@
             <div class="profile_box">
                 <form th:action="@{/auth/profile-image}" method="post" enctype="multipart/form-data">
                     <input type="file" name="file" id="profileImageInput" class="form-control" style="display: none" onchange="showSubmitButton(); previewImage(this);">
-                    <img th:src="@{/images/{profileImage}(profileImage=${#authentication.principal.profileImage}, _=${#dates.createNow()})}"
+                    <img th:src="@{${#authentication.principal.profileImage != null ? '/images/' + #authentication.principal.profileImage + '?t=' + #dates.createNow().getTime() : '/assets/Profile.png'}}"
                          class="profile profile-image profileImage" onclick="clickProfileImage()"/>
                     <div class="profile_btn" style="visibility: hidden">
                         <input type="submit" value="변경" id="profile_submit_btn">

@@ -140,22 +140,39 @@ public class AuthController {
 
     @PreAuthorize("principal.username == #authSecurityDTO.id")
     @PostMapping("/profile-image")
-    public String updateProfileImage(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, @RequestParam("file") MultipartFile file, Authentication authentication, RedirectAttributes redirectAttributes, Model model, HttpServletResponse response) {
-
+    public String updateProfileImage(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO,
+                                     @RequestParam("file") MultipartFile file,
+                                     Authentication authentication,
+                                     RedirectAttributes redirectAttributes,
+                                     Model model, HttpSession session , HttpServletResponse response
+    ) {
         try {
             String authId = authentication.getName();
-            authService.updateProfileImage(authId, file);
-            redirectAttributes.addFlashAttribute("message", "Profile image updated successfully");
-            model.addAttribute("auth", authSecurityDTO);
-            log.info("여기다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            String fileName = authService.updateProfileImage(authId, file);
 
+            // Authentication 객체 업데이트
+            Authentication updatedAuthentication = SecurityContextHolder.getContext().getAuthentication();
+            AuthSecurityDTO updatedAuthSecurityDTO = (AuthSecurityDTO) updatedAuthentication.getPrincipal();
+            updatedAuthSecurityDTO.setProfileImage(fileName);
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(updatedAuthSecurityDTO, updatedAuthentication.getCredentials(), updatedAuthentication.getAuthorities())
+            );
+
+            // 세션 업데이트
+            session.setAttribute("profileImage", fileName);
+
+            redirectAttributes.addFlashAttribute("message", "Profile image updated successfully");
+            model.addAttribute("auth", updatedAuthSecurityDTO);
         } catch (Exception e) {
+            log.error("Failed to update profile image", e);
             redirectAttributes.addFlashAttribute("error", "Failed to update profile image");
         }
 
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
         return "redirect:/auth/info";
     }
-
     @PreAuthorize("principal.username == #authSecurityDTO.id")
     @GetMapping("/modifyPwCheck")
     public String modifyPwCheck(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Model model) {
@@ -163,7 +180,6 @@ public class AuthController {
         model.addAttribute("auth", authSecurityDTO);
         return "auth/modifyPwCheck";
     }
-
     @PostMapping("/modifyPwCheck")
     public String pwCheck(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, @RequestParam("password") String password, HttpSession session, RedirectAttributes redirectAttributes) {
         AuthDTO authDTO = authService.info(authSecurityDTO.getId());
@@ -174,6 +190,7 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("error", "비밀번호가 일치하지 않습니다.");
             return "redirect:/auth/modifyPwCheck";
         }
+
 
     }
 

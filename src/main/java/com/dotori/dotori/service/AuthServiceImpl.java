@@ -76,20 +76,23 @@ public class AuthServiceImpl implements AuthService {
         authRepository.deleteById(id);
     }
 
-    @Override
-    public String updateProfileImage(String id, MultipartFile file) throws Exception {
+    public String updateProfileImage(String authId, MultipartFile file) throws Exception {
+        Auth auth = authRepository.findById(authId).orElseThrow(() -> new IllegalArgumentException("Invalid user id"));
 
-        // 파일 저장 로직 구현
-        String fileName = saveFile(file);
-
-        // Auth 정보 업데이트
-        Auth auth = authRepository.findById(id)
-                .orElseThrow(() -> new Exception("Auth not found"));
-        auth.setProfileImage(fileName);
-        authRepository.save(auth);
-        return fileName;
+        if (!file.isEmpty()) {
+            String fileName = file.getOriginalFilename();
+            String savePath = System.getProperty("user.dir") + "/src/main/resources/static/images/";
+            if (!new File(savePath).exists()) {
+                new File(savePath).mkdir();
+            }
+            String filePath = savePath + fileName;
+            file.transferTo(new File(filePath));
+            auth.setProfileImage(fileName);
+            authRepository.saveAndFlush(auth);
+            return fileName;
+        }
+        return null;
     }
-
     private String saveFile(MultipartFile file) throws Exception {
         String originalName = file.getOriginalFilename();
         String fileName = System.currentTimeMillis() + "_" + originalName;
@@ -101,4 +104,6 @@ public class AuthServiceImpl implements AuthService {
         file.transferTo(new File(filePath));
         return fileName;
     }
+
+
 }
