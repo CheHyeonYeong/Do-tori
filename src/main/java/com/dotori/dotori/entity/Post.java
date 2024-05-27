@@ -54,6 +54,12 @@ public class Post{
         this.thumbnail = thumbnail;
     }
 
+    public void changePost(String content, int likeCount) {
+        this.content = content;
+        this.likeCount = likeCount;
+        this.thumbnail = null;
+    }
+
     public void changeThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }

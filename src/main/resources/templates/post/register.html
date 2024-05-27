@@ -1,15 +1,32 @@
 <!DOCTYPE html>
+
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
-      layout:decorate="~{layout/basic.html}">
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <!-- thymeleaf 형식으로 경로 수정 => th:href = "@{경로}" -->
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+
     <style>
         body {
             background-color: #F5F0EA;
         }
     </style>
+
 </head>
+<body>
+
+
+<div th:insert="~{layout/navbar.html}"></div>
+
 
 <div layout:fragment="content">
     <div class="row mt-3">
@@ -17,7 +34,7 @@
             <form action="/post/register" method="post" enctype="multipart/form-data">
                 <div class="card">
                     <div class="card-header" style="display: inline">
-                        <input type="hidden" name = "nickname" th:value="${#authentication.principal.nickName}" readonly />
+                        <input type="hidden" name = "nickName" th:value="${#authentication.principal.nickName}" readonly />
                         <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto; margin-bottom: 10px">
                         <span class="card-title name" style="font-size: 30px; margin-left: 10px">[[${#authentication.principal.nickName}]]</span>
                         <hr>
@@ -44,6 +61,11 @@
     </div><!--end row-->
 </div><!--content end-->
 
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
 <script layout:fragment="script" th:inline="javascript">
 
     // const auth=[[${#authentication.principal}]]  나중에 auth 기능이 완료가 되면 추가할 사항입니다!
@@ -68,5 +90,5 @@
     },false)
 
 </script>
-
+</body>
 </html>

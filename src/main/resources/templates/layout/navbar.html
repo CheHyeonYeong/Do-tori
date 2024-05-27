@@ -67,3 +67,39 @@
     </div>
 
 </nav>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var path = window.location.pathname;
+        var page = path.split("8080/").pop();
+
+        var navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(function (link) {
+            var href = link.getAttribute('href');
+            if (href === page) {
+                link.classList.add('active-nav-link');
+            }
+        });
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var isLoggedIn = false;  // 로그인 상태 변수 (예시로 false로 설정)
+
+        var navbarMenu = document.getElementById('mypage');
+
+        if (isLoggedIn) {
+            navbarMenu.innerHTML = `
+            <a class="dropdown-item login" href="/auth/login">로그인</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item join" href="/auth/join">회원가입</a>
+        `;
+        } else {
+            navbarMenu.innerHTML = `
+        <a class="dropdown-item login" href="/auth/info">MY PAGE</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item join" href="/auth/login">로그아웃</a>
+        `;
+        }
+    });
+</script>

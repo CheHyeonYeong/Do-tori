@@ -1,7 +1,19 @@
 <!DOCTYPE html>
+
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org"
-      layout:decorate="~{layout/basic.html}">
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <!-- thymeleaf 형식으로 경로 수정 => th:href = "@{경로}" -->
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+
 <style>
     body {
         background-color: #F5F0EA;
@@ -16,13 +28,23 @@
     }
 
 </style>
+</head>
+<body>
+
+
+<div th:insert="~{layout/navbar.html}"></div>
+
+
 <div layout:fragment="content">
     <div class="row mt-3">
         <div class="col">
             <form th:action="@{/post/modify}" method="post" id="f1" enctype="multipart/form-data">
                 <div class="card">
                     <div class="card-header" style="display: inline">
-                        <input type="hidden" name = "nickname" th:value="${#authentication.principal.nickName}" readonly />                        <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto; margin-bottom: 10px">
+                        <input type="text" class="form-control" name="pid" th:value="${dto.pid}" readonly style="display: none;">
+
+                        <input type="hidden" name = "nickName" th:value="${#authentication.principal.nickName}" readonly />
+                        <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto; margin-bottom: 10px">
                         <span class="card-title name" style="font-size: 30px; margin-left: 10px">[[${#authentication.principal.nickName}]]</span>
                         <hr>
                     </div>
@@ -36,15 +58,18 @@
                 </div> <!--end card-->
                 <br>
                 <div class="insert input-group mb-3" style="margin: 0 auto; width: 50%">
-                    <div th:if="${dto.thumbnail != null}">
-                        <span style="width: 20%; display: inline">첨부된 사진</span>
-                        <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" alt="Thumbnail" width="40">
+                    <div th:if="${dto.thumbnail != null and dto.thumbnail != '1716805715097_'}">
+
+                        <!--                        이미지 뜨게 함-->
+                        <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" width="40">
                         <button type="button" class="btn btn-danger removeImageBtn">X</button>
                     </div>
-                    <div th:unless="${dto.thumbnail != null}">
+
+                    <div th:if="${dto.thumbnail == null}">
                         <span style="margin-top: 7px; margin-right: 10px">사진 등록하기</span>
                         <input type="file" name="file" class="form-control">
                     </div>
+
                 </div>
                 <div class="insert my-4" style="margin: 0 auto; width: 50%">
                     <div class="float-end">
@@ -59,6 +84,12 @@
 </div><!--content end-->
 
 <script layout:fragment="script" th:inline="javascript">
+
+    function filterStrings(strings) {
+        const pattern = /^171\d{10}\_/; // 17로 시작하고 10자리 숫자가 있는 패턴, 그리고 _로 끝나는 패턴
+
+        return strings.filter(str => !pattern.test(str));
+    }
 
     const errors = [[${errors}]]
     console.log(errors);
@@ -75,15 +106,15 @@
     const formObj = document.querySelector("#f1")
 
 
-    document.querySelector(".modBtn").addEventListener("click", function (e){
+    document.querySelector(".modBtn").addEventListener("click", function (e) {
         e.preventDefault()
         e.stopPropagation()
 
-        //검색과 관련된 page 번호, 키워드와 title이 있다.
         formObj.action = `/post/modify?${link}`
         formObj.method = "post"
         formObj.submit();
-    },false)
+
+    }, false)
 
     document.querySelector(".listBtn").addEventListener("click", function (e){
         e.preventDefault()
@@ -114,5 +145,6 @@
     },false);
 
 </script>
+</body>
 
 </html>
