@@ -93,17 +93,5 @@ public class AuthServiceImpl implements AuthService {
         }
         return null;
     }
-    private String saveFile(MultipartFile file) throws Exception {
-        String originalName = file.getOriginalFilename();
-        String fileName = System.currentTimeMillis() + "_" + originalName;
-        String savePath = System.getProperty("user.dir") + "/src/main/resources/static/images/";
-        if (!new File(savePath).exists()) {
-            new File(savePath).mkdir();
-        }
-        String filePath = savePath + fileName;
-        file.transferTo(new File(filePath));
-        return fileName;
-    }
-
 
 }

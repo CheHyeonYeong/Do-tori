@@ -37,11 +37,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final OAuth2Service oAuth2Service;
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
-    private final AuthRepository authRepository;
-    private final HttpServletResponse httpServletResponse;
 
     // 로그인
     @PreAuthorize("isAnonymous()")
@@ -119,13 +116,8 @@ public class AuthController {
         model.addAttribute("auth", authSecurityDTO);
 
         String id = authSecurityDTO.getId();
-        Optional<Auth> authOptional = authRepository.findById(id);
-        if (authOptional.isPresent()) {
-            Auth auth = authOptional.get();
-            model.addAttribute("auth", auth);
-        } else {
-            model.addAttribute("auth", new Auth());
-        }
+        AuthDTO authDTO = authService.info(id);
+        model.addAttribute("auth", authDTO);
 
         return "auth/info";
     }

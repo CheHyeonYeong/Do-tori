@@ -154,7 +154,7 @@
 
             <div class="mb">
                 <span class="input-group-txt">닉네임</span>
-                <input type="text" name="nickName" class="form-con">
+                <input type="text" name="nickName" id="nickName" class="form-con">
             </div>
 
             <div class="mb">
@@ -205,6 +205,17 @@
             passwordConfirmInput.focus();
             return;
         }
+
+        const nicknameInput = document.getElementById('nickName');
+        const nickname = nicknameInput.value;
+        // 닉네임 유효성 검사
+        const nicknameRegex = /^.{1,4}$/;
+        if (!nicknameRegex.test(nickname)) {
+            alert("닉네임은 4글자 이하여야 합니다.")
+            nicknameInput.focus();
+            return;
+        }
+
 
         // 유효성 검사 통과 시 폼 제출
         document.getElementById('registerForm').submit();
