@@ -255,7 +255,6 @@ function findXPositionOfClass(specialClass) {
     return xPositions;
 }
 
-
 // 그래프 렌더링 함수
 function renderGraph(currentMonth, currentYear, daysInMonth) {
     // 그래프가 렌더링될 컨테이너 요소를 가져옴
@@ -270,40 +269,35 @@ function renderGraph(currentMonth, currentYear, daysInMonth) {
     // 초기화
     graphContainer.innerHTML = '';
 
-    // 요소 생성
-    let dateRangeDiv = document.createElement('div');
-    dateRangeDiv.className = 'date-range';
-
     // 카테고리별로 컨테이너 생성
     let categories = ['No category', '일정', '공부', '습관'];
     let categoryContainers = {};
 
-    categories.forEach(category => {
-        let categoryDiv = document.createElement('div');
-        categoryDiv.className = 'category-container';
-        categoryDiv.id = category.replace(' ', '-').toLowerCase(); // id를 소문자와 하이픈으로 설정
-        categoryDiv.innerHTML = `${category === 'No category' ? '없음&nbsp;' : category + '&nbsp;'}`;
+    // 새로운 테이블 요소 생성
+    let table = document.createElement('table');
+    table.className = 'habbit-table'
 
-        // flex를 이용하여 왼쪽 정렬 및 간격 조정
-        categoryDiv.style.display = 'flex';
-        categoryDiv.style.justifyContent = 'flex-start';
-        categoryDiv.style.gap = '4px';
-
-        graphContainer.appendChild(categoryDiv);
-        categoryContainers[category] = categoryDiv;
-    });
+    // 테이블 바디 생성
+    let tbody = document.createElement('tbody');
 
     var result = countDoneByCategoryAndDate();
 
-    // 현재 달의 모든 날짜에 대해 Div 생성
-    for (let day = 1; day <= daysInMonth; day++) {
-        let currentDate = new Date(currentYear, currentMonth, day);
-        let year = currentDate.getFullYear();
-        let month = String(currentDate.getMonth() + 1).padStart(2, '0');
-        let dayString = String(currentDate.getDate()).padStart(2, '0');
-        let formattedDate = `${year}${month}${dayString}`;
+    // 카테고리별로 행 생성
+    categories.forEach(category => {
+        let row = document.createElement('tr');
 
-        categories.forEach(category => {
+        let th = document.createElement('th');
+        th.textContent = category === 'No category' ? '없음' : category;
+        row.appendChild(th);
+
+        // 현재 달의 모든 날짜에 대해 셀 생성
+        for (let day = 1; day <= daysInMonth; day++) {
+            let currentDate = new Date(currentYear, currentMonth, day);
+            let year = currentDate.getFullYear();
+            let month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            let dayString = String(currentDate.getDate()).padStart(2, '0');
+            let formattedDate = `${year}${month}${dayString}`;
+
             let doneCount = result[category][formattedDate] || 0;
             let className = '';
 
@@ -319,36 +313,30 @@ function renderGraph(currentMonth, currentYear, daysInMonth) {
                 className = 'day q4';
             }
 
-            if(day == 10){
-                className += ' tenth'
-            } else if(day == 20){
-                className += ' twentieth'
-            } else if(day == 30){
-                className += ' thirtieth'
-            }
+            let cell = document.createElement('td');
+            cell.className = className;
+            cell.title = `${formattedDate}: ${doneCount} done tasks`;
+            row.appendChild(cell);
+        }
 
+        tbody.appendChild(row);
+    });
 
-            let dayDiv = document.createElement('div');
-            dayDiv.className = className;
-            dayDiv.title = `${formattedDate}: ${doneCount} done tasks`;
-            categoryContainers[category].appendChild(dayDiv);
-        });
+    // 10일, 20일, 30일 헤더 행 추가
+    let headerRow = document.createElement('tr');
+    let emptyCell = document.createElement('th');
+    headerRow.appendChild(emptyCell);
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        let th = document.createElement('th');
+        if (day % 10 === 0) {
+            th.textContent = day;
+        }
+        headerRow.appendChild(th);
     }
 
-    // 모든 요소가 생성된 후에 X 위치 가져오기
-    let tenthXPosition = findXPositionOfClass('tenth');
-    let twentiethXPosition = findXPositionOfClass('twentieth');
-    let thirtiethXPosition = findXPositionOfClass('thirtieth');
+    tbody.insertBefore(headerRow, tbody.firstChild);
 
-    // 가져온 X 위치를 이용하여 span 요소의 위치 조정
-    let dateSpans = document.querySelectorAll('.date-range .date');
-    dateSpans.forEach((dateSpan, index) => {
-        if (index === 0) {
-            dateSpan.style.left = `${tenthXPosition}px`;
-        } else if (index === 1) {
-            dateSpan.style.left = `${twentiethXPosition}px`;
-        } else if (index === 2) {
-            dateSpan.style.left = `${thirtiethXPosition}px`;
-        }
-    });
+    table.appendChild(tbody);
+    graphContainer.appendChild(table);
 }

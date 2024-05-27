@@ -10902,9 +10902,11 @@ body {
   flex-direction: column;
 }
 .day {
-  width: 15px;
-  height: 15px;
-  margin: 2px;
+  width: 20px;
+  height: 20px;
+  padding: 4px;
+  border: 6px solid #FFFFFF;
+  aspect-ratio: 1 / 1; /* 추가 */
 }
 .q0 { background-color: #ebedf0; }
 .q1 { background-color: #F2E2D1; }
@@ -10922,11 +10924,13 @@ body {
   text-align: center;
   margin-bottom: 20px;
 }
-.date {
-  position: absolute;
-}
+
 .habbit-contents{
   background-color: white;
   border-radius: 10px;
   padding: 20px;
+}
+.habbit-table{
+  margin-left:auto;
+  margin-right:auto;
 }
