@@ -1,10 +1,7 @@
 package com.dotori.dotori.service;
 
 import com.dotori.dotori.dto.AuthDTO;
-import com.dotori.dotori.dto.AuthSecurityDTO;
-import com.dotori.dotori.dto.PostDTO;
 import com.dotori.dotori.entity.Auth;
-import com.dotori.dotori.entity.Post;
 import com.dotori.dotori.repository.AuthRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Optional;
-import java.util.UUID;
 
 @Log4j2
 @Service
@@ -86,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void updateProfileImage(String id, MultipartFile file) throws Exception {
+    public String updateProfileImage(String id, MultipartFile file) throws Exception {
 
         // 파일 저장 로직 구현
         String fileName = saveFile(file);
@@ -96,6 +87,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new Exception("Auth not found"));
         auth.setProfileImage(fileName);
         authRepository.save(auth);
+        return fileName;
     }
 
     private String saveFile(MultipartFile file) throws Exception {

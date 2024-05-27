@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,7 +43,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final AuthRepository authRepository;
     private final HttpServletResponse httpServletResponse;
-
+    private final CacheManager cacheManager;
     // 로그인
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
@@ -139,10 +140,21 @@ public class AuthController {
 
         try {
             String authId = authentication.getName();
-            authService.updateProfileImage(authId, file);
+            String newProfileImage = authService.updateProfileImage(authId, file);
             redirectAttributes.addFlashAttribute("message", "Profile image updated successfully");
             model.addAttribute("auth", authSecurityDTO);
             log.info("여기다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+            // 세션 갱신
+            Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+            AuthSecurityDTO updatedAuthSecurityDTO = (AuthSecurityDTO) currentAuthentication.getPrincipal();
+            updatedAuthSecurityDTO.setProfileImage(newProfileImage);
+
+            Authentication newAuthentication = new UsernamePasswordAuthenticationToken(updatedAuthSecurityDTO, currentAuthentication.getCredentials(), currentAuthentication.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+
+            // 캐시 갱신
+            cacheManager.getCache("userProfileCache").evict(authId);
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Failed to update profile image");
@@ -150,7 +162,6 @@ public class AuthController {
 
         return "redirect:/auth/info";
     }
-
     @PreAuthorize("principal.username == #authSecurityDTO.id")
     @GetMapping("/modifyPwCheck")
     public String modifyPwCheck(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Model model) {
