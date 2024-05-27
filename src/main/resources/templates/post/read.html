@@ -7,6 +7,9 @@
 <head>
     <title>Board Read</title>
     <style>
+        body {
+            background-color: #F5F0EA;
+        }
         .name{
             font-weight: bold;
         }
@@ -34,6 +37,7 @@
             width: 100%;
         }
         .addCommentBtn{
+            background-color: #ccbfb2;
             position: absolute;
             top: 40px;
             bottom: 15px;
@@ -43,9 +47,6 @@
             margin: 0 auto;
             width: 50%;
         }
-        .commentPaging{
-            justify-content: center;
-        }
     </style>
 </head>
 <body>
@@ -53,48 +54,59 @@
     <div class="row mt-3">
         <div class="col">
             <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">[[${dto.nickName}]]</h5>
+                <div class="card-header" style="display: inline">
+                    <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto; margin-bottom: 10px">
+                    <span class="card-title name" style="font-size: 30px; margin-left: 10px">[[${#authentication.principal.nickName}]]</span>
+                    <div class="dropdown" style="float: right; margin-top: 10px" th:with="user=${#authentication.principal}">
+                        <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="5" cy="5" r="5" fill="black"/>
+                                <circle cx="5" cy="22" r="5" fill="black"/>
+                                <circle cx="5" cy="40" r="5" fill="black"/>
+                            </svg>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown" th:with="link=${pageRequestDTO != null ? pageRequestDTO.getLink() : ''}">
+                            <a class="dropdown-item" th:href="|@{/post/modify(pid=${dto.pid})}&${link}|">수정하기</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/post/remove">삭제하기</a>
+                        </div>
+                    </div>
+                    <hr>
                 </div>
                 <div class="card-body">
                     <div class="input-group mb-3">
                         <input type="hidden" class="form-control" th:value="${dto.pid}" readonly>
                     </div>
                     <div class="input-group mb-3" style="display: block; text-align: center">
-                        <div class="body-content">[[${dto.content}]]</div>
-                        <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}"  class="img-fluid">
+                        <div th:if="${dto.thumbnail != null}">
+                            <div class="body-content">[[${dto.content}]]</div>
+                            <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}"  class="img-fluid">
+                        </div>
+                        <div th:unless="${dto.thumbnail != null}">
+                            <div class="body-content">[[${dto.content}]]</div>
+                        </div>
                     </div>
                     <div class="input-group mb-3">
-                        <div class="date">
-                            <span> [[${#temporals.format(dto.regDate,'yyyy-MM-dd HH:mm:ss')}]] 작성 /&nbsp;</span>
-                        </div>
-                        <div class="date">
-                            <span id="ModDate"> - [[${#temporals.format(dto.modDate,'yyyy-MM-dd HH:mm:ss')}]] 수정</span>
+                        <span> [[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
+                        <span> - &nbsp; [[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]] 수정 </span>
+                        <div class="p-2 ms-auto">
+                            <img th:src="@{/assets/Favorite.png}" style="width: 40px; height: 40px">
+                            <span>[[${dto.likeCount}]]</span>
                         </div>
                     </div>
                 </div> <!--end card-body -->
             </div><!--end card -->
-
-            <div class="my-4 modify-button" th:with="user=${#authentication.principal}">
-                <div class="float-end" th:with="link=${pageRequestDTO != null ? pageRequestDTO.getLink() : ''}">
-                    <a th:href="|@{/post/list}?${link}|" class="text-decoration-none">
-                        <button type="button" class="btn btn-primary">List</button>
-                    </a>
-                    <a th:href="|@{/post/modify(pid=${dto.pid})}&${link}|" class="text-decoration-none">
-                        <button type="button" class="btn btn-secondary">Modify</button>
-                    </a>
-                </div>
-            </div>
+            <br>
+            <hr style="width: 50%; margin: 0 auto">
         </div> <!--end col -->
     </div> <!--end row -->
 
     <!--    댓글 처리 영역 만들기-->
-
-    <div class="row mt-3">
+    <div class="row ">
         <div class="col-md-12">
             <div class="my-4">
                 <div class="input-group-comment mb-3">
-                    <button type="button" class="btn btn-outline-info addCommentBtn">등록하기</button>
+                    <button type="button" class="btn addCommentBtn">등록하기</button>
                     <input type="text" class="form-control commentContent" placeholder="댓글을 입력하세요">
                 </div>
             </div>
@@ -103,14 +115,10 @@
             </ul>
         </div>
     </div>
-    <div class="row mt-3">
-        <div class="col">
-            <ul class="pagination commentPaging">
-            </ul>
-        </div>
-    </div>
+
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/js/comment.js"></script>
+    <script src="/js/ajax.js.js"></script>
 
 </div> <!--end layout:fragment -->
 
@@ -118,59 +126,70 @@
 
     const pid = [[${dto.pid}]];
     const commentList = document.querySelector('.commentList');
-    const commentPaging = document.querySelector('.commentPaging');
+    const buttonInsert = document.querySelector('.remove-button');
 
-    function printList(dtoList) {
-        let str = '';
+    const commentBox = document.querySelector('.comments');
 
-        if(dtoList && dtoList.length > 0) {
-            for (const dto of dtoList) {
-                str +=`<li class="d-flex justify-content-between commentItem">
-                    <div>
-                        <p class="col-2 name">[[${#authentication.principal.nickName}]]</p>
-                        <span class="col-6" data-id="${dto.id}">${dto.content}</span>
-                    </div>
-                    <div>
-                        <button type="button" class="btn btn-danger removeBtn" data-id="${dto.id}">Remove</button>
-                    </div>
-                </li>
-                <hr>`;
-            }
-        }
-        commentList.innerHTML = str;
+    const cri = CommentCriteria;
+    showList(cri);
+
+    if(window.innerHeight >= document.body.offsetHeight){
+        cri.page++;
+        showList(cri);
     }
 
-    function printPages(data) {
-        let pageStr = '';
+    /* Scroll Down -> Board List Request */
+    window.addEventListener('scroll', () => {
+        let val = window.innerHeight + window.scrollY;
 
-        if(data.prev) {
-            pageStr += `<li class="page-item">
-                    <a class="page-link" data-page="${data.start - 1}">PREV</a>
-                 </li>`;
+        if(val >= document.body.offsetHeight){
+            cri.page++;
+            showList(cri);
         }
+    });
 
-        for (let i = data.start; i <= data.end; i++ ){
-            pageStr += `<li class="page-item ${i == data.page ? "active" : ""}">
-                    <a class="page-link" data-page="${i}">${i}</a>
-                </li>`;
-        }
+    function showList(cri){
 
-        if(data.next) {
-            pageStr += `<li class="page-item">
-                    <a class="page-link" data-page="${data.end + 1}">NEXT</a>
-                 </li>`;
-        }
-        commentPaging.innerHTML = pageStr;
-    }
+        const result = commentModule.getMyComments(cri);
 
-    function printComments(page = 1, size = 10) {
-        getList(pid, page, size).then(response => {
-            printList(response.postLists);
-            printPages(response);
-        }).catch(error => {
-            console.error(error);
+        result.forEach((comment, idx) => {
+            console.log(comment);
+
+            let html = '';
+            html = `<li class="d-flex justify-content-between commentItem" style="cursor: pointer; height: 50px">
+                        <div class="commentContent" style="margin-bottom: 0">
+                            <span class="name" >[[${#authentication.principal.nickName}]]</span>
+                            <span class="col-6" data-id="${dto.id}">${dto.content}</span>
+                        </div>
+                        <div class="remove-button" style="display:none">
+                            <button type="button" class="btn btn-danger removeBtn" data-id="${dto.id}">Remove</button>
+                        </div>
+                    </li>
+                    <hr>`
+
+            commentBox.insertAdjacentHTML('beforeend', html);
         });
     }
+
+    const commentItems = document.querySelectorAll('.commentItem');
+    commentItems.forEach(item => {
+        let num = 0;
+        item.querySelector('.commentContent').addEventListener('click', () => {
+            num = num + 1;
+            const removeButton = item.querySelector('.remove-button');
+            removeButton.style.display = num % 2 !== 0 ? 'inline' : 'none';
+        });
+    });
+    }
+
+    function handleScroll() {
+        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+        if (scrollTop + clientHeight >= scrollHeight - 5) {
+            printComments(page);
+        }
+    }
+
+    window.addEventListener('scroll', handleScroll);
 
     printComments();
 
@@ -201,19 +220,6 @@
             });
         }
     });
-
-    commentPaging.addEventListener("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const target = e.target;
-        if(!target || target.tagName !== 'A') {
-            return;
-        }
-
-        const pageNum = target.getAttribute("data-page");
-        printComments(pageNum);
-    }, false);
 
 
 </script>

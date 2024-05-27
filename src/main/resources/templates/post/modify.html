@@ -3,12 +3,16 @@
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{layout/basic.html}">
 <style>
-    .name{
-        font-weight: bold;
+    body {
+        background-color: #F5F0EA;
     }
-    .float-end{
-        margin: 0 auto;
-        width: 50%;
+    form{
+        position: relative;
+    }
+    .my-4{
+        position: absolute;
+        bottom: 0;
+        right: 0;
     }
 
 </style>
@@ -17,10 +21,10 @@
         <div class="col">
             <form th:action="@{/post/modify}" method="post" id="f1" enctype="multipart/form-data">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="input-group mb-3">
-                            <div class="name">[[${#authentication.principal.nickName}]] </div>
-                        </div>
+                    <div class="card-header" style="display: inline">
+                        <input type="hidden" name = "nickname" th:value="${#authentication.principal.nickName}" readonly />                        <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto; margin-bottom: 10px">
+                        <span class="card-title name" style="font-size: 30px; margin-left: 10px">[[${#authentication.principal.nickName}]]</span>
+                        <hr>
                     </div>
                     <div class="card-body">
                         <div class="input-group mb-3">
@@ -28,25 +32,25 @@
                                 <textarea class="col-sm-5" rows="20" style="width: 100%; resize: none; border: none" name="content">[[${dto.content}]]</textarea>
                             </div>
                         </div>
-
-                        <div th:if="${dto.thumbnail != null}">
-                                <span class="input-group-text" style="width: 20%; display: inline">첨부된 사진</span>
-                                <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" alt="Thumbnail" width="40">
-                                <button type="button" class="btn btn-danger removeImageBtn">X</button>
-                        </div>
-                        <div th:unless="${dto.thumbnail != null}">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text">Image</span>
-                                <input type="file" class="form-control" name="file">
-                            </div>
-                        </div>
                     </div><!-- cardbody end-->
                 </div> <!--end card-->
-                <div class="my-4">
-                    <div class="float-end"  th:with="link = ${pageRequestDTO.getLink()}" style="margin: 0 auto; width: 37%">
-                        <button type="button" class="btn btn-primary listBtn">List</button>
-                        <button type="button" class="btn btn-secondary modBtn">Modify</button>
-                        <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                <br>
+                <div class="insert input-group mb-3" style="margin: 0 auto; width: 50%">
+                    <div th:if="${dto.thumbnail != null}">
+                        <span style="width: 20%; display: inline">첨부된 사진</span>
+                        <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" alt="Thumbnail" width="40">
+                        <button type="button" class="btn btn-danger removeImageBtn">X</button>
+                    </div>
+                    <div th:unless="${dto.thumbnail != null}">
+                        <span style="margin-top: 7px; margin-right: 10px">사진 등록하기</span>
+                        <input type="file" name="file" class="form-control">
+                    </div>
+                </div>
+                <div class="insert my-4" style="margin: 0 auto; width: 50%">
+                    <div class="float-end">
+                        <button type="button" class="btn listBtn" style="background: #ffffff; color: #000000; width: 100px;">취소</button>
+                        <button type="button" class="btn modBtn" style="background: #ccbfb2; color: #000000; width: 100px;">수정하기</button>
+                        <button type="button" class="btn btn-danger removeBtn">삭제하기</button>
                     </div>
                 </div>
             </form>
@@ -108,23 +112,6 @@
         const imageElement = document.querySelector(".input-group img");
         imageElement.parentElement.remove();
     },false);
-
-    const imgInsert = document.querySelector('.img-insert')
-
-    function insertButton(){
-        let thumbnail= [[${dto.thumbnail}]];
-
-        if (thumbnail != null){
-            imgInsert.innerHTML = `<div class="input-group mb-3 " th:if="${dto.thumbnail}">
-                                <span class="input-group-text">첨부된 사진</span>
-                                <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" alt="Thumbnail" width="50">
-                                <button type="button" class="btn btn-danger removeImageBtn">X</button>
-                            </div>`;
-        } else {
-            imgInsert.innerHTML = `<span class="input-group-text ">Image</span>
-                            <input type="file" class="form-control " name="file">`
-        }
-    }
 
 </script>
 

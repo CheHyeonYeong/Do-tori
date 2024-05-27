@@ -618,11 +618,6 @@ progress {
   color: #6c757d;
 }
 
-.card{
-  margin: 0 auto;
-  width: 50%;
-}
-
 .container,
 .container-fluid,
 .container-xxl,
@@ -2312,7 +2307,6 @@ textarea.form-control-lg {
   display: inline-block;
   margin-right: 1rem;
 }
-
 .btn-check {
   position: absolute;
   clip: rect(0, 0, 0, 0);
@@ -4168,13 +4162,13 @@ textarea.form-control-lg {
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 0;
+  margin: 0 auto;
+  width: 50%;
   height: var(--bs-card-height);
   word-wrap: break-word;
   background-color: var(--bs-card-bg);
   background-clip: border-box;
-  border: var(--bs-card-border-width) solid var(--bs-card-border-color);
-  border-radius: var(--bs-card-border-radius);
+  border-radius: 20px;
 }
 .card > hr {
   margin-right: 0;
@@ -4206,7 +4200,7 @@ textarea.form-control-lg {
 }
 
 .card-title {
-  margin-bottom: var(--bs-card-title-spacer-y);
+  margin-top: 5px;
 }
 
 .card-subtitle {
@@ -4226,8 +4220,7 @@ textarea.form-control-lg {
   padding: var(--bs-card-cap-padding-y) var(--bs-card-cap-padding-x);
   margin-bottom: 0;
   color: var(--bs-card-cap-color);
-  background-color: var(--bs-card-cap-bg);
-  border-bottom: var(--bs-card-border-width) solid var(--bs-card-border-color);
+  background-color: #ffffff;
 }
 .card-header:first-child {
   border-radius: var(--bs-card-inner-border-radius) var(--bs-card-inner-border-radius) 0 0;
@@ -10892,7 +10885,7 @@ body {
   font-family: Arial, sans-serif;
   background-color: #f7f7f7;
 }
-#contribution {
+#contribution-graph {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
@@ -10902,17 +10895,13 @@ body {
   flex-direction: column;
 }
 .day {
-  width: 20px;
-  height: 20px;
-  padding: 4px;
-  border: 6px solid #FFFFFF;
-  aspect-ratio: 1 / 1; /* 추가 */
+  width: 15px;
+  height: 15px;
+  margin: 2px;
 }
 .q0 { background-color: #ebedf0; }
-.q1 { background-color: #F2E2D1; }
-.q2 { background-color: #CCBFB2; }
-.q3 { background-color: #9B7268; }
-.q4 { background-color: #725852; }
+.q1 { background-color: #CCBFB2; }
+.q2 { background-color: #725852; }
 
 .month-label {
   width: 100%;
@@ -10923,14 +10912,4 @@ body {
 .header {
   text-align: center;
   margin-bottom: 20px;
-}
-
-.habbit-contents{
-  background-color: white;
-  border-radius: 10px;
-  padding: 20px;
-}
-.habbit-table{
-  margin-left:auto;
-  margin-right:auto;
 }

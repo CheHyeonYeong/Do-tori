@@ -4,11 +4,15 @@
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
       layout:decorate="~{layout/basic.html}">
 <style>
+    body {
+        background-color: #F5F0EA;
+    }
     .search{
         width: 100%;
     }
-    .count{
-        float: right;
+    .date{
+        margin: 0 auto;
+        width: 100%;
     }
 </style>
 <div layout:fragment="content">
@@ -26,160 +30,205 @@
                                 <option value="tcw" th:selected="${pageRequestDTO.type =='cn'}">내용+작성자</option>
                             </select>
                         </div>
-                        <input type="text" class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}">
+                        <input type="text" class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}" placeholder="검색">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-danger searchBtn" type="submit">Search</button>
-                            <button class="btn btn-outline-secondary clearBtn" type="button">Clear</button>
+                            <button class="btn btn-outline searchBtn" type="submit" style="background-color: #ccbfb2">검색</button>
+                            <button class="btn btn-outline-secondary clearBtn" type="button">초기화</button>
                         </div>
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
 
-            <!--여기에 모달을 집어넣는 것임!-->
-            <div class="modal" tabindex="-1">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">게시글 등록 성공</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>[[${result}]]번 게시글이 성공적으로 등록되었습니다.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <!-- Floating Button -->
+    <button type="button" class="btn btn-primary btn-lg rounded-circle floating-btn"
+            style="position: fixed; bottom: 20px; right:5%; background: #CCBFB2; border: none"
+            onclick="window.location='/post/register'">
+        +
+    </button>
 
-                        </div>
-                    </div>
+    <!--여기에 모달을 집어넣는 것임!-->
+    <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">게시글 등록 성공</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>[[${result}]]번 게시글이 성공적으로 등록되었습니다.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
                 </div>
             </div>
         </div>
     </div>  <!-- search div end -->
 
-    <!-- Floating Button -->
-    <button type="button" class="btn btn-primary btn-lg rounded-circle floating-btn"
-            style="position: fixed; bottom: 20px; right:5%"
-            onclick="location.href = '/post/register'">
-        +
-    </button>
-
-    <div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px"
-         th:each="dto:${responseDTO.postLists}">
-        <div class="card-body">
-            <h5 class="card-title">[[${dto.nickName}]]</h5>
+    <div id="list">
+        <div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px"
+             th:each="dto:${responseDTO.postLists}">
             <div class="card-header" th:with="link = ${pageRequestDTO.getLink()}">
-                <p class="card-text" style="height: 200px">
-                    <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|">[[${dto.content}]]</a>
+                <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
+                <div class="card-title" style="display:inline; font-weight: bold">[[${#authentication.principal.nickName}]]</div>
+                <div class="dropdown" style="float: right; margin-top: 3px; display: inline" >
+                    <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="5" cy="5" r="5" fill="black"/>
+                            <circle cx="5" cy="22" r="5" fill="black"/>
+                            <circle cx="5" cy="40" r="5" fill="black"/>
+                        </svg>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/post/modify?${link}">수정하기</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/post/remove">삭제하기</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <input type="hidden" class="form-control" th:value="${dto.pid}" readonly>
+                </div>
+                <div class="input-group mb-3 " style="display: block; text-align: center; cursor: pointer" th:onclick="|location.href='@{/post/read(pid=${dto.pid})}&page=1&size=10'|">
+                    <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
+                    <div th:if="${dto.thumbnail != null}">
+                        <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" width="40">
+                    </div>
+                </div>
+            </div> <!-- card body end -->
+            <div style="margin: 0 auto; width: 95%">
+                <hr>
+                <p class="hstack gap-3 date">
+                    <span> [[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
+                    <span>/</span>
+                    <span>
+                    <span th:if="${dto.modDate == null}">-</span>
+                    <span th:unless="${dto.modDate == null}">[[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]]</span>
+                    &nbsp; 수정
+                </span>
+                    <span class="p-2 ms-auto">
+                    <img th:src="@{/assets/Favorite.png}" style="width: 30px; height: 30px">
+                    <span>[[${dto.likeCount}]]</span>
+
+                    <img th:src="@{/assets/Comment.png}" style="width: 30px; height: 30px">
+                    <span class="progress-bar-success" style="color: black">
+                        [[${dto.commentCount}]]
+                    </span>
+                    <img th:src="@{/assets/Bookmark.png}" href="#" style="width: 30px; height: 30px">
+                </span>
                 </p>
             </div>
-            <p class="hstack gap-3">
-                <span class="p-2">[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</span>
-                <span class="p-2 ms-auto">[[${dto.likeCount}]]</span>
-                <span class="p-2 badge progress-bar-success" style="background-color: #0a53be">
-                                [[${dto.commentCount}]]
-                    </span>
-            </p>
-        </div>
+        </div>  <!-- card end -->
     </div>
-    <div class = "row mt-3 list">
-        <div class="float-end p-2">
-            <button id="load-more"
-                    class="pagination flex-wrap load-more row mt-3 mx-auto p-2 vstack gap-3 page-link">
-                더보기
-            </button>
-        </div>
-    </div>
-</div>
 </div> <!--<div layout:fragment="content" end>-->
 
+<script src="/js/ajax.js.js"></script>
 <script layout:fragment="script" th:inline="javascript">
 
     //이벤트 처리
+    const contentBox = document.querySelector('#list');
 
+    const cri = ContentCriteria;
+    showList(cri);
 
-    function redirectToNewPostPage() {
-        // 새 게시글 작성 페이지로 이동
-        window.location.href = '';
+    if(window.innerHeight >= document.body.offsetHeight){
+        cri.page++;
+        showList(cri);
     }
 
-    document.querySelector('.pagination').addEventListener("click", function (e){
+    /* Scroll Down -> Board List Request */
+    window.addEventListener('scroll', () => {
+        let val = window.innerHeight + window.scrollY;
+
+        if(val >= document.body.offsetHeight){
+            cri.page++;
+            showList(cri);
+        }
+    });
+
+    function showList(cri){
+
+        const result = contentModule.getMyContents(cri);
+
+        result.forEach((dto, idx) => {
+            console.log(dto);
+
+            let html = ``;
+            html = `<div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px"
+             th:each="dto:${responseDTO.postLists}">
+            <div class="card-header" th:with="link = ${pageRequestDTO.getLink()}">
+                <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
+                <div class="card-title" style="display:inline; font-weight: bold">[[${#authentication.principal.nickName}]]</div>
+                <div class="dropdown" style="float: right; margin-top: 3px; display: inline" >
+                    <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="5" cy="5" r="5" fill="black"/>
+                            <circle cx="5" cy="22" r="5" fill="black"/>
+                            <circle cx="5" cy="40" r="5" fill="black"/>
+                        </svg>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/post/modify?${link}">수정하기</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/post/remove">삭제하기</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <input type="hidden" class="form-control" th:value="${dto.pid}" readonly>
+                </div>
+                <div class="input-group mb-3 " style="display: block; text-align: center; cursor: pointer" th:onclick="|location.href='@{/post/read(pid=${dto.pid})}&page=1&size=10'|">
+                    <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
+                    <div th:if="${dto.thumbnail != null}">
+                        <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" width="40">
+                    </div>
+                </div>
+            </div> <!-- card body end -->
+            <div style="margin: 0 auto; width: 95%">
+                <hr>
+                <p class="hstack gap-3 date">
+                    <span> [[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
+                    <span>/</span>
+                    <span>
+                        <span th:if="${dto.modDate == null}">-</span>
+                        <span th:unless="${dto.modDate == null}">[[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]]</span>
+                        &nbsp; 수정
+                    </span>
+                    <span class="p-2 ms-auto">
+                        <img th:src="@{/assets/Favorite.png}" style="width: 30px; height: 30px">
+                        <span>[[${dto.likeCount}]]</span>
+
+                        <img th:src="@{/assets/Comment.png}" style="width: 30px; height: 30px">
+                        <span class="progress-bar-success" style="color: black">
+                            [[${dto.commentCount}]]
+                        </span>
+                        <img th:src="@{/assets/Bookmark.png}" href="#" style="width: 30px; height: 30px">
+                    </span>
+                </p>
+            </div>
+        </div>  <!-- card end -->`;
+
+            contentBox.insertAdjacentHTML('beforeend', html);
+        });
+    }
+
+    // Show modal if result exists
+    const result = [[${result}]];
+    if (result) {
+        const modal = new bootstrap.Modal(document.querySelector('.modal'));
+        modal.show();
+    }
+
+    document.querySelector('.clearBtn').addEventListener('click', function (e){
         e.preventDefault();
         e.stopPropagation();
+        self.location = '/post/list';
+    }, false);
 
-        const target = e.target;
-
-        console.log(target)
-
-
-        if(target.tagName !='A'){return }
-
-        const num = target.getAttribute("data-num");
-        const formObj = document.querySelector("form");
-        formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`;
-        formObj.submit();
-    }, false)
-
-    document.querySelector(".clearBtn").addEventListener("click", function (e){
-        e.preventDefault()
-        e.stopPropagation()
-        self.location = '/post/list'
-    }, false)
-
-
-    //show modal
-    //게시글 등록 이후 모달창이 하나 뜰 것이다.
-    const result = [[${result}]]
-
-    const modal = new  bootstrap.Modal(document.querySelector(".modal"))
-
-    if(result){
-        modal.show()
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-
-        var cardContainer = document.getElementById('card-container');
-        var loadMoreButton = document.getElementById('load-more');
-        var currentPostIndex = 0;
-        var postsPerPage = 5;  // 한번에 로드할 게시물 수
-
-        function loadPosts() {
-            var endIndex = currentPostIndex + postsPerPage;
-            for (var i = currentPostIndex; i < endIndex && i < posts.length; i++) {
-                var post = posts[i];
-                var card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="card-body">
-                        <h5 class="card-title">[[${dto.nickName}]]</h5>
-                        <div class="card-header" th:with="link = ${pageRequestDTO.getLink()}">
-                            <p class="card-text" style="height: 200px">
-                                <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|">[[${dto.content}]]</a>
-                            </p>
-                        </div>
-                        <p class="hstack gap-3">
-                            <span class="p-2">[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</span>
-                            <span class="p-2 ms-auto">[[${dto.likeCount}]]</span>
-                            <span class="p-2 badge progress-bar-success" style="background-color: #0a53be">
-                                            [[${dto.commentCount}]]
-                                </span>
-                        </p>
-                    </div>
-            `;
-                cardContainer.appendChild(card);
-            }
-            currentPostIndex = endIndex;
-
-            // 모든 게시물이 로드되면 "더보기" 버튼 숨김
-            if (currentPostIndex >= posts.length) {
-                loadMoreButton.style.display = 'none';
-            }
-        }
-        loadMoreButton.addEventListener('click', loadPosts);
-
-        // 페이지 로드 시 처음 몇 개의 게시물 로드
-        loadPosts();
-    });
 </script>
 
 </html>
