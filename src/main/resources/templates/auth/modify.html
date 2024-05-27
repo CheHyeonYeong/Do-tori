@@ -328,7 +328,7 @@
 
                 <div class="mb">
                     <span class="input-group-txt">닉네임</span>
-                    <input type="text" th:value="${#authentication.principal.nickName}" name="nickName" class="form-con">
+                    <input type="text" th:value="${#authentication.principal.nickName}" name="nickName" id="nickName" class="form-con">
                 </div>
 
                 <div class="mb">
@@ -388,6 +388,16 @@
         if (password !== passwordConfirm) {
             alert("비밀번호가 일치하지 않습니다.");
             passwordConfirmInput.focus();
+            return;
+        }
+
+        const nicknameInput = document.getElementById('nickName');
+        const nickname = nicknameInput.value;
+        // 닉네임 유효성 검사
+        const nicknameRegex = /^.{1,4}$/;
+        if (!nicknameRegex.test(nickname)) {
+            alert("닉네임은 4글자 이하여야 합니다.")
+            nicknameInput.focus();
             return;
         }
 
