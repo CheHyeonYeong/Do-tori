@@ -66,7 +66,7 @@
     <!-- Floating Button -->
     <button type="button" class="btn btn-primary btn-lg rounded-circle floating-btn"
             style="position: fixed; bottom: 20px; right:5%; background: #CCBFB2; border: none"
-            onclick="window.location='/post/register'">
+            onclick="redirectToNewPostPage()">
         +
     </button>
 
@@ -89,6 +89,7 @@
     </div>  <!-- search div end -->
 
     <div id="list" th:with="link = ${pageRequestDTO.getLink()}">
+
         <div th:each="dto:${responseDTO.postLists}">
             <div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px">
                 <div class="card-header">
@@ -158,8 +159,27 @@
             </div>
         </div>
     </div>
+    <div >
+        <ul class="pagination flex-wrap">
+            <li class="page-item" th:if="${responseDTO.prev}">
+                <a class="page-link" th:data-num="${responseDTO.start - 1}"> Previous</a>
+            </li>
+            <th:block th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+                    <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                </li>
+            </th:block>
+            <li class="page-item" th:if="${responseDTO.next}">
+                <a class="page-link" th:data-num="${responseDTO.end + 1}"> Next</a>
+            </li>
+        </ul>
+    </div>
 
 
+    <!--    &lt;!&ndash; 더보기 버튼 추가 &ndash;&gt;-->
+<!--    <div class="text-center">-->
+<!--        <button id="loadMoreBtn" class="btn btn-primary">더보기</button>-->
+<!--    </div>-->
 </div> <!--<div layout:fragment="content" end -->
 
 
@@ -170,14 +190,35 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-    //이벤트 처리
-    const contentBox = document.querySelector('#list');
+    function redirectToNewPostPage() {
+        // 새 게시글 작성 페이지로 이동
+        window.location.href = '/post/register';
+    }
+    document.querySelector('.pagination').addEventListener("click", function (e){
+        e.preventDefault();
+        e.stopPropagation();
+        const target = e.target;
+        console.log(target)
+        if(target.tagName !='A'){return }
+        const num = target.getAttribute("data-num");
+        const formObj = document.querySelector("form");
+        formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`;
+        formObj.submit();
+    }, false)
+    document.querySelector(".clearBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+        self.location = '/post/list'
+    }, false)
 
-    // Show modal if result exists
-    const result = [[${result}]];
-    if (result) {
-        const modal = new bootstrap.Modal(document.querySelector('.modal'));
-        modal.show();
+    // show modal
+
+    // 게시글 등록 이후 모달창이 하나 뜰 것이다.
+
+    const result = [[${result}]]
+    const modal = new  bootstrap.Modal(document.querySelector(".modal"))
+    if(result){
+        modal.show()
     }
 
     document.querySelector('.clearBtn').addEventListener('click', function (e){

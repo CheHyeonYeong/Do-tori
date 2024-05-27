@@ -8,6 +8,7 @@ import com.dotori.dotori.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class PostController {
     private final PostService postService;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model) {
         PageResponseDTO<PostListCommentCountDTO> responseDTO = postService.listWithCommentCount(pageRequestDTO);
@@ -31,10 +33,13 @@ public class PostController {
         model.addAttribute("responseDTO", responseDTO);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/register")
     public void registerGet(Model model) {
         // + 버튼을 누르면 글 등록 페이지로 들어감
     }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/register")
     public String registerPost(@Valid PostDTO postDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes, MultipartFile file) throws Exception {
         if (bindingResult.hasErrors()) {
@@ -50,7 +55,7 @@ public class PostController {
         return "redirect:/post/list";
     }
 
-
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping({"/read", "/modify"})
     public void read(int pid, PageRequestDTO pageRequestDTO, Model model) {
         PostDTO postDTO = postService.getPost(pid);
@@ -58,6 +63,7 @@ public class PostController {
         model.addAttribute("dto", postDTO);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/modify")
     public String modify(PageRequestDTO pageRequestDTO, @Valid PostDTO postDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes, MultipartFile file) throws Exception {
         log.info("Post Modify coming");
@@ -75,7 +81,7 @@ public class PostController {
         return "redirect:/post/read";
     }
 
-
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/remove")
     public String remove(PostDTO postDTO,PageRequestDTO pageRequestDTO, RedirectAttributes redirectAttributes) {
 
