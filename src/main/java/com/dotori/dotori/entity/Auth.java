@@ -40,6 +40,7 @@ public class Auth {
     @Column(name = "provider")
     private String provider; // 사용자가 로그인한 서비스(ex) google, naver..)
 
+    @Column(name = "profile_image")
     private String profileImage;
 
     public void setAuth(String id) {

@@ -45,6 +45,7 @@ public class AuthDTO {
                 .nickName(this.nickName)
                 .email(this.email)
                 .provider(this.provider)
+                .profileImage(null)
                 .social(true)
                 .build();
     }
