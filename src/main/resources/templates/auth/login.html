@@ -71,6 +71,10 @@
             margin: 0 auto; /* 가운데 정렬 */
         }
 
+        .rememberBox {
+            text-align: center;
+        }
+
         .social-login {
             display: flex;
             justify-content: center;
@@ -145,6 +149,10 @@
             <div class="mb-3">
                 <input type="password" name="password" class="form-control" placeholder="비밀번호">
             </div>
+            <div class="rememberBox">
+                <input type="checkbox" id="rememberMe" name="rememberMe">
+                <label th:for="rememberMe">자동 로그인</label>
+            </div>
             <br>
             <div class="hr-sect">소셜 계정 로그인</div>
             <br>
@@ -168,6 +176,29 @@
 </div>
 <script th:if="${param.logout != null}">
     alert("저희 서비스를 이용해주셔서 감사합니다. 안녕히가세요.");
+
+    $.ajax({
+        type: "POST",
+        url: "auth/login",
+        data: {
+            username: userName,
+            password: password,
+            rememberMe: rememberMe
+        },
+        success: function(data, state, xhr) {
+            if (xhr.getResponseHeader("isSuccess") === "true") {
+                location.replace("/todo/list");
+            } else if (xhr.getResponseHeader("isSuccess") === "false") {
+                // 접근 권한이 없을 경우
+                alert('접근 권한이 없습니다.');
+            } else {
+                alert('로그인에 실패했습니다. 아이디 혹은 비밀번호를 확인하세요.');
+            }
+        },
+        error: function() {
+            // 에러 처리
+        }
+    });
 </script>
 </body>
 </html>

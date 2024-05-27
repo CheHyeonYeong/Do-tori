@@ -74,12 +74,13 @@ public class CustomSecurityConfig {
         http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
 
         //remember-me 설정
-        http.rememberMe(httpSecurityRememberMeConfigurer -> {
-            httpSecurityRememberMeConfigurer.key("123456789")           // DB에 저장해서 작업할 수 있어야 remember 되기 때문이다.
-                    .tokenRepository(persistentTokenRepository())
-                    .userDetailsService(userDetailsService)
-                    .tokenValiditySeconds(60*60);     // 30일 : 60*60*24*30, 1시간 : 60*60
-        });
+        http.rememberMe(rememberMe ->
+                rememberMe.key("123456789") // 세션에 저장해서 작업할 수 있어야 remember 되기 때문이다.
+                        .rememberMeParameter("rememberMe") // 자동 로그인 체크박스의 name 속성 값
+                        .tokenValiditySeconds(60 * 60 * 24 * 365) // 1년 : 60 * 60 * 24 * 365
+                        .userDetailsService(userDetailsService) // 사용자 정보 서비스 설정
+                        .authenticationSuccessHandler(authenticationSuccessHandler()) // 인증 성공 핸들러 설정
+        );
 
 
         //exception Handler 설정
