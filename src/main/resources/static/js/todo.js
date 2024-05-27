@@ -210,7 +210,7 @@ function generateRandomData(startDate, daysInMonth) {
     for (var i = 1; i <= daysInMonth; i++) {
         var date = new Date(startDate.getFullYear(), startDate.getMonth(), i);
         var count =  // 해당 done 개수
-        data.push({ date: date, count: count });
+            data.push({ date: date, count: count });
     }
     return data;
 }
@@ -288,6 +288,8 @@ function renderGraph(currentMonth, currentYear, daysInMonth) {
 
         let th = document.createElement('th');
         th.textContent = category === 'No category' ? '없음' : category;
+        th.style.fontSize = '15px';
+        th.style.height = '25px';
         row.appendChild(th);
 
         // 현재 달의 모든 날짜에 대해 셀 생성
@@ -314,6 +316,8 @@ function renderGraph(currentMonth, currentYear, daysInMonth) {
             }
 
             let cell = document.createElement('td');
+            cell.style.height = '20px';
+            cell.style.width = '20px';
             cell.className = className;
             cell.title = `${formattedDate}: ${doneCount} done tasks`;
             row.appendChild(cell);
@@ -329,6 +333,7 @@ function renderGraph(currentMonth, currentYear, daysInMonth) {
 
     for (let day = 1; day <= daysInMonth; day++) {
         let th = document.createElement('th');
+
         if (day % 10 === 0) {
             th.textContent = day;
         }
