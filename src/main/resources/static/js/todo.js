@@ -311,8 +311,12 @@ function renderGraph(currentMonth, currentYear, daysInMonth) {
                 className = 'day q0';
             } else if (doneCount >= 1 && doneCount <= 4) {
                 className = 'day q1';
-            } else {
+            } else if (doneCount >= 5 && doneCount <= 9) {
                 className = 'day q2';
+            } else if (doneCount >= 10 && doneCount <= 14) {
+                className = 'day q3';
+            } else {
+                className = 'day q4';
             }
 
             if(day == 10){
