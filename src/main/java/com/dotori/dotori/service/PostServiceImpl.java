@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class PostServiceImpl implements PostService {
+
     private final PostRepository postRepository;
     private final ModelMapper modelMapper;
 
@@ -58,6 +59,7 @@ public class PostServiceImpl implements PostService {
         return pid;
     }
 
+
     @Override
     public PostDTO getPost(int id) {
         Optional<Post> post = postRepository.findById(id);
@@ -73,6 +75,7 @@ public class PostServiceImpl implements PostService {
         String thumbnail = uploadImage(file);
         result.changePost(postDTO.getContent(), postDTO.getLikeCount(), thumbnail);
     }
+
 
     private String uploadImage(MultipartFile file) throws Exception {
         String originalName = file.getOriginalFilename();

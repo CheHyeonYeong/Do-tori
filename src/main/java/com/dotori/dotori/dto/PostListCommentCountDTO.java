@@ -11,6 +11,8 @@ public class PostListCommentCountDTO {
     private String content;
     private String nickName;
     private LocalDateTime regDate;
+    private LocalDateTime modDate;
     private int likeCount;
     private Long commentCount;
+    private String thumbnail;
 }

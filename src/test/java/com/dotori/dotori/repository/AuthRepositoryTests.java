@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Commit;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.stream.IntStream;
 

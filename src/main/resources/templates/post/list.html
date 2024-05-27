@@ -1,20 +1,42 @@
 <!DOCTYPE html>
 
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
-      layout:decorate="~{layout/basic.html}">
-<style>
-    body {
-        background-color: #F5F0EA;
-    }
-    .search{
-        width: 100%;
-    }
-    .date{
-        margin: 0 auto;
-        width: 100%;
-    }
-</style>
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+
+    <style>
+        .active-nav-link {
+            font-weight: bold;
+            color: black; /* 현재 페이지의 링크 색상을 빨간색으로 설정 */
+        }
+        body {
+            background-color: #F5F0EA;
+        }
+        .search{
+            width: 100%;
+        }
+        .date{
+            margin: 0 auto;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+
+<div th:insert="~{layout/navbar.html}"></div>
+
+
 <div layout:fragment="content">
     <div class="search">
         <!--    검색 화면 추가 -->
@@ -48,7 +70,6 @@
         +
     </button>
 
-    <!--여기에 모달을 집어넣는 것임!-->
     <div class="modal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -67,154 +88,89 @@
         </div>
     </div>  <!-- search div end -->
 
-    <div id="list">
-        <div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px"
-             th:each="dto:${responseDTO.postLists}">
-            <div class="card-header" th:with="link = ${pageRequestDTO.getLink()}">
-                <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
-                <div class="card-title" style="display:inline; font-weight: bold">[[${#authentication.principal.nickName}]]</div>
-                <div class="dropdown" style="float: right; margin-top: 3px; display: inline" >
-                    <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="5" cy="5" r="5" fill="black"/>
-                            <circle cx="5" cy="22" r="5" fill="black"/>
-                            <circle cx="5" cy="40" r="5" fill="black"/>
-                        </svg>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/post/modify?${link}">수정하기</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/post/remove">삭제하기</a>
+    <div id="list" th:with="link = ${pageRequestDTO.getLink()}">
+        <div th:each="dto:${responseDTO.postLists}">
+            <div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px">
+                <div class="card-header">
+                    <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
+                    <div class="card-title" style="display:inline; font-weight: bold">[[${#authentication.principal.nickName}]]</div>
+
+                    <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
+
+                        <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="5" cy="5" r="5" fill="black"/>
+                                <circle cx="5" cy="22" r="5" fill="black"/>
+                                <circle cx="5" cy="40" r="5" fill="black"/>
+                            </svg>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" th:href="@{/post/modify(pid=${dto.pid})}" th:text="수정하기"></a>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-item">
+                                    <form th:action="@{/post/remove}" method="post">
+                                        <input type="text" name="pid" th:value="${dto.pid}" readonly style="display: none;">
+                                        <button type="submit" class="removeBtn"  style="all: unset; cursor: pointer;">삭제하기</button>
+                                    </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="input-group mb-3">
-                    <input type="hidden" class="form-control" th:value="${dto.pid}" readonly>
-                </div>
-                <div class="input-group mb-3 " style="display: block; text-align: center; cursor: pointer" th:onclick="|location.href='@{/post/read(pid=${dto.pid})}&page=1&size=10'|">
-                    <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
-                    <div th:if="${dto.thumbnail != null}">
-                        <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" width="40">
+
+                <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|"   style="all: unset; cursor: pointer;">
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <input type="hidden" class="form-control" th:value="${dto.pid}" readonly>
+                        </div>
+                        <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
+                            <div class="body-content" style="text-align: left">[[${dto.content ?: ''}]]</div>
+
+                            <!--                        이미지 뜨게 함-->
+
+                        <img th:if="${dto.thumbnail != null and dto.thumbnail != '1716805715097_'}" th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}"
+                             class="img-fluid">
+
+                        </div>
                     </div>
-                </div>
-            </div> <!-- card body end -->
-            <div style="margin: 0 auto; width: 95%">
-                <hr>
-                <p class="hstack gap-3 date">
-                    <span> [[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
-                    <span>/</span>
-                    <span>
-                    <span th:if="${dto.modDate == null}">-</span>
-                    <span th:unless="${dto.modDate == null}">[[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]]</span>
-                    &nbsp; 수정
-                </span>
-                    <span class="p-2 ms-auto">
-                    <img th:src="@{/assets/Favorite.png}" style="width: 30px; height: 30px">
-                    <span>[[${dto.likeCount}]]</span>
-
-                    <img th:src="@{/assets/Comment.png}" style="width: 30px; height: 30px">
-                    <span class="progress-bar-success" style="color: black">
-                        [[${dto.commentCount}]]
-                    </span>
-                    <img th:src="@{/assets/Bookmark.png}" href="#" style="width: 30px; height: 30px">
-                </span>
-                </p>
-            </div>
-        </div>  <!-- card end -->
-    </div>
-</div> <!--<div layout:fragment="content" end>-->
-
-<script src="/js/ajax.js.js"></script>
-<script layout:fragment="script" th:inline="javascript">
-
-    //이벤트 처리
-    const contentBox = document.querySelector('#list');
-
-    const cri = ContentCriteria;
-    showList(cri);
-
-    if(window.innerHeight >= document.body.offsetHeight){
-        cri.page++;
-        showList(cri);
-    }
-
-    /* Scroll Down -> Board List Request */
-    window.addEventListener('scroll', () => {
-        let val = window.innerHeight + window.scrollY;
-
-        if(val >= document.body.offsetHeight){
-            cri.page++;
-            showList(cri);
-        }
-    });
-
-    function showList(cri){
-
-        const result = contentModule.getMyContents(cri);
-
-        result.forEach((dto, idx) => {
-            console.log(dto);
-
-            let html = ``;
-            html = `<div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px"
-             th:each="dto:${responseDTO.postLists}">
-            <div class="card-header" th:with="link = ${pageRequestDTO.getLink()}">
-                <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
-                <div class="card-title" style="display:inline; font-weight: bold">[[${#authentication.principal.nickName}]]</div>
-                <div class="dropdown" style="float: right; margin-top: 3px; display: inline" >
-                    <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="5" cy="5" r="5" fill="black"/>
-                            <circle cx="5" cy="22" r="5" fill="black"/>
-                            <circle cx="5" cy="40" r="5" fill="black"/>
-                        </svg>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/post/modify?${link}">수정하기</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/post/remove">삭제하기</a>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="input-group mb-3">
-                    <input type="hidden" class="form-control" th:value="${dto.pid}" readonly>
-                </div>
-                <div class="input-group mb-3 " style="display: block; text-align: center; cursor: pointer" th:onclick="|location.href='@{/post/read(pid=${dto.pid})}&page=1&size=10'|">
-                    <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
-                    <div th:if="${dto.thumbnail != null}">
-                        <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" width="40">
-                    </div>
-                </div>
-            </div> <!-- card body end -->
-            <div style="margin: 0 auto; width: 95%">
-                <hr>
-                <p class="hstack gap-3 date">
-                    <span> [[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
-                    <span>/</span>
-                    <span>
+                </a>
+                <div style="margin: 0 auto; width: 95%">
+                    <hr>
+                    <p class="hstack gap-3 date">
+                        <span>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
+                        <span>/</span>
+                        <span>
                         <span th:if="${dto.modDate == null}">-</span>
                         <span th:unless="${dto.modDate == null}">[[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]]</span>
                         &nbsp; 수정
                     </span>
-                    <span class="p-2 ms-auto">
+                        <span class="p-2 ms-auto">
                         <img th:src="@{/assets/Favorite.png}" style="width: 30px; height: 30px">
                         <span>[[${dto.likeCount}]]</span>
-
                         <img th:src="@{/assets/Comment.png}" style="width: 30px; height: 30px">
-                        <span class="progress-bar-success" style="color: black">
-                            [[${dto.commentCount}]]
-                        </span>
-                        <img th:src="@{/assets/Bookmark.png}" href="#" style="width: 30px; height: 30px">
+                        <span class="progress-bar-success" style="color: black">[[${dto.commentCount}]]</span>
                     </span>
-                </p>
-            </div>
-        </div>  <!-- card end -->`;
+                    </p>
+                </div>
 
-            contentBox.insertAdjacentHTML('beforeend', html);
-        });
-    }
+            </div>
+        </div>
+    </div>
+
+
+</div> <!--<div layout:fragment="content" end -->
+
+
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script src="/js/ajax.js"></script>
+<script layout:fragment="script" th:inline="javascript">
+
+    //이벤트 처리
+    const contentBox = document.querySelector('#list');
 
     // Show modal if result exists
     const result = [[${result}]];
@@ -230,5 +186,5 @@
     }, false);
 
 </script>
-
+</body>
 </html>

@@ -50,6 +50,7 @@ public class PostController {
         return "redirect:/post/list";
     }
 
+
     @GetMapping({"/read", "/modify"})
     public void read(int pid, PageRequestDTO pageRequestDTO, Model model) {
         PostDTO postDTO = postService.getPost(pid);
@@ -73,6 +74,7 @@ public class PostController {
 
         return "redirect:/post/read";
     }
+
 
     @PostMapping("/remove")
     public String remove(PostDTO postDTO,PageRequestDTO pageRequestDTO, RedirectAttributes redirectAttributes) {
