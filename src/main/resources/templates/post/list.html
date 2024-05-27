@@ -93,7 +93,7 @@
             <div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px">
                 <div class="card-header">
                     <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
-                    <div class="card-title" style="display:inline; font-weight: bold">[[${#authentication.principal.nickName}]]</div>
+                    <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
 
                     <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
 

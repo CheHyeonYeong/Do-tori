@@ -15,7 +15,7 @@
     <!-- Core theme CSS (includes Bootstrap)-->
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
 
-    <title>Board Read</title>
+    <title>🌰 Do-Tori</title>
     <style>
         body {
             background-color: #F5F0EA;
@@ -46,7 +46,8 @@
             height: 100px;
             width: 100%;
         }
-        .addCommentBtn{
+        .addCommentBtn, .removeBtn{
+            border : none;
             background-color: #ccbfb2;
             position: absolute;
             top: 40px;
@@ -56,6 +57,7 @@
         .commentList{
             margin: 0 auto;
             width: 50%;
+            background-color: #F5F0EA;
         }
     </style>
 </head>
@@ -71,7 +73,7 @@
             <div class="card">
                 <div class="card-header" style="display: inline">
                     <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto; margin-bottom: 10px">
-                    <span class="card-title name" style="font-size: 30px; margin-left: 10px">[[${#authentication.principal.nickName}]]</span>
+                    <span class="card-title name" style="font-size: 30px; margin-left: 10px">[[${dto.nickName}]]</span>
                     <div class="dropdown" style="float: right; margin-top: 10px" th:with="user=${#authentication.principal}">
                         <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -87,7 +89,7 @@
                             <div class="dropdown-item">
                                 <form th:action="@{/post/remove}" method="post" >
                                     <input type="text" name="pid" th:value="${dto.pid}" readonly style="display: none;">
-                                    <button type="submit" class="removeBtn">삭제하기</button>
+                                    <button type="submit" class="removePostBtn">삭제하기</button>
                                 </form>
                             </div>
                         </div>
@@ -109,7 +111,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <span> [[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
-                        <span> - &nbsp; [[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]] 수정 </span>
+                        <span> - &nbsp;&nbsp; [[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]] 수정 </span>
                         <div class="p-2 ms-auto">
                             <img th:src="@{/assets/Favorite.png}" style="width: 40px; height: 40px">
                             <span>[[${dto.likeCount}]]</span>
@@ -123,15 +125,18 @@
     </div> <!--end row -->
 
     <!--    댓글 처리 영역 만들기-->
-    <div class="row ">
+    <div class="row " >
         <div class="col-md-12">
             <div class="my-4">
                 <div class="input-group-comment mb-3">
-                    <button type="button" class="btn addCommentBtn">등록하기</button>
+                    <input type="hidden" name="nickName" th:value="${#authentication.principal.nickName}"  class="form-control nickname" readonly>
+
                     <input type="text" class="form-control commentContent" placeholder="댓글을 입력하세요">
+                    <button type="button" class="btn addCommentBtn">등록하기</button>
+
                 </div>
             </div>
-            <ul class="list-group commentList">
+            <ul class="list-group commentList" >
 
             </ul>
         </div>
@@ -141,53 +146,98 @@
 
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <script th:src="@{/js/comment.js}"></script>
 
 
 <script layout:fragment="script" th:inline="javascript">
-
     const pid = [[${dto.pid}]];
+    const authNickName = [[${#authentication.principal.nickName}]];
     const commentList = document.querySelector('.commentList');
-    const buttonInsert = document.querySelector('.remove-button');
+    const commentPaging = document.querySelector('.commentPaging');
 
-    const commentBox = document.querySelector('.comments');
-
-    const cri = CommentCriteria;
-
-
-    function handleScroll() {
-        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-        if (scrollTop + clientHeight >= scrollHeight - 5) {
-            printComments(page);
+    function printList(dtoList) {
+        let str = '';
+        if (dtoList && dtoList.length > 0) {
+            for (const dto of dtoList) {
+                const isOwner = dto.nickName === authNickName; // 작성자와 현재 사용자가 같은지 확인
+                str += `
+                <li class="list-group-item d-flex justify-content-between commentItem" style="background-color: #F5F0EA; border: none;">
+                    <div style="background-color: #F5F0EA;">
+                        <h3>
+                            <img src="/assets/Profile.png" class="col-1 profile" id="profileImage" style="width: 30px; height: auto">
+                            <span class="col-2">${dto.nickName}</span>
+                        </h3>
+                        <div>
+                            <span class="col-6" data-id="${dto.id}">${dto.content}</span>
+                        </div>
+                        <span class="col-2" style="display: none;">${dto.id}</span>
+                    </div>
+                    ${isOwner ? `
+                        <div>
+                            <button type="button" class="btn btn-danger removeBtn" data-id="${dto.id}">삭제</button>
+                        </div>
+                    ` : ''}
+                </li>
+                <li>
+                <hr>
+                </li>`;
+            }
         }
+        commentList.innerHTML = str;
     }
 
-    window.addEventListener('scroll', handleScroll);
 
+    function printPages(data) {
+        let pageStr = '';
+        if(data.prev) {
+            pageStr += `<li class="page-item">
+                    <a class="page-link" data-page="${data.start - 1}">PREV</a>
+                 </li>`;
+        }
+        for (let i = data.start; i <= data.end; i++ ){
+            pageStr += `<li class="page-item ${i == data.page ? "active" : ""}">
+                    <a class="page-link" data-page="${i}">${i}</a>
+                </li>`;
+        }
+        if(data.next) {
+            pageStr += `<li class="page-item">
+                    <a class="page-link" data-page="${data.end + 1}">NEXT</a>
+                 </li>`;
+        }
+        commentPaging.innerHTML = pageStr;
+    }
+
+    function printComments(page = 1, size = 10) {
+        getList(pid, page, size).then(response => {
+            printList(response.postLists);
+            printPages(response);
+        }).catch(error => {
+            console.error(error);
+
+        });
+    }
     printComments();
-
     document.querySelector(".addCommentBtn").addEventListener("click", function () {
         const commentObj = {
             pid: pid,
-            content: document.querySelector(".commentContent").value
+            content: document.querySelector(".commentContent").value,
+            nickName: document.querySelector(".nickname").value
         };
         addComment(commentObj).then(response => {
             alert(response.id);
             document.querySelector(".commentContent").value = '';
+            document.querySelector(".nickname").value = '';
             printComments();
         }).catch(error => {
             console.error(error);
         });
     }, false);
-
     commentList.addEventListener('click', (e) => {
         if (e.target.classList.contains('removeBtn')) {
             e.preventDefault();
             e.stopPropagation();
-
             const id = e.target.dataset.id;
             removeComment(id).then(() => {
                 printComments();
@@ -196,8 +246,16 @@
             });
         }
     });
-
-
+    commentPaging.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const target = e.target;
+        if(!target || target.tagName !== 'A') {
+            return;
+        }
+        const pageNum = target.getAttribute("data-page");
+        printComments(pageNum);
+    }, false);
 </script>
 
 </body>

@@ -59,12 +59,9 @@
                 <br>
                 <div class="insert input-group mb-3" style="margin: 0 auto; width: 50%">
                     <div th:if="${dto.thumbnail != null and dto.thumbnail != '1716805715097_'}">
-
-                        <!--                        이미지 뜨게 함-->
                         <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" width="40">
                         <button type="button" class="btn btn-danger removeImageBtn">X</button>
                     </div>
-
                     <div th:if="${dto.thumbnail == null}">
                         <span style="margin-top: 7px; margin-right: 10px">사진 등록하기</span>
                         <input type="file" name="file" class="form-control">
@@ -84,12 +81,6 @@
 </div><!--content end-->
 
 <script layout:fragment="script" th:inline="javascript">
-
-    function filterStrings(strings) {
-        const pattern = /^171\d{10}\_/; // 17로 시작하고 10자리 숫자가 있는 패턴, 그리고 _로 끝나는 패턴
-
-        return strings.filter(str => !pattern.test(str));
-    }
 
     const errors = [[${errors}]]
     console.log(errors);
