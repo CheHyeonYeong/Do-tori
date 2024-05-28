@@ -123,19 +123,13 @@
                     </div>
                 </div>
 
-                <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|"   style="all: unset; cursor: pointer;">
+                <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|" style="all: unset; cursor: pointer;">
                     <div class="card-body">
-                        <div class="input-group mb-3">
-                            <input type="hidden" class="form-control" th:value="${dto.pid}" readonly>
-                        </div>
                         <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
-                            <div class="body-content" style="text-align: left">[[${dto.content ?: ''}]]</div>
-
-                            <!--                        이미지 뜨게 함-->
-
-                        <img th:if="${dto.thumbnail != null and dto.thumbnail != '1716805715097_'}" th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}"
-                             class="img-fluid">
-
+                            <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
+                            <div th:if="${postDTO != null && !postDTO.thumbnails.isEmpty()}">
+                                <img th:src="@{/images/{filename}(filename=${postDTO.thumbnails[0]})}" alt="Thumbnail" style="max-width: 200px; max-height: 200px;">
+                            </div>
                         </div>
                     </div>
                 </a>

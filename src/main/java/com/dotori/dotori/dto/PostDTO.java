@@ -2,10 +2,7 @@ package com.dotori.dotori.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,11 +10,14 @@ import java.util.List;
 
 @Data
 @Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostDTO {
 
     private int pid;
+    private Long commentCount;
 
     @NotEmpty
     private String nickName;
@@ -35,5 +35,7 @@ public class PostDTO {
 
     @Builder.Default
     private List<String> thumbnails = new ArrayList<>();
+
+
 
 }

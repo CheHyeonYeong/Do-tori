@@ -127,15 +127,32 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PageResponseDTO<PostListCommentCountDTO> listWithCommentCount(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<PostDTO> listWithCommentCount(PageRequestDTO pageRequestDTO) {
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("pid");
+
         Page<PostListCommentCountDTO> result = postRepository.searchWithCommentCount(types, keyword, pageable);
 
-        return PageResponseDTO.<PostListCommentCountDTO>withAll()
+        List<PostDTO> postDTOS = result.getContent().stream()
+                .map(postListCommentCountDTO -> {
+                    PostDTO postDTO = modelMapper.map(postListCommentCountDTO, PostDTO.class);
+                    postDTO.setCommentCount(postListCommentCountDTO.getCommentCount());
+
+                    // 썸네일 정보 설정
+                    List<String> thumbnails = new ArrayList<>();
+                    if (postListCommentCountDTO.getThumbnail() != null) {
+                        thumbnails.add(postListCommentCountDTO.getThumbnail());
+                    }
+                    postDTO.setThumbnails(thumbnails);
+
+                    return postDTO;
+                })
+                .collect(Collectors.toList());
+
+        return PageResponseDTO.<PostDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
-                .postLists(result.getContent())
+                .postLists(postDTOS)
                 .total((int) result.getTotalElements())
                 .build();
     }

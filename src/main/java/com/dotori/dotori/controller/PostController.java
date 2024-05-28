@@ -31,11 +31,10 @@ public class PostController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model) {
-        PageResponseDTO<PostListCommentCountDTO> responseDTO = postService.listWithCommentCount(pageRequestDTO);
+        PageResponseDTO<PostDTO> responseDTO = postService.listWithCommentCount(pageRequestDTO);
         log.info(responseDTO);
         model.addAttribute("responseDTO", responseDTO);
     }
-
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/register")
     public void registerGet(Model model) {
