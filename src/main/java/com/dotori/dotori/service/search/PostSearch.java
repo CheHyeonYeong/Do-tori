@@ -1,6 +1,7 @@
 package com.dotori.dotori.service.search;
 
 import com.dotori.dotori.dto.PostListCommentCountDTO;
+import com.dotori.dotori.dto.ToriBoxDTO;
 import com.dotori.dotori.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

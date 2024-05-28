@@ -112,4 +112,5 @@ public class PostSearchImpl extends QuerydslRepositorySupport implements PostSea
 
         return new PageImpl<>(content, pageable, count);
     }
+
 }

@@ -2,28 +2,28 @@ package com.dotori.dotori.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookMark {
+public class ToriBox {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull
-    @Column(name = "pid")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Post post;
+
     private int pid;
 
-    @NotNull
-    @Column(name = "aid")
     private int aid;
+
+    public void setPost(int pid) {
+        this.post = Post.builder().pid(pid).build();
+    }
 
 }

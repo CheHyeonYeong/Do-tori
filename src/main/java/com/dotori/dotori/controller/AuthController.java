@@ -2,16 +2,14 @@ package com.dotori.dotori.controller;
 
 import com.dotori.dotori.dto.AuthDTO;
 import com.dotori.dotori.dto.AuthSecurityDTO;
-import com.dotori.dotori.entity.Auth;
-import com.dotori.dotori.repository.AuthRepository;
+import com.dotori.dotori.dto.ToriBoxDTO;
 import com.dotori.dotori.service.AuthService;
-import com.dotori.dotori.service.OAuth2Service;
+import com.dotori.dotori.service.ToriBoxService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,10 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.Authentication;
 
-import java.io.File;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
 
 @Controller
 @Log4j2
@@ -39,6 +35,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
+    private final ToriBoxService toriBoxService;
 
     // 로그인
     @PreAuthorize("isAnonymous()")
@@ -220,6 +217,13 @@ public class AuthController {
 
         redirectAttributes.addAttribute("aid",authDTO.getAid());
         return "redirect:/auth/info";
+    }
+
+    @GetMapping("/toriBoxPage")
+    public void toriPage(Model model) {
+        List<ToriBoxDTO> likeDTO= toriBoxService.selectAll();
+
+        model.addAttribute("likeDTO",likeDTO);
     }
 
     @PostMapping("/delete")
