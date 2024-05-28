@@ -33,7 +33,7 @@ public class PostServiceImpl implements PostService {
     public PageResponseDTO<PostDTO> list(PageRequestDTO pageRequestDTO) {
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
-        Pageable pageable = pageRequestDTO.getPageabble("pid");
+        Pageable pageable = pageRequestDTO.getPageable("pid");
 
         Page<Post> result = postRepository.searchAll(types, keyword, pageable);
 
@@ -98,7 +98,7 @@ public class PostServiceImpl implements PostService {
     public PageResponseDTO<PostListCommentCountDTO> listWithCommentCount(PageRequestDTO pageRequestDTO) {
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
-        Pageable pageable = pageRequestDTO.getPageabble("pid");
+        Pageable pageable = pageRequestDTO.getPageable("pid");
         Page<PostListCommentCountDTO> result = postRepository.searchWithCommentCount(types, keyword, pageable);
 
         return PageResponseDTO.<PostListCommentCountDTO>withAll()

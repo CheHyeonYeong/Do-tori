@@ -50,7 +50,6 @@ public class PostServiceTests {
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
                 .type("cn")
                 .keyword("1")
-                .page(1)
                 .size(10)
                 .build();
         PageResponseDTO<PostDTO> responseDTO = postService.list(pageRequestDTO);
