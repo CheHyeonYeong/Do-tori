@@ -150,6 +150,7 @@
                             &nbsp수정
                         </span>
                         <span class="p-2 ms-auto">
+
 <!--                        <img th:src="@{/assets/Favorite.png}" style="width: 30px; height: 30px">-->
                             <img id="likeBtn" th:src="@{/assets/Favorite.png}" style="width: 30px; height: 30px"
                                  th:data-post-id="${dto.pid}" th:data-auth-id="${#authentication.principal.aid}">
@@ -157,6 +158,7 @@
                             <img th:src="@{/assets/Comment.png}" style="width: 30px; height: 30px">
                             <span class="progress-bar-success" style="color: black">[[${dto.commentCount}]]</span>
                         </span>
+
                     </p>
                 </div>
             </div>

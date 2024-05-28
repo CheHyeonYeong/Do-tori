@@ -3,6 +3,7 @@ package com.dotori.dotori.dto;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class PostListCommentCountDTO {
@@ -14,5 +15,6 @@ public class PostListCommentCountDTO {
     private LocalDateTime modDate;
     private int likeCount;
     private Long commentCount;
-    private String thumbnail;
+    private List<String> thumbnails;
+
 }

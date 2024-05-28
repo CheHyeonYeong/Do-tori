@@ -12,6 +12,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -44,24 +46,25 @@ public class Post{
     @Column(name = "modDate")
     private LocalDateTime modDate;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<PostThumbnail> thumbnails = new ArrayList<>();
 
-    @Column(name = "thumbnail")
-    private String thumbnail;
 
-    public void changePost(String content, int likeCount, String thumbnail) {
+    public void changePost(String content, int likeCount, List<PostThumbnail> thumbnails) {
         this.content = content;
         this.likeCount = likeCount;
-        this.thumbnail = thumbnail;
+        this.thumbnails = thumbnails;
     }
 
     public void changePost(String content, int likeCount) {
         this.content = content;
         this.likeCount = likeCount;
-        this.thumbnail = null;
     }
 
-    public void changeThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
+    public void addThumbnail(PostThumbnail postThumbnail) {
+        this.thumbnails.add(postThumbnail);
+        postThumbnail.setPost(this);
     }
 
 

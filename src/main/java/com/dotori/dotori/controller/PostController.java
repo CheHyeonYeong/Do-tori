@@ -15,8 +15,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @Log4j2
@@ -39,9 +42,11 @@ public class PostController {
         // + 버튼을 누르면 글 등록 페이지로 들어감
     }
 
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/register")
-    public String registerPost(@Valid PostDTO postDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes, MultipartFile file) throws Exception {
+    public String registerPost(@Valid PostDTO postDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes,
+                               @RequestParam(value = "files", required = false) List<MultipartFile> files) throws Exception {
         if (bindingResult.hasErrors()) {
             log.error("has Error");
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
@@ -49,7 +54,7 @@ public class PostController {
         }
 
         log.info("Post register" + postDTO.getContent());
-        int pid = postService.addPost(postDTO, file);
+        int pid = postService.addPost(postDTO, files);
         redirectAttributes.addFlashAttribute("result", pid);
 
         return "redirect:/post/list";
@@ -63,9 +68,11 @@ public class PostController {
         model.addAttribute("dto", postDTO);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/modify")
-    public String modify(PageRequestDTO pageRequestDTO, @Valid PostDTO postDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes, MultipartFile file) throws Exception {
+    public String modify(PageRequestDTO pageRequestDTO, @Valid PostDTO postDTO, BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes,
+                         @RequestParam(value = "files", required = false) List<MultipartFile> files,
+                         @RequestParam(value = "deletedThumbnails", required = false) List<String> deletedThumbnails) throws Exception {
         log.info("Post Modify coming");
         if (bindingResult.hasErrors()) {
             log.error("has Error");
@@ -74,12 +81,14 @@ public class PostController {
             redirectAttributes.addAttribute("pid", postDTO.getPid());
             return "redirect:/post/modify?" + link;
         }
-        postService.modifyPost(postDTO, file);
+        postService.modifyPost(postDTO, files, deletedThumbnails);
+
         redirectAttributes.addFlashAttribute("result", "modify success");
         redirectAttributes.addAttribute("pid", postDTO.getPid());
 
         return "redirect:/post/read";
     }
+
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/remove")
@@ -89,7 +98,6 @@ public class PostController {
         postService.deletePost(postDTO.getPid());
 
         //삭제시에는 페이지 번호를 1로, 사이즈는 전달 받는다.
-        redirectAttributes.addAttribute("page", 1);
         redirectAttributes.addAttribute("size", pageRequestDTO.getSize());
         return "redirect:/post/list";
     }
