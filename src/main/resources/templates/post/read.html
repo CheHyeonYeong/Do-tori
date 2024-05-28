@@ -102,12 +102,12 @@
                     </div>
                     <div class="input-group mb-3" style="display: block; text-align: center">
                         <div class="body-content">[[${dto.content}]]</div>
+                        <div th:if="${dto.thumbnails != null and !dto.thumbnails.isEmpty()}">
+                            <div th:each="thumbnail : ${dto.thumbnails}">
+                                <img th:src="@{/images/{thumbnail}(thumbnail=${thumbnail})}" class="img-fluid">
+                            </div>
+                        </div>
 
-<!--                        이미지 뜨게 함-->
-
-                        <img th:if="${dto.thumbnail != null and dto.thumbnail != '1716805715097_'}"
-                             th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}"
-                             class="img-fluid">
                     </div>
                     <div class="input-group mb-3">
                         <span> [[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>

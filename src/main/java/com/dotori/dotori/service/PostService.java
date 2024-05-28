@@ -11,14 +11,11 @@ import java.util.List;
 
 public interface PostService {
 
-    // 파일 업로드
-
-
     // 전체 post 보여주기
     PageResponseDTO<PostDTO> list(PageRequestDTO pageRequestDTO);
-    int addPost(PostDTO postDTO, MultipartFile file) throws Exception;
+    int addPost(PostDTO postDTO, List<MultipartFile> files) throws Exception;
     PostDTO getPost(int id);
-    void modifyPost(PostDTO postDTO, MultipartFile file) throws Exception;
+    void modifyPost(PostDTO postDTO, List<MultipartFile> files, List<String> deletedThumbnails) throws Exception;
     void deletePost(int id);
     PageResponseDTO<PostListCommentCountDTO> listWithCommentCount(PageRequestDTO pageRequestDTO);
 

@@ -13,21 +13,21 @@
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
+    <title>🌰 Do-Tori</title>
+    <style>
+        body {
+            background-color: #F5F0EA;
+        }
+        form{
+            position: relative;
+        }
+        .my-4{
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
 
-<style>
-    body {
-        background-color: #F5F0EA;
-    }
-    form{
-        position: relative;
-    }
-    .my-4{
-        position: absolute;
-        bottom: 0;
-        right: 0;
-    }
-
-</style>
+    </style>
 </head>
 <body>
 
@@ -58,15 +58,16 @@
                 </div> <!--end card-->
                 <br>
                 <div class="insert input-group mb-3" style="margin: 0 auto; width: 50%">
-                    <div th:if="${dto.thumbnail != null and dto.thumbnail != '1716805715097_'}">
-                        <img th:src="@{/images/{thumbnail}(thumbnail=${dto.thumbnail})}" width="40">
-                        <button type="button" class="btn btn-danger removeImageBtn">X</button>
+                    <div th:if="${dto.thumbnails != null and !dto.thumbnails.isEmpty()}" th:each="thumbnail, index : ${dto.thumbnails}">
+                        <div style="display: inline-block; margin-right: 10px;">
+                            <img th:src="@{/images/{thumbnail}(thumbnail=${thumbnail})}" width="80">
+                            <input type="checkbox" name="deletedThumbnails" th:value="${thumbnail}"> 삭제
+                        </div>
                     </div>
-                    <div th:if="${dto.thumbnail == null}">
+                    <div th:if="${dto.thumbnails == null or dto.thumbnails.isEmpty()}">
                         <span style="margin-top: 7px; margin-right: 10px">사진 등록하기</span>
-                        <input type="file" name="file" class="form-control">
                     </div>
-
+                    <input type="file" name="files" class="form-control" multiple>
                 </div>
                 <div class="insert my-4" style="margin: 0 auto; width: 50%">
                     <div class="float-end">
@@ -82,58 +83,64 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-    const errors = [[${errors}]]
+
+    const errors = [[${errors}]];
     console.log(errors);
 
     let errorMsg = '';
-    if(errors){
-        for(let i = 0;i<errors.length;i++){
-            errorMsg+=`${errors[i].field}으(는) ${errors[i].code}\n`
+    if (errors) {
+        for (let i = 0; i < errors.length; i++) {
+            errorMsg += `${errors[i].field}으(는) ${errors[i].code}\n`;
         }
-        history.replaceState({},null,null)
-        alert(errorMsg)
+        history.replaceState({}, null, null);
+        alert(errorMsg);
     }
-    const link =[[${pageRequestDTO.getLink()}]]
-    const formObj = document.querySelector("#f1")
-
+    const link = [[${pageRequestDTO.getLink()}]];
+    const formObj = document.querySelector("#f1");
 
     document.querySelector(".modBtn").addEventListener("click", function (e) {
-        e.preventDefault()
-        e.stopPropagation()
-
-        formObj.action = `/post/modify?${link}`
-        formObj.method = "post"
-        formObj.submit();
-
-    }, false)
-
-    document.querySelector(".listBtn").addEventListener("click", function (e){
-        e.preventDefault()
-        e.stopPropagation()
-
-        formObj.reset()
-        self.location = `/post/list?${link}`
-    },false)
-
-    document.querySelector(".removeBtn").addEventListener("click", function (e){
-        e.preventDefault()
-        e.stopPropagation()
-
-        formObj.action = `/post/remove`
-        formObj.method = "post"
-        formObj.submit();
-    },false)
-
-    document.querySelector(".removeImageBtn")?.addEventListener("click", function (e){
         e.preventDefault();
         e.stopPropagation();
 
-        const inputFile = document.querySelector("input[name='file']");
-        inputFile.value = "";
+        formObj.action = `/post/modify?${link}`;
+        formObj.method = "post";
+        formObj.submit();
 
-        const imageElement = document.querySelector(".input-group img");
-        imageElement.parentElement.remove();
-    },false);
+    }, false);
+
+    document.querySelector(".listBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        formObj.reset();
+        self.location = `/post/list?${link}`;
+    }, false);
+
+    document.querySelector(".removeBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        formObj.action = `/post/remove`;
+        formObj.method = "post";
+        formObj.submit();
+    }, false);
+
+    document.querySelectorAll(".removeImageBtn").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const filename = this.getAttribute("data-filename");
+            this.parentElement.remove();
+
+            // Add the filename to the hidden input `deletedThumbnails`
+            const deletedThumbnailInput = document.createElement("input");
+            deletedThumbnailInput.type = "hidden";
+            deletedThumbnailInput.name = "deletedThumbnails";
+            deletedThumbnailInput.value = filename;
+            formObj.appendChild(deletedThumbnailInput);
+        });
+    });
 
 </script>
 </body>
