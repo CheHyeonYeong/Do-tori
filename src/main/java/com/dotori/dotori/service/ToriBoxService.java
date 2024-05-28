@@ -2,9 +2,12 @@ package com.dotori.dotori.service;
 
 import com.dotori.dotori.dto.ToriBoxDTO;
 
+import java.util.List;
+
 public interface ToriBoxService {
 
-    void insert(ToriBoxDTO toriBoxDTO) throws Exception;
-    void delete(ToriBoxDTO toriBoxDTO) throws Exception;
+    int insert(ToriBoxDTO toriBoxDTO);
+    List<ToriBoxDTO> selectAll();
+    void delete(int id);
 
 }

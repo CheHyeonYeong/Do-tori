@@ -40,13 +40,13 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
-    public CommentDTO getReplyDTO(@PathVariable("id") int id){
+    public CommentDTO getComment(@PathVariable("id") int id){
         CommentDTO commentDTO = commentService.read(id);
         return commentDTO;
-
     }
+
     @DeleteMapping("/{id}")
-    public Map<String, Integer> deleteReply(@PathVariable("id") int id){
+    public Map<String, Integer> deleteComment(@PathVariable("id") int id){
         commentService.remove(id);
 
         Map<String, Integer> resultMap = new HashMap<>();

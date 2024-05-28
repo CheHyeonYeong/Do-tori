@@ -18,21 +18,12 @@ public class ToriBox {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    @JoinColumn(name = "pid")
     private int pid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Auth auth;
-
-    @JoinColumn(name = "aid")
     private int aid;
 
     public void setPost(int pid) {
         this.post = Post.builder().pid(pid).build();
     }
-    public void setAuth(int aid) {
-        this.auth = Auth.builder().aid(aid).build();
-    }
-
 
 }
