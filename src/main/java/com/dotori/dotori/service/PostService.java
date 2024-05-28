@@ -17,6 +17,8 @@ public interface PostService {
     PostDTO getPost(int id);
     void modifyPost(PostDTO postDTO, List<MultipartFile> files, List<String> deletedThumbnails) throws Exception;
     void deletePost(int id);
-    PageResponseDTO<PostListCommentCountDTO> listWithCommentCount(PageRequestDTO pageRequestDTO);
+
+    PageResponseDTO<PostDTO> listWithCommentCount(PageRequestDTO pageRequestDTO);
+
 
 }

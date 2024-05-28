@@ -2,12 +2,10 @@ package com.dotori.dotori.service.search;
 
 
 import com.dotori.dotori.dto.PostListCommentCountDTO;
-import com.dotori.dotori.entity.Comment;
-import com.dotori.dotori.entity.Post;
-import com.dotori.dotori.entity.QComment;
-import com.dotori.dotori.entity.QPost;
+import com.dotori.dotori.entity.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -77,12 +75,18 @@ public class PostSearchImpl extends QuerydslRepositorySupport implements PostSea
     public Page<PostListCommentCountDTO> searchWithCommentCount(String[] types, String keyword, Pageable pageable) {
         QPost post = QPost.post;
         QComment comment = QComment.comment;
+        QPostThumbnail postThumbnail = QPostThumbnail.postThumbnail;
 
         JPQLQuery<PostListCommentCountDTO> query = from(post)
                 .leftJoin(comment).on(comment.post.eq(post))
-                .groupBy(post)
-                .select(Projections.bean(PostListCommentCountDTO.class,
-                        post.pid, post.content, post.nickName, post.regDate, comment.count().as("commentCount")));
+                .leftJoin(postThumbnail).on(postThumbnail.post.eq(post))
+                .groupBy(post.pid, postThumbnail.id)
+                .select(Projections.constructor(PostListCommentCountDTO.class,
+                        post.pid, post.content, post.nickName, post.regDate,
+                        postThumbnail.thumbnail.as("thumbnail"), // 썸네일 정보 포함
+                        comment.count()))
+                .orderBy(postThumbnail.id.desc()) // 썸네일 ID 기준으로 정렬
+                .limit(1); // 첫 번째 행만 선택
 
         if ((types != null && types.length > 0) && keyword != null) {
             BooleanBuilder booleanBuilder = new BooleanBuilder();
@@ -101,13 +105,10 @@ public class PostSearchImpl extends QuerydslRepositorySupport implements PostSea
 
         query.where(post.pid.gt(0));
 
-        JPQLQuery<PostListCommentCountDTO> dtojpqlQuery = query.select(Projections.bean(PostListCommentCountDTO.class,
-                post.pid, post.content, post.nickName, post.regDate, comment.count().as("commentCount")));
+        this.getQuerydsl().applyPagination(pageable, query);
 
-        this.getQuerydsl().applyPagination(pageable, dtojpqlQuery);
-        List<PostListCommentCountDTO> content = dtojpqlQuery.fetch();
-
-        Long count = dtojpqlQuery.fetchCount();
+        List<PostListCommentCountDTO> content = query.fetch();
+        long count = query.fetchCount();
 
         return new PageImpl<>(content, pageable, count);
     }
