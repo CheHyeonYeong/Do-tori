@@ -310,7 +310,8 @@ svg {
 
 table {
   caption-side: bottom;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 5px;
 }
 
 caption {
@@ -10896,7 +10897,7 @@ body {
 }
 .day {
   padding: 4px;
-  border: 6px solid #FFFFFF;
+  border: 4px solid #FFFFFF;
   aspect-ratio: 1 / 1; /* 추가 */
 }
 
