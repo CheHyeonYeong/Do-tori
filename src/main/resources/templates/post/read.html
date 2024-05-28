@@ -9,13 +9,15 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
+    <title>Do-Tori - post-list</title>
+
     <!-- thymeleaf 형식으로 경로 수정 => th:href = "@{경로}" -->
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
 
-    <title>🌰 Do-Tori</title>
+    <title>Post Read</title>
     <style>
         body {
             background-color: #F5F0EA;
@@ -27,6 +29,37 @@
             margin: 0 auto;
             width: 50%;
         }
+
+        .card {
+            padding: 1rem !important;
+        }
+        .writer_info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+
+            border-bottom: 1px solid #7d7d7d;
+        }
+        .writer {
+            display: flex;
+            align-items: center;
+        }
+        .profile {
+            width: 35px;
+            margin-right: 1rem;
+        }
+        .name {
+            font-size: 1.2rem;
+            margin: 0 !important;
+        }
+
+        .toggle {
+            position : absolute;
+            top: auto;
+            right: 3%;
+        }
+
         .img-fluid{
             max-width: 50%;
             height: auto;
@@ -35,6 +68,9 @@
             width: 50%;
             text-align: left;
             margin-bottom: 30px;
+        }
+        .input-group {
+            align-items: center;
         }
         .input-group-comment{
             margin: 0 auto;
@@ -45,19 +81,27 @@
         .commentContent{
             height: 100px;
             width: 100%;
+            border: none;
         }
         .addCommentBtn, .removeBtn{
             border : none;
             background-color: #ccbfb2;
             position: absolute;
-            top: 40px;
-            bottom: 15px;
-            right: 10px;
+            top: 35%;
+            right: 2%;
         }
         .commentList{
             margin: 0 auto;
             width: 50%;
             background-color: #F5F0EA;
+            list-style: none;
+        }
+
+        .removePostBtn {
+            border: none;
+            background-color: transparent;
+            text-align: left;
+            padding: 0;
         }
     </style>
 </head>
@@ -71,10 +115,12 @@
     <div class="row mt-3">
         <div class="col">
             <div class="card">
-                <div class="card-header" style="display: inline">
-                    <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto; margin-bottom: 10px">
-                    <span class="card-title name" style="font-size: 30px; margin-left: 10px">[[${dto.nickName}]]</span>
-                    <div class="dropdown" style="float: right; margin-top: 10px" th:with="user=${#authentication.principal}">
+                <div class="card-header writer_info">
+                    <div class="writer">
+                        <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage">
+                        <span class="card-title name">[[${dto.nickName}]]</span>
+                    </div>
+                    <div class="toggle" th:with="user=${#authentication.principal}">
                         <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="5" cy="5" r="5" fill="black"/>
@@ -94,7 +140,6 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
                 </div>
                 <div class="card-body">
                     <div class="input-group mb-3">
@@ -171,10 +216,10 @@
                 str += `
                 <li class="list-group-item d-flex justify-content-between commentItem" style="background-color: #F5F0EA; border: none;">
                     <div style="background-color: #F5F0EA;">
-                        <h3>
-                            <img src="/assets/Profile.png" class="col-1 profile" id="profileImage" style="width: 30px; height: auto">
+                        <h5>
+                            <img src="/assets/Profile.png" class="col-1 profile" id="profileImage" style="width: 35px; height: auto">
                             <span class="col-2">${dto.nickName}</span>
-                        </h3>
+                        </h5>
                         <div>
                             <span class="col-6" data-id="${dto.id}">${dto.content}</span>
                         </div>
