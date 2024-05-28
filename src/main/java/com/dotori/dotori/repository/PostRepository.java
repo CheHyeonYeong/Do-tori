@@ -2,10 +2,13 @@ package com.dotori.dotori.repository;
 
 import com.dotori.dotori.entity.Post;
 import com.dotori.dotori.service.search.PostSearch;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface PostRepository extends JpaRepository<Post, Integer>, PostSearch {
 

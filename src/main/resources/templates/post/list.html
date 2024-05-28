@@ -14,6 +14,8 @@
     <!-- Core theme CSS (includes Bootstrap)-->
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style>
         .active-nav-link {
             font-weight: bold;
@@ -143,19 +145,22 @@
                         <span>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
                         <span>/</span>
                         <span>
-                        <span th:if="${dto.modDate == null}">-</span>
-                        <span th:unless="${dto.modDate == null}">[[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]]</span>
-                        &nbsp; 수정
-                    </span>
+                            <span th:if="${dto.modDate == null}">-</span>
+                            <span th:unless="${dto.modDate == null}">[[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]]</span>
+                            &nbsp수정
+                        </span>
                         <span class="p-2 ms-auto">
-                        <img th:src="@{/assets/Favorite.png}" style="width: 30px; height: auto">
-                        <span>[[${dto.likeCount}]]</span>
-                        <img th:src="@{/assets/Comment.png}" style="width: 30px; height: 30px">
-                        <span class="progress-bar-success" style="color: black">[[${dto.commentCount}]]</span>
-                    </span>
+
+<!--                        <img th:src="@{/assets/Favorite.png}" style="width: 30px; height: 30px">-->
+                            <img id="likeBtn" th:src="@{/assets/Favorite.png}" style="width: 30px; height: 30px"
+                                 th:data-post-id="${dto.pid}" th:data-auth-id="${#authentication.principal.aid}">
+                            <span>[[${dto.likeCount}]]</span>
+                            <img th:src="@{/assets/Comment.png}" style="width: 30px; height: 30px">
+                            <span class="progress-bar-success" style="color: black">[[${dto.commentCount}]]</span>
+                        </span>
+
                     </p>
                 </div>
-
             </div>
         </div>
     </div>
@@ -218,6 +223,58 @@
         e.stopPropagation();
         self.location = '/post/list';
     }, false);
+
+
+    // 좋아요 기능
+
+    $(document).ready(function() {
+        let isLiked = false;
+
+        $('#likeBtn').click(function() {
+            const postId = $(this).data('post-id');
+            const authId = $(this).data('auth-id');
+
+            if (isLiked) {
+                // 좋아요 취소
+                $.ajax({
+                    url: '/post/delete',
+                    type: 'DELETE',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        pid: parseInt(postId),
+                        aid: parseInt(authId)
+                    }),
+                    success: function(response) {
+                        console.log('좋아요가 취소되었습니다.');
+                        isLiked = false;
+                        // 좋아요 수 업데이트 로직 추가
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('좋아요 취소 중 오류가 발생했습니다:', error);
+                    }
+                });
+            } else {
+                // 좋아요 추가
+                $.ajax({
+                    url: '/post/like',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        pid: parseInt(postId),
+                        aid: parseInt(authId)
+                    }),
+                    success: function(response) {
+                        console.log('좋아요가 추가되었습니다.');
+                        isLiked = true;
+                        // 좋아요 수 업데이트 로직 추가
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('좋아요 추가 중 오류가 발생했습니다:', error);
+                    }
+                });
+            }
+        });
+    });
 
 </script>
 </body>
