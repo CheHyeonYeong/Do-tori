@@ -140,12 +140,12 @@
 
             </ul>
         </div>
-        <div class="row mt-3">
-            <div class="col">
-                <ul class="pagination commentPaging">
-                </ul>
-            </div>
+
+        <!-- 더보기 버튼 추가 -->
+        <div class="text-center">
+            <button id="loadMoreBtn" class="btn btn-primary" type="button">더보기</button>
         </div>
+
 
     </div>
 </div> <!--end layout:fragment -->
@@ -162,7 +162,6 @@
     const pid = [[${dto.pid}]];
     const authNickName = [[${#authentication.principal.nickName}]];
     const commentList = document.querySelector('.commentList');
-    const commentPaging = document.querySelector('.commentPaging');
 
     function printList(dtoList) {
         let str = '';
@@ -196,36 +195,34 @@
     }
 
 
-    function printPages(data) {
-        let pageStr = '';
-        if(data.prev) {
-            pageStr += `<li class="page-item">
-                    <a class="page-link" data-page="${data.start - 1}">PREV</a>
-                 </li>`;
-        }
-        for (let i = data.start; i <= data.end; i++ ){
-            pageStr += `<li class="page-item ${i == data.page ? "active" : ""}">
-                    <a class="page-link" data-page="${i}">${i}</a>
-                </li>`;
-        }
-        if(data.next) {
-            pageStr += `<li class="page-item">
-                    <a class="page-link" data-page="${data.end + 1}">NEXT</a>
-                 </li>`;
-        }
-        commentPaging.innerHTML = pageStr;
-    }
+    // 초기 count 값 설정
+    let count = 1;
 
-    function printComments(page = 1, size = 10) {
-        getList(pid, page, size).then(response => {
+    // 더보기 버튼과 input 요소를 가져오기
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+    // 버튼 클릭 이벤트 리스너 추가
+    loadMoreBtn.addEventListener('click', () => {
+
+        // count 값 증가
+        count += 1;
+
+        console.log(count);
+
+        printComments();
+
+    });
+
+    function printComments( size = count*10 ) {
+        getList(pid, 0, size).then(response => {
             printList(response.postLists);
-            printPages(response);
         }).catch(error => {
             console.error(error);
-
         });
     }
+
     printComments();
+
     document.querySelector(".addCommentBtn").addEventListener("click", function () {
         const commentObj = {
             pid: pid,
@@ -241,6 +238,7 @@
             console.error(error);
         });
     }, false);
+
     commentList.addEventListener('click', (e) => {
         if (e.target.classList.contains('removeBtn')) {
             e.preventDefault();
@@ -253,16 +251,7 @@
             });
         }
     });
-    commentPaging.addEventListener("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const target = e.target;
-        if(!target || target.tagName !== 'A') {
-            return;
-        }
-        const pageNum = target.getAttribute("data-page");
-        printComments(pageNum);
-    }, false);
+
 </script>
 
 </body>

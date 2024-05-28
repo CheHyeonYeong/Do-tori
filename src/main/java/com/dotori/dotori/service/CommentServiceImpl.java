@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
     public PageResponseDTO<CommentDTO> getListOfPost(int pid, PageRequestDTO pageRequestDTO) {
 
         Pageable pageable = (Pageable) PageRequest.of(
-                pageRequestDTO.getPage() <=0 ? 0 : pageRequestDTO.getPage()-1,
+                0,
                 pageRequestDTO.getSize(),
                 Sort.by("id").ascending());
 
