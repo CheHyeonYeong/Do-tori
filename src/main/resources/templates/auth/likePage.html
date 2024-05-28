@@ -44,7 +44,7 @@
             align-items: center;
         }
 
-        .auth_modify, .auth_logout, .auth_likePage {
+        .auth, .auth_modify, .auth_logout {
             position: relative;
         }
         .aside_menu_film {
@@ -60,6 +60,10 @@
 
             transition: 0.5s;
         }
+        .auth:hover .aside_menu_film {
+            opacity: 0;
+            z-index: -10;
+        }
         .auth_modify:hover .aside_menu_film {
             opacity: 0;
             z-index: -10;
@@ -68,14 +72,13 @@
             opacity: 0;
             z-index: -10;
         }
-        .auth_likePage:hover .aside_menu_film {
-            opacity: 0;
-            z-index: -10;
-        }
 
         .auth {
             justify-content: space-between;
             padding: 22px 25px;
+        }
+        .logout {
+            border: none;
         }
 
         .auth_aside_txt {
@@ -95,89 +98,48 @@
             width: 80%;
         }
         .main_info_container {
-            width: 44%;
+            width: 90%;
+            height: 95vh;
             margin: 0 auto;
-        }
-        .title {
-            display: inline-block;
-            padding: 1rem 1.2rem;
-            background-color: #f5f0ea;
-            border: 1px solid #000;
-            border-radius: 20px;
-            text-align: center;
-        }
-        .profile_box {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 1rem auto 2.5rem;
-        }
-        .profile {
-            width: 178px;
-            height: 178px;
-            border-radius: 50%;
-            object-fit: cover;
-            cursor: pointer;
-        }
-        .profile_box>form {
-            text-align : center;
-        }
-        .profile_btn {
-            display : flex;
-            justify-content: center;
-            margin-top : 1rem;
-        }
-        #profile_submit_btn {
-            background-color: #ccbfb2;
-            color: #000;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 10px;
-
-            transition: 0.3s;
-        }
-        #profile_submit_btn:hover {
-            background-color: #928980;
+            justify-content: left;
+            flex-wrap: wrap;
         }
 
-        .mb {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
+        .card {
+            width: 30% !important;
+            height: 26rem !important;
+            box-shadow: 1px 1px 3px rgb(107 104 104 / 30%);
+            border: 1px solid #b9b9b9;
+            overflow: hidden;
+            margin: 0 2rem 4rem 0 !important;
         }
-        .mb span {
-            display: inline-block;
-            width: 20%;
-            text-align: center;
-            border-bottom: 1px solid #000;
-            padding-bottom: 4px;
+        .card .img_box {
+            width: 100%;
+            height: 50%;
+            overflow: hidden;
         }
-        .mb input {
-            width: 70%; /* 입력 칸의 좌우 길이 조정 */
-            margin: 0 auto; /* 가운데 정렬 */
-            border-radius: 10px;
-            border: none;
-            padding: 0.5rem;
-            background-color: #d9d9d9;
+        .card>hr {
+            margin: 0;
         }
-
-        .logout {
-            border: none;
+        .content, .content_info {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding: 0 0.5rem !important;
         }
-
-        .btn_box {
-            display: flex;
-            justify-content: right;
-            margin-top: 40px;
+        .content {
+            height: 30%;
         }
-        .btn {
-            background-color: #ccbfb2;
-            color: #000;
-            padding: 12px 20px;
-            border: none;
+        .card-body>p {
+            color: #a8a8a8;
         }
-        .btn:hover {
-            background-color: #928980;
+        .content_info {
+            height: 20%;
+        }
+        .like_icon img {
+            width: 40px;
+            height: 40px;
         }
 
         .toggle-btn{
@@ -232,13 +194,29 @@
             top: 50%;
         }
 
-        @media (max-width: 1260px) {
-            .auth, .auth_modify, .auth_logout {
+        .profile-image {
+            width : 55px;
+            height : 55px;
+            border-radius : 50%;
+        }
+        .default-profile-image {
+            width : 55px;
+            height : 55px;
+        }
+
+        @media (max-width: 1334px) {
+            .auth, .auth_modify, .auth_logout, .auth_likePage {
                 padding: 8px;
                 border-radius: 8px;
             }
             .auth .icon_box span {
                 display: none;
+            }
+
+            .card {
+                width: 22rem !important;
+                height: 22rem !important;
+                margin: 0 auto 2rem !important;
             }
 
         }
@@ -272,6 +250,18 @@
             .toggle-btn.active {
                 left: 38%;
             }
+
+            .card {
+                width: 16rem !important;
+                height: 16rem !important;
+                margin: 0 auto 1rem !important;
+            }
+
+            .profile-image {
+                width: 40px;
+                height: 40px;
+            }
+
         }
     </style>
 
@@ -294,6 +284,7 @@
 <div layout:fragment="content" class="content_layout">
     <aside class="aside">
         <div class="auth">
+            <span class="aside_menu_film"></span>
             <div class="icon_box">
                 <svg width="31" height="31" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="28" cy="27.5" r="27" stroke="black"></circle>
@@ -318,7 +309,6 @@
         </div>
 
         <div class="auth_likePage">
-            <span class="aside_menu_film"></span>
             <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="25" height="25">
                 <path d="M20.137,24a2.8,2.8,0,0,1-1.987-.835L12,17.051,5.85,23.169a2.8,2.8,0,0,1-3.095.609A2.8,2.8,0,0,1,1,21.154V5A5,5,0,0,1,6,0H18a5,5,0,0,1,5,5V21.154a2.8,2.8,0,0,1-1.751,2.624A2.867,2.867,0,0,1,20.137,24ZM6,2A3,3,0,0,0,3,5V21.154a.843.843,0,0,0,1.437.6h0L11.3,14.933a1,1,0,0,1,1.41,0l6.855,6.819a.843.843,0,0,0,1.437-.6V5a3,3,0,0,0-3-3Z"/>
             </svg>
@@ -350,68 +340,84 @@
 
     <div class="main_info">
         <div class="main_info_container">
-            <h4 class="title">MYPAGE</h4>
-
-            <div class="profile_box">
-                <form th:action="@{/auth/profile-image}" method="post" enctype="multipart/form-data">
-                    <input type="file" name="file" id="profileImageInput" class="form-control" style="display: none" onchange="showSubmitButton(); previewImage(this);">
-                    <img th:src="@{${#authentication.principal.profileImage != null ? '/images/' + #authentication.principal.profileImage + '?t=' + #dates.createNow().getTime() : '/assets/Profile.png'}}"
-                         class="profile profile-image profileImage" onclick="clickProfileImage()"/>
-                    <div class="profile_btn" style="visibility: hidden">
-                        <input type="submit" value="변경" id="profile_submit_btn">
+            <div class="card">
+                <div class="img_box">
+                    <img th:src="@{/images/1716799543250_썸네일.png}" class="card-img-top" alt="썸네일대신">
+                </div>
+                <div class="card-body content">
+                    <p class="card-text">ㅇㅇㅇㅇ</p>
+                </div>
+                <hr>
+                <div class="card-body content_info">
+                    <div class="auth_information">
+                        <img th:if="${#authentication.principal.profileImage != null}" th:src="@{/images/{profileImage}(profileImage=${#authentication.principal.profileImage})}" class="profile profile-image" />
+                        <img th:if="${#authentication.principal.profileImage == null}" th:src="@{/assets/Profile.png}" class="profile default-profile-image" />
+                        <span class="auth_aside_txt">[[${#authentication.principal.id}]]</span>
                     </div>
-                </form>
-            </div>
-
-            <script>
-                function clickProfileImage() {
-                    document.getElementById('profileImageInput').click();
-                }
-
-                function showSubmitButton() {
-                    document.getElementsByClassName('profile_btn')[0].style.visibility = 'visible';
-                }
-
-                function previewImage(input) {
-                    if (input.files && input.files[0]) {
-                        var reader = new FileReader();
-                        reader.onload = function (e) {
-                            var profileImages = document.getElementsByClassName('profileImage');
-                            for (var i = 0; i < profileImages.length; i++) {
-                                profileImages[i].setAttribute('src', e.target.result);
-                            }
-                        }
-                        reader.readAsDataURL(input.files[0]);
-                    }
-                }
-            </script>
-
-            <div class="info_box">
-                <div class="mb">
-                    <span class="input-group-txt">닉네임</span>
-                    <input type="text" th:value="${#authentication.principal.nickName}" name="nickName" class="form-con" readonly>
-                </div>
-
-                <div class="mb">
-                    <span class="input-group-txt">아이디</span>
-                    <input type="text" th:value="${#authentication.principal.id}" name="id" class="form-con" readonly>
-                </div>
-
-                <div class="mb">
-                    <span class="input-group-txt">비밀번호</span>
-                    <input type="password" th:value="${#authentication.principal.password}" name="password" class="form-con" readonly>
-                </div>
-
-                <div class="mb">
-                    <span class="input-group-txt">이메일</span>
-                    <input type="email" th:value="${#authentication.principal.email}" name="email" class="form-con" readonly>
+                    <div class="like_icon">
+                        <img th:src="@{/assets/Favorite.png}">
+                    </div>
                 </div>
             </div>
 
-            <div class="btn_box">
-                <a th:href="@{/auth/modifyPwCheck}" class="text-decoration-none">
-                    <input type="button" value="회원정보 수정" class="btn btn-primary">
-                </a>
+            <div class="card">
+                <div class="img_box">
+                    <img th:src="@{/images/1716799543250_썸네일.png}" class="card-img-top" alt="썸네일대신">
+                </div>
+                <div class="card-body content">
+                    <p class="card-text">ㅇㅇㅇㅇ</p>
+                </div>
+                <hr>
+                <div class="card-body content_info">
+                    <div class="auth_information">
+                        <img th:if="${#authentication.principal.profileImage != null}" th:src="@{/images/{profileImage}(profileImage=${#authentication.principal.profileImage})}" class="profile profile-image" />
+                        <img th:if="${#authentication.principal.profileImage == null}" th:src="@{/assets/Profile.png}" class="profile default-profile-image" />
+                        <span class="auth_aside_txt">[[${#authentication.principal.id}]]</span>
+                    </div>
+                    <div class="like_icon">
+                        <img th:src="@{/assets/Favorite.png}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img_box">
+                    <img th:src="@{/images/1716799543250_썸네일.png}" class="card-img-top" alt="썸네일대신">
+                </div>
+                <div class="card-body content">
+                    <p class="card-text">ㅇㅇㅇㅇ</p>
+                </div>
+                <hr>
+                <div class="card-body content_info">
+                    <div class="auth_information">
+                        <img th:if="${#authentication.principal.profileImage != null}" th:src="@{/images/{profileImage}(profileImage=${#authentication.principal.profileImage})}" class="profile profile-image" />
+                        <img th:if="${#authentication.principal.profileImage == null}" th:src="@{/assets/Profile.png}" class="profile default-profile-image" />
+                        <span class="auth_aside_txt">[[${#authentication.principal.id}]]</span>
+                    </div>
+                    <div class="like_icon">
+                        <img th:src="@{/assets/Favorite.png}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img_box">
+                    <img th:src="@{/images/1716799543250_썸네일.png}" class="card-img-top" alt="썸네일대신">
+                </div>
+                <div class="card-body content">
+                    <p class="card-text">ㅇㅇㅇㅇ</p>
+                </div>
+                <hr>
+                <div class="card-body content_info">
+                    <div class="auth_information">
+                        <img th:if="${#authentication.principal.profileImage != null}" th:src="@{/images/{profileImage}(profileImage=${#authentication.principal.profileImage})}" class="profile profile-image" />
+                        <img th:if="${#authentication.principal.profileImage == null}" th:src="@{/assets/Profile.png}" class="profile default-profile-image" />
+                        <span class="auth_aside_txt">[[${#authentication.principal.id}]]</span>
+                    </div>
+                    <div class="like_icon">
+                        <img th:src="@{/assets/Favorite.png}">
+                    </div>
+                </div>
             </div>
         </div>
     </div>

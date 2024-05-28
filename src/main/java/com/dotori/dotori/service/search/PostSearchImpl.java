@@ -2,10 +2,7 @@ package com.dotori.dotori.service.search;
 
 
 import com.dotori.dotori.dto.PostListCommentCountDTO;
-import com.dotori.dotori.entity.Comment;
-import com.dotori.dotori.entity.Post;
-import com.dotori.dotori.entity.QComment;
-import com.dotori.dotori.entity.QPost;
+import com.dotori.dotori.entity.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
@@ -111,4 +108,5 @@ public class PostSearchImpl extends QuerydslRepositorySupport implements PostSea
 
         return new PageImpl<>(content, pageable, count);
     }
+
 }

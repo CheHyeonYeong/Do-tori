@@ -222,6 +222,12 @@ public class AuthController {
         return "redirect:/auth/info";
     }
 
+    @GetMapping("/likePage")
+    public String likePage(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Model model) {
+        model.addAttribute("auth", authSecurityDTO);
+        return "auth/likePage";
+    }
+
     @PostMapping("/delete")
     public String deleteAuth(AuthDTO authDTO, RedirectAttributes redirectAttributes) {
         String aid = authDTO.getId();
