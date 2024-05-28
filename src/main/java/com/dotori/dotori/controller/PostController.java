@@ -1,14 +1,12 @@
 package com.dotori.dotori.controller;
 
-import com.dotori.dotori.dto.PageRequestDTO;
-import com.dotori.dotori.dto.PageResponseDTO;
-import com.dotori.dotori.dto.PostDTO;
-import com.dotori.dotori.dto.PostListCommentCountDTO;
+import com.dotori.dotori.dto.*;
 import com.dotori.dotori.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,11 +58,31 @@ public class PostController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping({"/read", "/modify"})
+    @GetMapping("/read")
     public void read(int pid, PageRequestDTO pageRequestDTO, Model model) {
         PostDTO postDTO = postService.getPost(pid);
         log.info(postDTO);
         model.addAttribute("dto", postDTO);
+    }
+
+    @GetMapping("/modify")
+    public String modifyGet(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, PostDTO postDTO, PageRequestDTO pageRequestDTO, Model model) {
+        int pid = postDTO.getPid();
+        PostDTO dto = postService.getPost(pid);
+        log.info(dto);
+        model.addAttribute("dto", dto);
+
+        if (authSecurityDTO != null && authSecurityDTO.getNickName().equals(dto.getNickName())) {
+            // 작성자가 일치하는 경우에 대한 처리 로직 추가
+            return "post/modify";
+        } else {
+            log.info("!!!!!!!!!@!$#!@$#@%@$^%$&^%%^#$#%$^&%^*&(^*%$##");
+            log.info(authSecurityDTO.getNickName());
+            log.info(dto.getNickName());
+            // 작성자가 일치하지 않는 경우에 대한 처리 로직 추가 (예: 예외 처리 또는 에러 페이지로 리다이렉트)
+            model.addAttribute("errorMessage", "접근 권한이 없습니다."); // 에러 메시지를 모델에 추가
+            return "post/read"; // 에러 페이지로 리다이렉트
+        }
     }
 
     @PostMapping("/modify")
