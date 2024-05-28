@@ -14,7 +14,7 @@
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
-
+    <title>🌰 Do-Tori</title>
     <style>
         body {
             background-color: #F5F0EA;
@@ -48,7 +48,7 @@
                 <br>
                 <div class="insert input-group mb-3" style="margin: 0 auto; width: 50%">
                     <span style="margin-top: 7px; margin-right: 10px">사진 등록하기</span>
-                    <input type="file" name="file" class="form-control">
+                    <input type="file" name="files" class="form-control" multiple>
                 </div>
                 <div class="insert my-4" style="margin: 0 auto; width: 50%">
                     <div class="float-end">
@@ -75,7 +75,7 @@
     let errorMsg = '';
     if(errors){
         for(let i = 0;i<errors.length;i++){
-            errorMsg+=`${errors[i].field}으(는) ${errors[i].code}\n`
+            errorMsg+=`${errors[i].field}은(는) ${errors[i].code}\n`
         }
         alert(errorMsg)
     }
