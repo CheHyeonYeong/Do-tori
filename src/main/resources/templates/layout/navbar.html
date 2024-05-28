@@ -84,13 +84,11 @@
 
 
     document.addEventListener("DOMContentLoaded", function() {
-        var isLoggedIn = [[${#authentication.principal}]] == null ;
-
+        var isLoggedIn = false;  // 로그인 상태 변수 (예시로 false로 설정)
 
         var navbarMenu = document.getElementById('mypage');
 
         if (isLoggedIn) {
-
             navbarMenu.innerHTML = `
             <a class="dropdown-item login" href="/auth/login">로그인</a>
             <div class="dropdown-divider"></div>
