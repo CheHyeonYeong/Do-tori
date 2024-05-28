@@ -31,6 +31,13 @@
             margin: 0 auto;
             width: 100%;
         }
+        .thumbnail {
+            max-width: 200px; /* 원하는 썸네일 크기 */
+            max-height: 200px; /* 원하는 썸네일 크기 */
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -123,12 +130,13 @@
                     </div>
                 </div>
 
+
                 <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|" style="all: unset; cursor: pointer;">
                     <div class="card-body">
                         <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
                             <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
-                            <div th:if="${postDTO != null && !postDTO.thumbnails.isEmpty()}">
-                                <img th:src="@{/images/{filename}(filename=${postDTO.thumbnails[0]})}" alt="Thumbnail" style="max-width: 200px; max-height: 200px;">
+                            <div th:if="${dto.thumbnails != null && !dto.thumbnails.isEmpty()}">
+                                <img th:src="@{/images/{filename}(filename=${dto.thumbnails[0]})}" alt="썸네일" class="thumbnail">
                             </div>
                         </div>
                     </div>
