@@ -33,8 +33,8 @@ public class PostController {
     public void list(PageRequestDTO pageRequestDTO, Model model) {
         PageResponseDTO<PostDTO> responseDTO = postService.listWithCommentCount(pageRequestDTO);
         log.info(responseDTO);
+
         model.addAttribute("responseDTO", responseDTO);
-        model.addAttribute("likes", postService.countLikes(responseDTO.getSize()));
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -76,12 +76,10 @@ public class PostController {
     public String modifyGet(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, PostDTO postDTO, PageRequestDTO pageRequestDTO, Model model) {
         int pid = postDTO.getPid();
         PostDTO dto = postService.getPost(pid);
-        int likes = postService.countLikes(pid);
 
         log.info(dto);
 
         model.addAttribute("dto", dto);
-        model.addAttribute("likes", likes); // 좋아요 개수
 
         if (authSecurityDTO != null && authSecurityDTO.getNickName().equals(dto.getNickName())) {
             // 작성자가 일치하는 경우에 대한 처리 로직 추가

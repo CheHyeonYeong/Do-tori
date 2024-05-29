@@ -1,9 +1,6 @@
 package com.dotori.dotori.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,6 +11,7 @@ import java.net.URLEncoder;
 // Lombok 애노테이션을 사용하여 보일러플레이트 코드를 생성합니다.
 @Builder
 @Data
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PageRequestDTO {
