@@ -12,6 +12,7 @@ public class PageResponseDTO<E> {
 
     private int size;
     private int total;
+    private int commentCount;
 
     private List<E> postLists;  // 게시글 내용!
 
@@ -25,6 +26,10 @@ public class PageResponseDTO<E> {
 
         this.postLists = postLists;
 
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 
 }

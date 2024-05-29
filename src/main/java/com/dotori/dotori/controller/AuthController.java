@@ -4,6 +4,7 @@ import com.dotori.dotori.dto.AuthDTO;
 import com.dotori.dotori.dto.AuthSecurityDTO;
 import com.dotori.dotori.dto.ToriBoxDTO;
 import com.dotori.dotori.service.AuthService;;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -113,7 +114,12 @@ public class AuthController {
         AuthDTO authDTO = authService.info(id);
         model.addAttribute("auth", authDTO);
 
-        return "auth/info";
+        // 소셜 로그인 여부 확인
+        if (authDTO.isSocial() || authDTO.getProvider() != null) {
+            return "auth/socialMyPage"; // 소셜 로그인한 회원의 정보 페이지
+        } else {
+            return "auth/info"; // 일반 로그인한 회원의 정보 페이지
+        }
     }
 
     @PreAuthorize("principal.username == #authSecurityDTO.id")
@@ -216,11 +222,19 @@ public class AuthController {
         return "redirect:/auth/info";
     }
 
-
+    @PreAuthorize("principal.username == #authDTO.id")
     @PostMapping("/delete")
-    public String deleteAuth(AuthDTO authDTO, RedirectAttributes redirectAttributes) {
+    public String deleteAuth(AuthDTO authDTO, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         String aid = authDTO.getId();
         authService.remove(aid);
+
+        // 사용자의 인증 정보 제거
+        HttpSession session =request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        SecurityContextHolder.clearContext();
+
         return "redirect:/auth/login";
     }
 

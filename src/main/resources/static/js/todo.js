@@ -345,3 +345,61 @@ function renderGraph(currentMonth, currentYear, daysInMonth) {
     table.appendChild(tbody);
     graphContainer.appendChild(table);
 }
+
+
+//튜토리얼 사진 추가
+var tutorialImages = [
+    "/assets/joinBg.png",
+    "/assets/tutorial-1.png",
+    "/assets/tutorial-2.png"
+];
+var currentImageIndex = 0;
+
+function changeTutorialImage(direction) {
+    currentImageIndex += direction;
+    if (currentImageIndex < 0) {
+        currentImageIndex = 0;
+    } else if (currentImageIndex >= tutorialImages.length) {
+        currentImageIndex = tutorialImages.length - 1;
+    }
+    document.getElementById("tutorialImage").src = tutorialImages[currentImageIndex];
+    updateArrowVisibility();
+}
+
+function updateArrowVisibility() {
+    var leftArrow = document.querySelector(".arrow-left");
+    var rightArrow = document.querySelector(".arrow-right");
+
+    if (currentImageIndex === 0) {
+        leftArrow.style.display = "none";
+    } else {
+        leftArrow.style.display = "inline-block";
+    }
+
+    if (currentImageIndex === tutorialImages.length - 1) {
+        rightArrow.style.display = "none";
+    } else {
+        rightArrow.style.display = "inline-block";
+    }
+}
+
+// 초기 화살표 상태 업데이트
+updateArrowVisibility();
+
+// 튜토리얼 완료 버튼 클릭 이벤트 처리
+document.querySelector("form").addEventListener("submit", function(event) {
+    event.preventDefault(); // 폼 제출 기본 동작 막기
+    document.querySelector(".tutorial-design").style.display = "none"; // 튜토리얼 화면 숨기기
+    // 서버로 튜토리얼 완료 요청 보내기
+    fetch("/auth/tutorialDone", { method: "POST" })
+        .then(function(response) {
+            if (response.ok) {
+                console.log("Tutorial completed.");
+            } else {
+                console.error("Failed to complete tutorial.");
+            }
+        })
+        .catch(function(error) {
+            console.error("Error:", error);
+        });
+});

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -99,7 +100,7 @@ public class PostServiceImpl implements PostService {
             result.getThumbnails().addAll(thumbnails);
         }
 
-        result.changePost(postDTO.getContent(), result.getThumbnails());
+        result.changePost(postDTO.getContent(), LocalDateTime.now(), result.getThumbnails());
     }
     private List<PostThumbnail> uploadImages(List<MultipartFile> files, Post post) throws Exception {
         List<PostThumbnail> thumbnails = new ArrayList<>();
