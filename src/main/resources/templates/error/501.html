@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>501 Error</title>
+    <link rel="stylesheet" href="/css/error.css">
+</head>
+<body>
+
+<div class="error-container">
+    <div class="error-code">
+        <span class="error-digit">5</span>
+        <img src="/assets/dotori_image.png" alt="Dotori Image" class="error-image">
+        <span class="error-digit">1</span>
+    </div>
+
+    <p>죄송합니다. 요청하신 기능은 서버에서 지원하지 않습니다.</p>
+    <br>
+    <p2>해당 기능은 현재 구현되지 않았습니다.
+        <br>
+        다른 방법을 시도해주시기 바랍니다.</p2>
+
+
+    <p th:text="${errorMessage}"></p>
+
+
+    <a href="/todo/list" class="main-link">메인으로</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="#" onclick="goBack(); return false;" class="back-link">이전페이지</a></div>
+</body>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</html>

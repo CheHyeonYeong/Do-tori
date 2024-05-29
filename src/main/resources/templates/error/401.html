@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>401 Error</title>
+    <link rel="stylesheet" href="/css/error.css">
+</head>
+<body>
+
+<div class="error-container">
+    <div class="error-code">
+        <span class="error-digit">4</span>
+        <img src="/assets/dotori_image.png" alt="Dotori Image" class="error-image">
+        <span class="error-digit">1</span>
+    </div>
+
+    <p>권한이 없는 페이지 입니다.</p>
+    <br>
+    <p2>권한이 없거나, 사용할 수 없는 페이지입니다.
+        <br>
+        로그인 후 다시 시도해주시기 바랍니다</p2>
+
+    <p th:text="${errorMessage}"></p>
+
+    <a href="/todo/list" class="main-link">메인으로</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="#" onclick="goBack(); return false;" class="back-link">이전페이지</a></div>
+</body>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</html>
