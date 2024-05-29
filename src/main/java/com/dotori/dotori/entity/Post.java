@@ -47,8 +47,9 @@ public class Post{
     @Builder.Default
     private List<PostThumbnail> thumbnails = new ArrayList<>();
 
-    public void changePost(String content, List<PostThumbnail> thumbnails) {
+    public void changePost(String content, LocalDateTime modDate, List<PostThumbnail> thumbnails) {
         this.content = content;
+        this.modDate = modDate;
         this.thumbnails = thumbnails;
     }
 
