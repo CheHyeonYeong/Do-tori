@@ -22,9 +22,6 @@ public class PostDTO {
     @NotEmpty
     private String nickName;
 
-    @Builder.Default
-    private int likeCount = 0;
-
     @NotEmpty
     @Size(min = 1, max = 500)
     private String content;

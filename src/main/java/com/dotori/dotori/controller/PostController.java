@@ -2,6 +2,7 @@ package com.dotori.dotori.controller;
 
 import com.dotori.dotori.dto.*;
 import com.dotori.dotori.service.PostService;
+import com.dotori.dotori.service.PostServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -25,6 +26,7 @@ import java.util.List;
 @RequestMapping("/post")
 public class PostController {
     private final PostService postService;
+    private final PostServiceImpl postServiceImpl;
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/list")
@@ -32,7 +34,9 @@ public class PostController {
         PageResponseDTO<PostDTO> responseDTO = postService.listWithCommentCount(pageRequestDTO);
         log.info(responseDTO);
         model.addAttribute("responseDTO", responseDTO);
+        model.addAttribute("likes", postService.countLikes(responseDTO.getSize()));
     }
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/register")
     public void registerGet(Model model) {
@@ -62,21 +66,27 @@ public class PostController {
     public void read(int pid, PageRequestDTO pageRequestDTO, Model model) {
         PostDTO postDTO = postService.getPost(pid);
         log.info(postDTO);
+        int likes = postService.countLikes(pid);
+
         model.addAttribute("dto", postDTO);
+        model.addAttribute("likes", likes); // 좋아요 개수
     }
 
     @GetMapping("/modify")
     public String modifyGet(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, PostDTO postDTO, PageRequestDTO pageRequestDTO, Model model) {
         int pid = postDTO.getPid();
         PostDTO dto = postService.getPost(pid);
+        int likes = postService.countLikes(pid);
+
         log.info(dto);
+
         model.addAttribute("dto", dto);
+        model.addAttribute("likes", likes); // 좋아요 개수
 
         if (authSecurityDTO != null && authSecurityDTO.getNickName().equals(dto.getNickName())) {
             // 작성자가 일치하는 경우에 대한 처리 로직 추가
             return "post/modify";
         } else {
-            log.info("!!!!!!!!!@!$#!@$#@%@$^%$&^%%^#$#%$^&%^*&(^*%$##");
             log.info(authSecurityDTO.getNickName());
             log.info(dto.getNickName());
             // 작성자가 일치하지 않는 경우에 대한 처리 로직 추가 (예: 예외 처리 또는 에러 페이지로 리다이렉트)
@@ -118,4 +128,23 @@ public class PostController {
         redirectAttributes.addAttribute("size", pageRequestDTO.getSize());
         return "redirect:/post/list";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/like")
+    public void likePosts(@RequestParam("pid") int pid, @RequestParam("aid") int aid, RedirectAttributes redirectAttributes) throws Exception {
+
+        ToriBoxDTO boardLikeDTO = ToriBoxDTO.builder().pid(pid).aid(aid).build();
+        int tid = postService.toriBoxPost(boardLikeDTO);
+
+        redirectAttributes.addAttribute("tid", tid);
+
+    }
+
+    @GetMapping("/likes")
+    public void toriBoxes(Model model) {
+        List<PostDTO> toriBoxPosts  = postService.toriBoxSelectAll();
+        model.addAttribute("toriBoxPosts", toriBoxPosts);
+    }
+
+
 }

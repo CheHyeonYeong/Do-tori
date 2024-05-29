@@ -34,9 +34,6 @@ public class Post{
     @Column(nullable = false,length = 500)
     private String content;
 
-    @ColumnDefault("0")
-    private int likeCount;
-
     @CreatedDate
     @Builder.Default
     @Column(name = "regDate", updatable = false)
@@ -50,16 +47,13 @@ public class Post{
     @Builder.Default
     private List<PostThumbnail> thumbnails = new ArrayList<>();
 
-
-    public void changePost(String content, int likeCount, List<PostThumbnail> thumbnails) {
+    public void changePost(String content, List<PostThumbnail> thumbnails) {
         this.content = content;
-        this.likeCount = likeCount;
         this.thumbnails = thumbnails;
     }
 
-    public void changePost(String content, int likeCount) {
+    public void changePost(String content) {
         this.content = content;
-        this.likeCount = likeCount;
     }
 
     public void addThumbnail(PostThumbnail postThumbnail) {

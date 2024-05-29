@@ -15,6 +15,6 @@ import java.util.Optional;
 public interface ToriBoxRepository extends JpaRepository<ToriBox, Integer> {
 
     Optional<ToriBox> findByAidAndPost(int aid, Post post);
-
+    int countByPost(Post post);
 
 }

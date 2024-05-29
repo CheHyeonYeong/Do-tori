@@ -1,13 +1,14 @@
 package com.dotori.dotori.service;
 
-import com.dotori.dotori.dto.PageRequestDTO;
-import com.dotori.dotori.dto.PageResponseDTO;
-import com.dotori.dotori.dto.PostDTO;
-import com.dotori.dotori.entity.Post;
+import com.dotori.dotori.dto.*;
+import com.dotori.dotori.repository.AuthRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @Log4j2
@@ -15,6 +16,8 @@ public class PostServiceTests {
 
     @Autowired
     private PostService postService;
+    @Autowired
+    private AuthService authService;
 
     //주석 지우면 에러남
 //    @Test
@@ -55,5 +58,41 @@ public class PostServiceTests {
         PageResponseDTO<PostDTO> responseDTO = postService.list(pageRequestDTO);
         log.info(responseDTO);
     }
+
+    @Test
+    public void testAddToriBox() throws Exception {
+        log.info("testAddToriBox");
+
+        PostDTO postDTO = postService.getPost(1);
+        AuthDTO authDTO = authService.info("gusdudco6");
+
+        ToriBoxDTO toriBoxDTO = ToriBoxDTO.builder()
+                .pid(postDTO.getPid())
+                .aid(authDTO.getAid())
+                .build();
+        int id = postService.toriBoxPost(toriBoxDTO);
+        log.info(id);
+    }
+
+    @Test
+    public void testCountToriBox(){
+        log.info("testCountToriBox");
+        int result = postService.countLikes(1);
+        log.info(result);
+    }
+
+
+
+    @Test
+    public void testLikeList(){
+        log.info("testCountToriBox");
+        List<PostDTO> toriBox = postService.toriBoxSelectAll();
+        for (PostDTO postDTO : toriBox) {
+            log.info(postDTO.getContent());
+        }
+    }
+
+
+
 
 }

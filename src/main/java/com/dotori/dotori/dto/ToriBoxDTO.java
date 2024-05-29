@@ -17,7 +17,6 @@ public class ToriBoxDTO {
     @NotNull
     private int aid;
 
-
     @NotNull
     private int pid;
 
