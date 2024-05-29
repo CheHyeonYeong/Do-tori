@@ -21,10 +21,11 @@ public class AuthSecurityDTO extends User implements OAuth2User {
     private String email;
     private boolean social;
     private String profileImage;
+    private boolean tutorialDone;
 
 
     private Map<String, Object> props;
-    public AuthSecurityDTO(int aid, String id, String password, String nickName, String email, boolean social, String profileImage, Collection<? extends GrantedAuthority> authorities) {
+    public AuthSecurityDTO(int aid, String id, String password, String nickName, String email, boolean social, String profileImage, boolean tutorialDone, Collection<? extends GrantedAuthority> authorities) {
         super(id == null ? "" : id, password == null ? "" : password, authorities);
         this.aid = aid;
         this.id = id;
@@ -32,6 +33,7 @@ public class AuthSecurityDTO extends User implements OAuth2User {
         this.email = email;
         this.social = social;
         this.profileImage = profileImage;
+        this.tutorialDone = tutorialDone;
     }
 
     @Override

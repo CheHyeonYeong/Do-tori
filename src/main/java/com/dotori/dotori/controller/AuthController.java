@@ -232,4 +232,11 @@ public class AuthController {
         authService.remove(aid);
         return "redirect:/auth/login";
     }
+
+    @PreAuthorize("principal.username == #authSecurityDTO.id")
+    @PostMapping("/tutorialDone")
+    public String tutorialDone(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO) {
+        authService.updateTutorialDone(authSecurityDTO.getId());
+        return "redirect:/todo/list";
+    }
 }

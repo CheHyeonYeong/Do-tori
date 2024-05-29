@@ -37,6 +37,9 @@ public class AuthDTO {
 
     private String profileImage;
 
+    //튜토리얼 추가
+    private boolean tutorialDone;
+
     // DTO 파일을 통하여 Social 로그인 시 Auth Entity를 생성하는 메소드
     public Auth toEntity() {
         return Auth.builder()
@@ -47,6 +50,7 @@ public class AuthDTO {
                 .provider(this.provider)
                 .profileImage(null)
                 .social(true)
+                .tutorialDone(this.tutorialDone)
                 .build();
     }
 

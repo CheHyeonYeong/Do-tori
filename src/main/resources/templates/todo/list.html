@@ -144,6 +144,14 @@
 <div th:insert="~{layout/navbar.html}"></div>
 
 <div layout:fragment="content">
+
+    <div th:if="${!tutorialDone}">
+        <img th:src="@{/assets/joinBg.png}" alt="Tutorial Image">
+        <form th:action="@{/auth/tutorialDone}" method="post">
+            <button type="submit" class="btn btn-primary">튜토리얼 완료</button>
+        </form>
+    </div>
+
     <div class="container">
         <div class="row-cols-1">
 

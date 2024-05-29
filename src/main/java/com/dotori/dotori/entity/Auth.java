@@ -43,6 +43,9 @@ public class Auth {
     @Column(name = "profile_image")
     private String profileImage;
 
+    @ColumnDefault("false")
+    private boolean tutorialDone;
+
     public void setAuth(String id) {
         this.id = id;
     }
@@ -74,6 +77,8 @@ public class Auth {
     public void ProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }
+
+    public void setTutorialDone(boolean tutorialDone) {this.tutorialDone = tutorialDone;}
 
     public void changeProfileImage(String profileImage) { this.profileImage = profileImage; }
     // 사용자의 이름이나 이메일을 업데이트하는 메소드
