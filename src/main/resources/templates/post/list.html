@@ -9,7 +9,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>PostList</title>
+    <title>🌰 Do-Tori</title>
 
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
@@ -40,6 +40,51 @@
             margin-right: auto;
             display: block;
         }
+
+        /*.searchInputGroup {*/
+        /*    align-items: center !important;*/
+        /*}*/
+
+        .form-select {
+            border: none;
+            border-radius: 10px 0 0 10px;
+        }
+        .form-control {
+            border: none;
+            border-radius: 0 10px 10px 0;
+            margin-right: 0.5rem;
+        }
+        .searchBar {
+            border-radius: 0 10px 10px 0 !important;
+        }
+        .searchBtn {
+            background-color: #ccbfb2;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        .clearBtn {
+            background-color: #e1d9d1;
+            border: none;
+            color: #000;
+            transition: 0.3s;
+        }
+        .clearBtn:hover {
+            background-color: #7D625B;
+        }
+
+        .moreBtn {
+            background-color: #CCBFB2;
+            color: #333;
+            padding: 0.5rem 1.7rem;
+            border: none;
+
+            transition: 0.3s;
+        }
+        .moreBtn:hover {
+            background-color: #7D625B;
+            border: none;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -55,7 +100,7 @@
             <form action="/post/list" method="get">
                 <div class="col">
                     <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
-                    <div class="input-group">
+                    <div class="input-group searchInputGroup">
                         <div class="input-group-prepend">
                             <select class="form-select" name="type">
                                 <option value="c" th:selected="${pageRequestDTO.type =='c'}">내용</option>
@@ -63,7 +108,7 @@
                                 <option value="tcw" th:selected="${pageRequestDTO.type =='cn'}">내용+작성자</option>
                             </select>
                         </div>
-                        <input type="text" class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}" placeholder="검색">
+                        <input type="text" class="form-control searchBar" name="keyword" th:value="${pageRequestDTO.keyword}" placeholder="검색">
                         <div class="input-group-append">
                             <button class="btn btn-outline searchBtn" type="submit" style="background-color: #ccbfb2">검색</button>
                             <button class="btn btn-outline-secondary clearBtn" type="button">초기화</button>
@@ -108,27 +153,27 @@
                     <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
 
                     <div th:if="${dto.nickName == #authentication.principal.nickName}">
-                    <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
+                        <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
 
-                        <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="5" cy="5" r="5" fill="black"/>
-                                <circle cx="5" cy="22" r="5" fill="black"/>
-                                <circle cx="5" cy="40" r="5" fill="black"/>
-                            </svg>
-                        </a>
+                            <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="5" cy="5" r="5" fill="black"/>
+                                    <circle cx="5" cy="22" r="5" fill="black"/>
+                                    <circle cx="5" cy="40" r="5" fill="black"/>
+                                </svg>
+                            </a>
 
-                        <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" th:href="@{/post/modify(pid=${dto.pid})}" th:text="수정하기"></a>
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-item">
+                            <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" th:href="@{/post/modify(pid=${dto.pid})}" th:text="수정하기"></a>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-item">
                                     <form th:action="@{/post/remove}" method="post">
                                         <input type="text" name="pid" th:value="${dto.pid}" readonly style="display: none;">
                                         <button type="submit" class="removeBtn"  style="all: unset; cursor: pointer;">삭제하기</button>
                                     </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     </div>
                 </div>
 
@@ -171,7 +216,7 @@
 
     <!-- 더보기 버튼 추가 -->
     <div class="text-center">
-        <button id="loadMoreBtn" class="btn btn-primary" type="button">더보기</button>
+        <button id="loadMoreBtn" class="btn btn-primary moreBtn" type="button">더보기</button>
 
     </div>
 

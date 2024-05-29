@@ -7,13 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Modify</title>
+    <title>🌰 Do-Tori</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
 
     <style>
+        a {
+            color: #000;
+        }
+        a:hover {
+            color: #000;
+        }
+
         .content_layout {
             display: flex;
             align-items: center;
@@ -27,7 +34,7 @@
             transition: 1s;
         }
 
-        .auth, .auth_modify, .auth_logout {
+        .auth, .auth_modify, .auth_logout, .auth_toriBox {
             width: 95%;
             margin: 16px auto 0;
             padding: 24px 25px;
@@ -37,7 +44,7 @@
             align-items: center;
         }
 
-        .auth, .auth_logout {
+        .auth, .auth_logout, .auth_toriBox {
             position: relative;
         }
         .aside_menu_film {
@@ -58,6 +65,10 @@
             z-index: -10;
         }
         .auth_logout:hover .aside_menu_film {
+            opacity: 0;
+            z-index: -10;
+        }
+        .auth_toriBox:hover .aside_menu_film {
             opacity: 0;
             z-index: -10;
         }
@@ -283,6 +294,14 @@
             <span class="auth_aside_txt">
                 회원 정보 수정
             </span>
+        </div>
+
+        <div class="auth_toriBox">
+            <span class="aside_menu_film"></span>
+            <img th:src="@{/assets/auth_like.png}" style="width: 25px">
+            <a th:href="@{/auth/toriBoxPage}" class="text-decoration-none auth_aside_txt">
+                마음함
+            </a>
         </div>
 
         <div class="auth_logout">
