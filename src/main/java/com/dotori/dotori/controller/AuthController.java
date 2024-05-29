@@ -3,8 +3,7 @@ package com.dotori.dotori.controller;
 import com.dotori.dotori.dto.AuthDTO;
 import com.dotori.dotori.dto.AuthSecurityDTO;
 import com.dotori.dotori.dto.ToriBoxDTO;
-import com.dotori.dotori.service.AuthService;
-import com.dotori.dotori.service.ToriBoxService;
+import com.dotori.dotori.service.AuthService;;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -24,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.Authentication;
 
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -35,7 +33,6 @@ public class AuthController {
 
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
-    private final ToriBoxService toriBoxService;
 
     // 로그인
     @PreAuthorize("isAnonymous()")
@@ -219,12 +216,6 @@ public class AuthController {
         return "redirect:/auth/info";
     }
 
-    @GetMapping("/toriBoxPage")
-    public void toriPage(Model model) {
-        List<ToriBoxDTO> likeDTO= toriBoxService.selectAll();
-
-        model.addAttribute("likeDTO",likeDTO);
-    }
 
     @PostMapping("/delete")
     public String deleteAuth(AuthDTO authDTO, RedirectAttributes redirectAttributes) {

@@ -1,9 +1,6 @@
 package com.dotori.dotori.service;
 
-import com.dotori.dotori.dto.PageRequestDTO;
-import com.dotori.dotori.dto.PageResponseDTO;
-import com.dotori.dotori.dto.PostDTO;
-import com.dotori.dotori.dto.PostListCommentCountDTO;
+import com.dotori.dotori.dto.*;
 import com.dotori.dotori.entity.Post;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +15,10 @@ public interface PostService {
     void modifyPost(PostDTO postDTO, List<MultipartFile> files, List<String> deletedThumbnails) throws Exception;
     void deletePost(int id);
 
+    int toriBoxPost(ToriBoxDTO toriBoxDTO) throws Exception;
+    int countLikes(int pid);
+
+    List<PostDTO> toriBoxSelectAll();
     PageResponseDTO<PostDTO> listWithCommentCount(PageRequestDTO pageRequestDTO);
 
 
