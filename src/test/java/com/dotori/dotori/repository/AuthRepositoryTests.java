@@ -32,6 +32,7 @@ public class AuthRepositoryTests {
                     .email("test" + i + "@naver.com")
                     .provider("naver")
                     .social(true)
+                    .tutorialDone(true)
                     .build();
 
             authRepository.save(auth);
@@ -51,11 +52,33 @@ public class AuthRepositoryTests {
     }
 
     @Test
+    public void testByNickName(){
+        Optional<Auth> auth = authRepository.findByNickName("tu10");
+        Auth auth1 = auth.orElseThrow();
+
+        log.info(auth1);
+        log.info(auth1.getAid());
+
+        log.info(auth1.getNickName());
+    }
+
+    @Test
     public void testByEmail(){
         Optional<Auth> auth = authRepository.findByEmail("test10@naver.com");
         Auth auth1 = auth.orElseThrow();
         log.info(auth1);
         log.info(auth1.getAid());
+        log.info(auth1.getNickName());
+    }
+
+    @Test
+    public void testByProvider(){
+        Optional<Auth> auth = authRepository.findUserByEmailAndProvider("test10@naver.com", "naver");
+        Auth auth1 = auth.orElseThrow();
+
+        log.info(auth1);
+        log.info(auth1.getAid());
+
         log.info(auth1.getNickName());
     }
 

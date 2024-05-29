@@ -24,7 +24,7 @@ public class AuthServiceTests {
     private PasswordEncoder passwordEncoder;
 
     //login은 기본적으로 제공하기 때문에, 따로 테스트를 진행하지 않음
-    
+
     @Test
     public void joinTest() throws AuthService.MidExistException, AuthService.NickNameExistException, AuthService.EmailExistException {
         AuthDTO authDTO = AuthDTO.builder()
@@ -32,6 +32,8 @@ public class AuthServiceTests {
                 .password("1111")
                 .nickName("테스트2")
                 .email("ServiceTestUser3@test.com")
+                .social(true)
+                .tutorialDone(true)
                 .build();
         log.info("authDTO: ", authDTO.getAid());
         log.info(authService.join(authDTO));
@@ -50,6 +52,8 @@ public class AuthServiceTests {
                 .password("Servicetest1")
                 .nickName("테스트50")
                 .email("ServiceTestUser30@test.com")
+                .social(true)
+                .tutorialDone(true)
                 .build();
         authService.modify(authDTO);
         Optional<Auth> auth=authRepository.findById("ServiceTestUser2");
