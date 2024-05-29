@@ -95,6 +95,9 @@ public class AuthController {
         } catch (AuthService.EmailExistException ee) {
             redirectAttributes.addFlashAttribute("error", "email");
             return "redirect:/auth/join";
+        } catch (AuthService.NickNameLengthException le) {
+            redirectAttributes.addFlashAttribute("error", "nickNameLength");
+            return "redirect:/auth/join";
         }
 
         redirectAttributes.addFlashAttribute("result", "success");

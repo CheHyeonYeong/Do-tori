@@ -17,15 +17,16 @@
     <style>
         body {
             background-color: #F5F0EA;
+            overflow-x: hidden;
         }
         form{
             position: relative;
         }
-        .my-4{
-            position: absolute;
-            bottom: 0;
-            right: 0;
-        }
+        /*.my-4{*/
+        /*    position: absolute;*/
+        /*    bottom: 0;*/
+        /*    right: 0;*/
+        /*}*/
 
     </style>
 </head>
@@ -60,7 +61,7 @@
                 <div class="insert input-group mb-3" style="margin: 0 auto; width: 50%">
                     <div th:if="${dto.thumbnails != null and !dto.thumbnails.isEmpty()}" th:each="thumbnail, index : ${dto.thumbnails}">
                         <div style="display: inline-block; margin-right: 10px;">
-                            <img th:src="@{/images/{thumbnail}(thumbnail=${thumbnail})}" width="80">
+                            <img th:src="@{/images/{thumbnail}(thumbnail=${thumbnail})}" style="width: 80px; height: 35px; object-fit: contain;">
                             <input type="checkbox" name="deletedThumbnails" th:value="${thumbnail}"> 삭제
                         </div>
                     </div>

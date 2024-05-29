@@ -4,9 +4,8 @@
         height : 46px;
         border-radius : 50%;
     }
-    .default-profile-image {
-        width : 46px;
-        height : 46px;
+    .nav-item.active .menu-bar {
+        font-weight: bold;
     }
 </style>
 
@@ -53,8 +52,8 @@
             </ul>
             <div class="dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img th:if="${#authentication.principal.profileImage != null}" th:src="@{/images/{profileImage}(profileImage=${#authentication.principal.profileImage})}" class="profile profile-image" />
-                    <img th:if="${#authentication.principal.profileImage == null}" th:src="@{/assets/Profile.png}" class="profile default-profile-image" />
+                    <img th:src="@{${#authentication.principal.profileImage != null ? '/images/' + #authentication.principal.profileImage + '?t=' + #dates.createNow().getTime() : '/assets/Profile.png'}}"
+                         class="profile profile-image profileImage" />
                 </a>
                 <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item login" href="/auth/login">로그인</a>
@@ -69,18 +68,41 @@
 </nav>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var path = window.location.pathname;
-        var page = path.split("8080/").pop();
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     var path = window.location.pathname;
+    //     var page = path.split("8080/").pop();
+    //
+    //     var navLinks = document.querySelectorAll('.nav-link');
+    //     navLinks.forEach(function (link) {
+    //         var href = link.getAttribute('href');
+    //         if (href === page) {
+    //             link.classList.add('active-nav-link');
+    //         }
+    //     });
+    // });
 
-        var navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(function (link) {
-            var href = link.getAttribute('href');
-            if (href === page) {
-                link.classList.add('active-nav-link');
-            }
-        });
-    });
+    // 현재 URL 가져오기
+    var currentURL = window.location.href;
+
+    // Do-tori 메뉴 엘리먼트 가져오기
+    var doToriMenu = document.querySelector('.nav-item:first-child');
+
+    // To-rest 메뉴 엘리먼트 가져오기
+    var toRestMenu = document.querySelector('.nav-item:last-child');
+
+    // 현재 URL에 따라 active 클래스 추가/제거
+    if (currentURL.includes('/todo/list')) {
+        doToriMenu.classList.add('active');
+        toRestMenu.classList.remove('active');
+    } else if (
+        currentURL.includes('/post/list') ||
+        currentURL.includes('/post/register') ||
+        currentURL.includes('/post/read') ||
+        currentURL.includes('/post/modify')
+    ) {
+        doToriMenu.classList.remove('active');
+        toRestMenu.classList.add('active');
+    }
 
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -99,6 +121,8 @@
         <a class="dropdown-item login" href="/auth/info">MY PAGE</a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item join" href="/auth/logout">로그아웃</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item join" href="/post/likes">마음함</a>
         `;
         }
     });
