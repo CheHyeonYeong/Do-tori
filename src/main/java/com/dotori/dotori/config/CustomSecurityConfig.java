@@ -51,6 +51,7 @@ public class CustomSecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("/images/**").permitAll()
+                .requestMatchers("/error/**").permitAll()
                 .anyRequest().authenticated()
         );
 

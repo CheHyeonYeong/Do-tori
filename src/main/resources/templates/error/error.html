@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>999 Error</title>
+    <link rel="stylesheet" href="/css/error.css">
+</head>
+<body>
+
+<div class="error-container">
+    <div class="error-code">
+        <img src="/assets/999_1.png" alt="Image_1" class="error-image">
+        <img src="/assets/999_2.png" alt="Image_2" class="error-image">
+        <img src="/assets/999_3.png" alt="Image_3" class="error-image">
+    </div>
+
+    <p> 죄송합니다. 알 수 없는 오류가 발생했습니다.</p>
+    <br>
+    <p2>시스템에서 처리할 수 없는 예기치 않은 오류가 발생했습니다.
+        <br>
+        불편을 드려 죄송합니다. 잠시 후 다시 시도해주시기 바랍니다.</p2>
+
+    <p th:text="${errorMessage}"></p>
+
+    <a href="/todo/list" class="main-link">메인으로</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="#" onclick="goBack(); return false;" class="back-link">이전페이지</a></div>
+</body>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</html>

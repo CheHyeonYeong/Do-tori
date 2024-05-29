@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>405 Error</title>
+    <link rel="stylesheet" href="/css/error.css">
+</head>
+<body>
+
+<div class="error-container">
+    <div class="error-code">
+        <span class="error-digit">4</span>
+        <img src="/assets/dotori_image.png" alt="Dotori Image" class="error-image">
+        <span class="error-digit">5</span>
+    </div>
+
+    <p>   죄송합니다. 현재 요청하신 메서드는 허용되지 않습니다.</p>
+    <br>
+    <p2>해당 리소스에서는 요청에 사용된 메서드(GET, POST 등)를 지원하지 않습니다.
+        <br>
+        요청 경로를 다시 한번 확인해 주시기 바랍니다.</p2>
+
+
+    <p th:text="${errorMessage}"></p>
+
+
+    <a href="/todo/list" class="main-link">메인으로</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="#" onclick="goBack(); return false;" class="back-link">이전페이지</a></div>
+</body>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</html>

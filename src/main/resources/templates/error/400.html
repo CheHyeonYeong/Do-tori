@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>400 Error</title>
+    <link rel="stylesheet" href="/css/error.css">
+</head>
+<body>
+
+<div class="error-container">
+    <div class="error-code">
+        <span class="error-digit">4</span>
+        <span class="error-digit">0</span>
+        <span class="error-digit">0</span>
+    </div>
+
+    <p> 잘못된 요청입니다.</p>
+    <br>
+    <p2>잘못된 형식의 데이터가 전송되었거나, 서버가 요청을 이해하지 못합니다.
+        <br>
+        요청 내용을 다시 한 번 확인해주시기 바랍니다.</p2>
+
+    <p th:text="${errorMessage}"></p>
+
+    <a href="/todo/list" class="main-link">메인으로</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="#" onclick="goBack(); return false;" class="back-link">이전페이지</a></div>
+</body>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</html>
