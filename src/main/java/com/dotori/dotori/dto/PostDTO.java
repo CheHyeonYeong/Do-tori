@@ -18,6 +18,7 @@ public class PostDTO {
 
     private int pid;
     private Long commentCount;
+    private int toriBoxCount;
 
     @NotEmpty
     private String nickName;
