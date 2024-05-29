@@ -2,8 +2,7 @@ package com.dotori.dotori.controller;
 
 import com.dotori.dotori.dto.AuthDTO;
 import com.dotori.dotori.dto.AuthSecurityDTO;
-import com.dotori.dotori.dto.ToriBoxDTO;
-import com.dotori.dotori.service.AuthService;;
+import com.dotori.dotori.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;

@@ -1,7 +1,5 @@
 package com.dotori.dotori.repository;
 
-import com.dotori.dotori.entity.Auth;
-import com.dotori.dotori.entity.Comment;
 import com.dotori.dotori.entity.Post;
 import com.dotori.dotori.entity.ToriBox;
 import lombok.extern.log4j.Log4j2;
@@ -10,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 
 @SpringBootTest
@@ -23,8 +20,6 @@ public class ToriBoxRepositoryTests {
     private ToriBoxRepository toriBoxRepository;
     @Autowired
     private PostRepository postRepository;
-    @Autowired
-    private AuthRepository authRepository;
 
 
     @Test

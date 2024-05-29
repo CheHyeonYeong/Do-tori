@@ -34,7 +34,7 @@ public class PostServiceTests {
         log.info(post.getContent());
 
     }
-      //주석 지우면 에러남
+    //주석 지우면 에러남
 //    @Test
 //    public void updateTest() {
 //        log.info("updateTest");
@@ -42,6 +42,7 @@ public class PostServiceTests {
 //        postService.modifyPost(postDTO);
 //        log.info(postService.getPost(56).getContent());
 //    }
+
 
     @Test
     public void testDeletePost() {
@@ -91,8 +92,6 @@ public class PostServiceTests {
             log.info(postDTO.getContent());
         }
     }
-
-
 
 
 }
