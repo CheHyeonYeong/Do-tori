@@ -33,6 +33,7 @@ public class PostController {
     public void list(PageRequestDTO pageRequestDTO, Model model) {
         PageResponseDTO<PostDTO> responseDTO = postService.listWithCommentCount(pageRequestDTO);
         log.info(responseDTO);
+
         model.addAttribute("responseDTO", responseDTO);
     }
 

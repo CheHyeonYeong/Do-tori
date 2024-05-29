@@ -150,6 +150,7 @@ public class PostServiceImpl implements PostService {
                     }
                     postDTO.setThumbnails(thumbnails);
 
+                    postDTO.setToriBoxCount(countLikes(postDTO.getPid()));
                     return postDTO;
                 })
                 .collect(Collectors.toList());
