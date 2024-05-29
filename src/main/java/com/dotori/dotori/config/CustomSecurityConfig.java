@@ -48,7 +48,9 @@ public class CustomSecurityConfig {
 
         // 권한 설정
         http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/").permitAll()
                 .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/todo/**").permitAll()
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("/images/**").permitAll()
                 .requestMatchers("/error/**").permitAll()
