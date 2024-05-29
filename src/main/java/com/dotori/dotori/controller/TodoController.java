@@ -47,6 +47,7 @@ public class TodoController {
         }
         model.addAttribute("todoCategory", sortedTodoCategory);
         model.addAttribute("categoryOrder", categoryOrder);
+        model.addAttribute("tutorialDone", authSecurityDTO.isTutorialDone());
     }
 
     @PostMapping("/register")

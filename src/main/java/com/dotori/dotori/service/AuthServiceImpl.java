@@ -94,4 +94,11 @@ public class AuthServiceImpl implements AuthService {
         return null;
     }
 
+    @Override
+    public void updateTutorialDone(String id) {
+        Optional<Auth> authOptional = authRepository.findById(id);
+        Auth auth = authOptional.orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        auth.setTutorialDone(true);
+        authRepository.save(auth);
+    }
 }

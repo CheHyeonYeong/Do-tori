@@ -39,4 +39,6 @@ public interface AuthService {
     void modify(AuthDTO authDTO);
     void remove(String id);
     String updateProfileImage(String authId, MultipartFile file) throws Exception;
+
+    void updateTutorialDone(String id);
 }

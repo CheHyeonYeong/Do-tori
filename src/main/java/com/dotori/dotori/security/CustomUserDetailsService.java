@@ -48,6 +48,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 auth.getEmail(),
                 false,
                 auth.getProfileImage(),
+                auth.isTutorialDone(),
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
         );
 

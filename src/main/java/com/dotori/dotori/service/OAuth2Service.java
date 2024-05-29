@@ -55,6 +55,7 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
                 auth.getEmail(),
                 auth.isSocial(),
                 auth.getProfileImage(),
+                auth.isTutorialDone(),
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
         );
     }
