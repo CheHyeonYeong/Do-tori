@@ -36,6 +36,7 @@ public class CommentController {
     @GetMapping(value = "/list/{pid}")
     public PageResponseDTO<CommentDTO> getList(@PathVariable("pid") int pid, PageRequestDTO pageRequestDTO){
         PageResponseDTO<CommentDTO> responseDTO = commentService.getListOfPost(pid, pageRequestDTO);
+        responseDTO.setCommentCount(responseDTO.getTotal());
         return responseDTO;
     }
 

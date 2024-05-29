@@ -69,6 +69,12 @@
             text-align: left;
             margin-bottom: 30px;
         }
+        .p-2 {
+            padding: 0 !important;
+        }
+        .content_bottom {
+            margin: 1.2rem 0 0 0 !important;
+        }
         .input-group {
             align-items: center;
         }
@@ -87,7 +93,7 @@
             border : none;
             background-color: #ccbfb2;
             position: absolute;
-            top: 35%;
+            top: 20%;
             right: 2%;
         }
         .commentList{
@@ -102,6 +108,20 @@
             background-color: transparent;
             text-align: left;
             padding: 0;
+        }
+
+        .moreBtn {
+            background-color: #CCBFB2;
+            color: #333;
+            padding: 0.5rem 1.7rem;
+            border: none;
+
+            transition: 0.3s;
+        }
+        .moreBtn:hover {
+            background-color: #7D625B;
+            border: none;
+            color: #fff;
         }
     </style>
 </head>
@@ -154,9 +174,9 @@
                         </div>
 
                     </div>
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 content_bottom">
                         <span> [[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
-                        <span> - &nbsp;&nbsp; [[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]] 수정 </span>
+                        <span>&nbsp; - &nbsp; [[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]] 수정 </span>
                         <div class="p-2 ms-auto">
                             <img th:src="@{/assets/Favorite.png}" style="width: 30px; height: auto"> &nbsp;
                             <span>[[${likes}]]</span>
@@ -188,7 +208,7 @@
 
         <!-- 더보기 버튼 추가 -->
         <div class="text-center">
-            <button id="loadMoreBtn" class="btn btn-primary" type="button">더보기</button>
+            <button id="loadMoreBtn" class="btn btn-primary moreBtn" type="button">더보기</button>
         </div>
 
 
@@ -214,13 +234,13 @@
             for (const dto of dtoList) {
                 const isOwner = dto.nickName === authNickName; // 작성자와 현재 사용자가 같은지 확인
                 str += `
-                <li class="list-group-item d-flex justify-content-between commentItem" style="background-color: #F5F0EA; border: none;">
-                    <div style="background-color: #F5F0EA;">
-                        <h5>
-                            <img src="/assets/Profile.png" class="col-1 profile" id="profileImage" style="width: 35px; height: auto">
+                <li class="list-group-item d-flex justify-content-between commentItem" style="background-color: #F5F0EA; border: none; align-items: center;">
+                    <img src="/assets/Profile.png" class="col-1 profile" id="profileImage" style="width: 50px; height: 50px">
+                    <div style="background-color: #F5F0EA; width: 90%; border-bottom: 1px solid #c3c3c3">
+                        <h5 style="font-size: 1.2rem;">
                             <span class="col-2">${dto.nickName}</span>
                         </h5>
-                        <div>
+                        <div style="margin-bottom: 0.7rem;">
                             <span class="col-6" data-id="${dto.id}">${dto.content}</span>
                         </div>
                         <span class="col-2" style="display: none;">${dto.id}</span>
@@ -230,9 +250,6 @@
                             <button type="button" class="btn btn-danger removeBtn" data-id="${dto.id}">삭제</button>
                         </div>
                     ` : ''}
-                </li>
-                <li>
-                <hr>
                 </li>`;
             }
         }
@@ -246,6 +263,30 @@
     // 더보기 버튼과 input 요소를 가져오기
     const loadMoreBtn = document.getElementById('loadMoreBtn');
 
+    function printComments( size = 10 ) {
+        getList(pid, 0, size).then(response => {
+            printList(response.postLists);
+
+            // 댓글 개수 확인
+            const totalComments = response.commentCount;
+            const displayedComments = commentList.children.length;
+
+            if (totalComments <= 10) {
+                // 댓글 10개 이하면 더보기 숨김
+                loadMoreBtn.style.visibility = 'hidden';
+            } else if (displayedComments >= totalComments) {
+                // 모든 댓글을 불러온 경우 더보기 숨김
+                loadMoreBtn.style.visibility = 'hidden';
+            } else {
+                // 더보기 보이기
+                loadMoreBtn.style.visibility = 'visible';
+            }
+
+        }).catch(error => {
+            console.error(error);
+        });
+    }
+
     // 버튼 클릭 이벤트 리스너 추가
     loadMoreBtn.addEventListener('click', () => {
 
@@ -254,17 +295,9 @@
 
         console.log(count);
 
-        printComments();
+        printComments(count * 10);
 
     });
-
-    function printComments( size = count*10 ) {
-        getList(pid, 0, size).then(response => {
-            printList(response.postLists);
-        }).catch(error => {
-            console.error(error);
-        });
-    }
 
     printComments();
 
@@ -272,13 +305,15 @@
         const commentObj = {
             pid: pid,
             content: document.querySelector(".commentContent").value,
-            nickName: document.querySelector(".nickname").value
+            nickName: authNickName
         };
         addComment(commentObj).then(response => {
             alert(response.id);
             document.querySelector(".commentContent").value = '';
-            document.querySelector(".nickname").value = '';
+            count += 1;
+            // document.querySelector(".nickname").value = '';
             printComments();
+
         }).catch(error => {
             console.error(error);
         });

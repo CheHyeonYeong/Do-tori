@@ -41,10 +41,6 @@
             display: block;
         }
 
-        /*.searchInputGroup {*/
-        /*    align-items: center !important;*/
-        /*}*/
-
         .form-select {
             border: none;
             border-radius: 10px 0 0 10px;
@@ -70,6 +66,19 @@
         }
         .clearBtn:hover {
             background-color: #7D625B;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .writer_box {
+            display: flex;
+            align-items: center;
+        }
+        .writer_box>.card-title {
+            margin-left: 0.3rem;
         }
 
         .moreBtn {
@@ -149,8 +158,10 @@
         <div th:each="dto:${responseDTO.postLists}">
             <div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px">
             <div class="card-header">
-                <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
-                <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
+                <div class="writer_box">
+                    <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
+                    <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
+                </div>
 
                 <div th:if="${dto.nickName == #authentication.principal.nickName}">
                     <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
