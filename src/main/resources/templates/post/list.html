@@ -148,57 +148,57 @@
 
         <div th:each="dto:${responseDTO.postLists}">
             <div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px">
-            <div class="card-header">
-                <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
-                <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
+                <div class="card-header">
+                    <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
+                    <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
 
-                <div th:if="${dto.nickName == #authentication.principal.nickName}">
-                    <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
+                    <div th:if="${dto.nickName == #authentication.principal.nickName}">
+                        <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
 
-                        <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="5" cy="5" r="5" fill="black"/>
-                                <circle cx="5" cy="22" r="5" fill="black"/>
-                                <circle cx="5" cy="40" r="5" fill="black"/>
-                            </svg>
-                        </a>
+                            <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="5" cy="5" r="5" fill="black"/>
+                                    <circle cx="5" cy="22" r="5" fill="black"/>
+                                    <circle cx="5" cy="40" r="5" fill="black"/>
+                                </svg>
+                            </a>
 
-                        <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" th:href="@{/post/modify(pid=${dto.pid})}" th:text="수정하기"></a>
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-item">
-                                <form th:action="@{/post/remove}" method="post">
-                                    <input type="text" name="pid" th:value="${dto.pid}" readonly style="display: none;">
-                                    <button type="submit" class="removeBtn"  style="all: unset; cursor: pointer;">삭제하기</button>
-                                </form>
+                            <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" th:href="@{/post/modify(pid=${dto.pid})}" th:text="수정하기"></a>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-item">
+                                    <form th:action="@{/post/remove}" method="post">
+                                        <input type="text" name="pid" th:value="${dto.pid}" readonly style="display: none;">
+                                        <button type="submit" class="removeBtn"  style="all: unset; cursor: pointer;">삭제하기</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
 
-            <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|" style="all: unset; cursor: pointer;">
-                <div class="card-body">
-                    <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
-                        <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
-                        <div th:if="${dto.thumbnails != null && !dto.thumbnails.isEmpty()}">
-                            <img th:src="@{/images/{filename}(filename=${dto.thumbnails[0]})}" alt="썸네일" class="thumbnail">
+                <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|" style="all: unset; cursor: pointer;">
+                    <div class="card-body">
+                        <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
+                            <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
+                            <div th:if="${dto.thumbnails != null && !dto.thumbnails.isEmpty()}">
+                                <img th:src="@{/images/{filename}(filename=${dto.thumbnails[0]})}" alt="썸네일" class="thumbnail">
+                            </div>
                         </div>
                     </div>
-                </div>
-            </a>
-            <div style="margin: 0 auto; width: 95%">
-                <hr>
-                <p class="hstack gap-3 date">
-                    <span>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
-                    <span>/</span>
-                    <span>
+                </a>
+                <div style="margin: 0 auto; width: 95%">
+                    <hr>
+                    <p class="hstack gap-3 date">
+                        <span>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
+                        <span>/</span>
+                        <span>
                             <span th:if="${dto.modDate == null}">-</span>
                             <span th:unless="${dto.modDate == null}">[[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]]</span>
                             &nbsp;수정
                         </span>
-                    <span class="p-2 ms-auto">
+                        <span class="p-2 ms-auto">
 
                             <img id="likeBtn" th:src="@{/assets/Favorite.png}" style="width: 30px; height: 30px"
                                  th:data-post-id="${dto.pid}" th:data-auth-id="${#authentication.principal.aid}">
@@ -207,9 +207,9 @@
                             <span class="progress-bar-success" style="color: black">[[${dto.commentCount}]]</span>
                         </span>
 
-                </p>
+                    </p>
+                </div>
             </div>
-        </div>
         </div>
     </div>
 
@@ -226,6 +226,7 @@
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
+
 <script layout:fragment="script" th:inline="javascript">
 
     function redirectToNewPostPage() {
@@ -239,14 +240,31 @@
     // 더보기 버튼과 input 요소를 가져오기
     const loadMoreBtn = document.getElementById('loadMoreBtn');
 
+    // 스크롤 위치
+    let scrollPosition = 0;
+
+    // 이전 스크롤 위치 복원
+    window.addEventListener('load', () => {
+        const savedScrollPosition = sessionStorage.getItem('scrollPosition');
+        if (savedScrollPosition) {
+            window.scrollTo(0, parseInt(savedScrollPosition));
+            sessionStorage.removeItem('scrollPosition');  // 복원 후 삭제
+        }
+    });
+
     // 버튼 클릭 이벤트 리스너 추가
     loadMoreBtn.addEventListener('click', () => {
+        // 현재 스크롤 위치 저장
+        scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+        sessionStorage.setItem('scrollPosition', scrollPosition);
 
-        // count 값 증가
-        count += 1;
+        // 현재 URL에서 size 값을 가져온 후, 10씩 증가시키기
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentSize = parseInt(urlParams.get('size')) || 10;
+        const nextSize = currentSize + 10;
 
         // input 요소의 값 업데이트
-        self.location = '/post/list?size='+count*10
+        self.location = '/post/list?size=' + nextSize;
     });
 
     document.querySelector(".clearBtn").addEventListener("click", function (e){
@@ -254,7 +272,6 @@
         e.stopPropagation()
         self.location = '/post/list'
     }, false)
-
 
     // 게시글 등록 이후 모달창이 하나 뜰 것이다.
 
@@ -269,8 +286,6 @@
         e.stopPropagation();
         self.location = '/post/list';
     }, false);
-
-
 
 </script>
 </body>

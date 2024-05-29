@@ -80,13 +80,11 @@ public class PostSearchImpl extends QuerydslRepositorySupport implements PostSea
         JPQLQuery<PostListCommentCountDTO> query = from(post)
                 .leftJoin(comment).on(comment.post.eq(post))
                 .leftJoin(postThumbnail).on(postThumbnail.post.eq(post))
-                .groupBy(post.pid, postThumbnail.id)
+                .groupBy(post.pid)
                 .select(Projections.constructor(PostListCommentCountDTO.class,
                         post.pid, post.content, post.nickName, post.regDate,
-                        postThumbnail.thumbnail.as("thumbnail"), // 썸네일 정보 포함
-                        comment.count()))
-                .orderBy(postThumbnail.id.desc()) // 썸네일 ID 기준으로 정렬
-                .limit(1); // 첫 번째 행만 선택
+                        JPAExpressions.select(postThumbnail.thumbnail.max()).from(postThumbnail).where(postThumbnail.post.eq(post)),
+                        comment.count()));
 
         if ((types != null && types.length > 0) && keyword != null) {
             BooleanBuilder booleanBuilder = new BooleanBuilder();
@@ -112,5 +110,4 @@ public class PostSearchImpl extends QuerydslRepositorySupport implements PostSea
 
         return new PageImpl<>(content, pageable, count);
     }
-
 }
