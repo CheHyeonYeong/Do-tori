@@ -26,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
 
     @Override
-    public Auth join(AuthDTO authDTO) throws MidExistException, NickNameExistException, EmailExistException{
+    public Auth join(AuthDTO authDTO) throws MidExistException, NickNameExistException, EmailExistException, NickNameLengthException{
         String mid = authDTO.getId();
         String email = authDTO.getEmail();
         String nickName = authDTO.getNickName();
@@ -39,6 +39,9 @@ public class AuthServiceImpl implements AuthService {
         }
         if (authRepository.existsByEmail(email)) {
             throw new EmailExistException("이미 존재하는 이메일입니다.");
+        }
+        if (nickName.length() > 5) {
+            throw new NickNameLengthException("닉네임은 5글자 이하여야 합니다.");
         }
 
 

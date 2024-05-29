@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface AuthService {
     static class MidExistException extends Exception {
-        //ID 가 중복되면 안됨!! 예외발생하기 때문에 예외처리를 함
+        // ID 중복 확인
 
         public MidExistException(){}
         public MidExistException(String message) {
@@ -16,7 +16,7 @@ public interface AuthService {
     }
 
     static class NickNameExistException extends Exception {
-        //ID 가 중복되면 안됨!! 예외발생하기 때문에 예외처리를 함
+        // 닉네임 중복 확인
 
         public NickNameExistException(){}
         public NickNameExistException(String message) {
@@ -25,7 +25,7 @@ public interface AuthService {
     }
 
     static class EmailExistException extends Exception {
-        //ID 가 중복되면 안됨!! 예외발생하기 때문에 예외처리를 함
+        // 이메일 중복 확인
 
         public EmailExistException(){}
         public EmailExistException(String message) {
@@ -33,7 +33,16 @@ public interface AuthService {
         }
     }
 
-    Auth join(AuthDTO authDTO) throws MidExistException, NickNameExistException, EmailExistException;
+    static class NickNameLengthException extends Exception {
+        // 닉네임 길이 검사
+
+        public NickNameLengthException() {}
+        public NickNameLengthException(String message) {
+            super(message);
+        }
+    }
+
+    Auth join(AuthDTO authDTO) throws MidExistException, NickNameExistException, EmailExistException, NickNameLengthException;
 
     AuthDTO info(String id);
     void modify(AuthDTO authDTO);

@@ -195,7 +195,7 @@
         e.stopPropagation()
 
         formObj.reset()
-        self.location = `/auth/info`
+        self.location = `/auth/login`
 
     }, false)
 
@@ -224,9 +224,9 @@
         const nicknameInput = document.getElementById('nickName');
         const nickname = nicknameInput.value;
         // 닉네임 유효성 검사
-        const nicknameRegex = /^.{1,4}$/;
+        const nicknameRegex = /^.{1,5}$/;
         if (!nicknameRegex.test(nickname)) {
-            alert("닉네임은 4글자 이하여야 합니다.")
+            alert("닉네임은 5글자 이하여야 합니다.")
             nicknameInput.focus();
             return;
         }
