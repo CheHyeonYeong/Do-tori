@@ -25,6 +25,10 @@
         height: 120%;
     }
 
+    .fc-daygrid-day-number{
+        cursor: pointer;
+    }
+
     .fc-toolbar-title {
         font-weight: bolder;
     }
@@ -334,6 +338,7 @@
     var daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
     renderGraph(currentMonth, currentYear, daysInMonth);
+
 
     var formattedDate = currentMonth + '월 ' + day + '일(' + weekday + ')';
 

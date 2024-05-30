@@ -79,6 +79,11 @@
   --bs-highlight-bg: #fff3cd;
 }
 
+*{
+  font-family: "Dovemayo_gothic";
+  src: url("../assets/Dovemayo_gothic.ttf");
+}
+
 *,
 *::before,
 *::after {
