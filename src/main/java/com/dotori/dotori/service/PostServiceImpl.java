@@ -208,10 +208,26 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+//    public List<PostDTO> toriBoxSelectAll() {
+//        List<ToriBox> toriBoxList = toriBoxRepository.findAll();
+//        List<PostDTO> toriBoxPosts = toriBoxList.stream()
+//                .map(toriBox -> modelMapper.map(toriBox.getPost(), PostDTO.class))
+//                .collect(Collectors.toList());
+//        return toriBoxPosts;
+//    }
+
     public List<PostDTO> toriBoxSelectAll() {
         List<ToriBox> toriBoxList = toriBoxRepository.findAll();
         List<PostDTO> toriBoxPosts = toriBoxList.stream()
-                .map(toriBox -> modelMapper.map(toriBox.getPost(), PostDTO.class))
+                .map(toriBox -> {
+                    Post post = toriBox.getPost();
+                    PostDTO postDTO = modelMapper.map(post, PostDTO.class);
+                    List<String> thumbnails = post.getThumbnails().stream()
+                            .map(PostThumbnail::getThumbnail)
+                            .collect(Collectors.toList());
+                    postDTO.setThumbnails(thumbnails);
+                    return postDTO;
+                })
                 .collect(Collectors.toList());
         return toriBoxPosts;
     }

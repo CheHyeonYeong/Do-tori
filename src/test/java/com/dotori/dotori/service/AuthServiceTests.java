@@ -26,7 +26,7 @@ public class AuthServiceTests {
     //login은 기본적으로 제공하기 때문에, 따로 테스트를 진행하지 않음
 
     @Test
-    public void joinTest() throws AuthService.MidExistException, AuthService.NickNameExistException, AuthService.EmailExistException {
+    public void joinTest() throws AuthService.MidExistException, AuthService.EmailExistException, AuthService.NickNameLengthException {
         AuthDTO authDTO = AuthDTO.builder()
                 .id("ServiceTestUser2")
                 .password("1111")

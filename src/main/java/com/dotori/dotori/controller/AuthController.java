@@ -89,9 +89,6 @@ public class AuthController {
         } catch (AuthService.MidExistException me) {
             redirectAttributes.addFlashAttribute("error", "id");
             return "redirect:/auth/join";
-        } catch (AuthService.NickNameExistException ne) {
-            redirectAttributes.addFlashAttribute("error", "nickName");
-            return "redirect:/auth/join";
         } catch (AuthService.EmailExistException ee) {
             redirectAttributes.addFlashAttribute("error", "email");
             return "redirect:/auth/join";
