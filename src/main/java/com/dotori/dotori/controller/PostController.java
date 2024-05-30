@@ -7,19 +7,19 @@ import com.dotori.dotori.service.PostServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Log4j2
@@ -32,9 +32,23 @@ public class PostController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/list")
-    public void list(PageRequestDTO pageRequestDTO, Model model) {
+    public void list(PageRequestDTO pageRequestDTO, Model model, @AuthenticationPrincipal AuthSecurityDTO authSecurityDTO) {
         PageResponseDTO<PostDTO> responseDTO = postService.listWithCommentCount(pageRequestDTO);
         log.info(responseDTO);
+
+        if (authSecurityDTO != null) {
+            int aid = authSecurityDTO.getAid();
+            List<PostDTO> postDTOS = responseDTO.getPostLists();
+
+            // 각 PostDTO에 대해 좋아요 상태를 확인하고 설정
+            for (PostDTO postDTO : postDTOS) {
+                // 현재 사용자가 해당 게시물에 좋아요를 눌렀는지 확인
+                boolean isLiked = postService.isLikedByUser(postDTO.getPid(), aid);
+
+                // PostDTO의 liked 필드에 좋아요 상태를 설정
+                postDTO.setLiked(isLiked);
+            }
+        }
 
         model.addAttribute("responseDTO", responseDTO);
     }
@@ -65,10 +79,20 @@ public class PostController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/read")
-    public void read(int pid, PageRequestDTO pageRequestDTO, Model model) {
+    public void read(int pid, PageRequestDTO pageRequestDTO, Model model, @AuthenticationPrincipal AuthSecurityDTO authSecurityDTO) {
         PostDTO postDTO = postService.getPost(pid);
         log.info(postDTO);
         int likes = postService.countLikes(pid);
+
+        if (authSecurityDTO != null) {
+            int aid = authSecurityDTO.getAid();
+
+            // 현재 사용자가 해당 게시물에 좋아요를 눌렀는지 확인
+            boolean isLiked = postService.isLikedByUser(pid, aid);
+
+            // PostDTO에 좋아요 상태를 설정
+            postDTO.setLiked(isLiked);
+        }
 
         model.addAttribute("dto", postDTO);
         model.addAttribute("likes", likes); // 좋아요 개수
@@ -131,13 +155,20 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/like")
-    public void likePosts(@RequestParam("pid") int pid, @RequestParam("aid") int aid, RedirectAttributes redirectAttributes) throws Exception {
+    public ResponseEntity<Map<String, Object>> likePosts(@RequestBody Map<String, Integer> requestBody) throws Exception {
+        int pid = requestBody.get("pid");
+        int aid = requestBody.get("aid");
 
         ToriBoxDTO boardLikeDTO = ToriBoxDTO.builder().pid(pid).aid(aid).build();
         int tid = postService.toriBoxPost(boardLikeDTO);
 
-        redirectAttributes.addAttribute("tid", tid);
+        int likeCount = postService.countLikes(pid);
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("tid", tid);
+        response.put("likeCount", likeCount);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/likes")
@@ -147,6 +178,12 @@ public class PostController {
 
         String id = authSecurityDTO.getId();
         AuthDTO authDTO = authService.info(id);
+
+        // 현재 사용자의 좋아요 상태 확인
+        for (PostDTO postDTO : toriBoxPosts) {
+            boolean isLiked = postService.isLikedByUser(postDTO.getPid(), authSecurityDTO.getAid());
+            postDTO.setLiked(isLiked);
+        }
 
         // 소셜 로그인 여부 확인
         if (authDTO.isSocial() || authDTO.getProvider() != null) {

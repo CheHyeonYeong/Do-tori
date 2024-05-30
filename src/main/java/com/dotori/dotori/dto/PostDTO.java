@@ -34,6 +34,7 @@ public class PostDTO {
     @Builder.Default
     private List<String> thumbnails = new ArrayList<>();
 
-
+    // liked 필드 추가
+    private boolean liked;
 
 }
