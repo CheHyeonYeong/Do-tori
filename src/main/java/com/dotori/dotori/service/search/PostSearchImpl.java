@@ -82,7 +82,7 @@ public class PostSearchImpl extends QuerydslRepositorySupport implements PostSea
                 .leftJoin(postThumbnail).on(postThumbnail.post.eq(post))
                 .groupBy(post.pid)
                 .select(Projections.constructor(PostListCommentCountDTO.class,
-                        post.pid, post.content, post.nickName, post.regDate,
+                        post.pid, post.content, post.nickName, post.regDate, post.modDate,
                         JPAExpressions.select(postThumbnail.thumbnail.max()).from(postThumbnail).where(postThumbnail.post.eq(post)),
                         comment.count()));
 
