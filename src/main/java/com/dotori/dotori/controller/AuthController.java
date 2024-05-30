@@ -242,8 +242,16 @@ public class AuthController {
 
     @PreAuthorize("principal.username == #authSecurityDTO.id")
     @PostMapping("/tutorialDone")
-    public String tutorialDone(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO) {
+    public String tutorialDone(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Authentication authentication) {
         authService.updateTutorialDone(authSecurityDTO.getId());
+
+        // Authentication 객체 업데이트
+        AuthSecurityDTO updatedAuthSecurityDTO = (AuthSecurityDTO) authentication.getPrincipal();
+        updatedAuthSecurityDTO.setTutorialDone(true);
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(updatedAuthSecurityDTO, authentication.getCredentials(), authentication.getAuthorities())
+        );
+
         return "redirect:/todo/list";
     }
 }
