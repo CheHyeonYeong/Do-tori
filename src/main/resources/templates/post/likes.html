@@ -105,7 +105,6 @@
         }
 
         .card {
-            width: 30% !important;
             height: 26rem !important;
             box-shadow: 1px 1px 3px rgb(107 104 104 / 30%);
             border: 1px solid #b9b9b9;
@@ -120,21 +119,11 @@
         .card>hr {
             margin: 0;
         }
-        .content, .content_info {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            padding: 0 0.5rem !important;
-        }
-        .content {
-            height: 30%;
-        }
+
         .card-body>p {
             color: #a8a8a8;
         }
-        .content_info {
-            height: 20%;
-        }
+
         .like_icon img {
             width: 40px;
         }
@@ -211,7 +200,6 @@
             }
 
             .card {
-                width: 22rem !important;
                 height: 22rem !important;
                 margin: 0 auto 2rem !important;
             }
@@ -277,6 +265,7 @@
     </script>
 
 </head>
+<body>
 
 <div layout:fragment="content" class="content_layout">
     <aside class="aside">
@@ -334,11 +323,9 @@
     </div>
 
     <div class="main_info">
-        <div class="main_info_container">
+        <div class="main_info_container" th:each="dto:${toriBoxPosts}">
 
-
-                <div th:each="dto:${toriBoxPosts}">
-                    <div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px">
+                    <div class="card " style="width: 50%; margin: 50px">
                         <div class="card-header">
                             <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
                             <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
@@ -369,7 +356,7 @@
                         </div>
 
 
-                        <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|" style="all: unset; cursor: pointer;">
+                        <a th:href="|@{/post/read(pid=${dto.pid})}|" style="all: unset; cursor: pointer;">
                             <div class="card-body">
                                 <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
                                     <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
@@ -401,14 +388,15 @@
                             </p>
                         </div>
                     </div>
-                </div>
+
             </div>
 
 
 
 
         </div>
-    </div>
-</div>
 
+
+</div>
+</body>
 </html>
