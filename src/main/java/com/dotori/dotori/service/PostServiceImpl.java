@@ -156,12 +156,24 @@ public class PostServiceImpl implements PostService {
                 })
                 .collect(Collectors.toList());
 
+        // 전체 게시물 수 가져오기
+        int totalPosts = (int) result.getTotalElements();
+
+        // 현재 페이지 크기와 번호 가져오기
+        int currentSize = result.getSize();
+        int currentPage = result.getNumber();
+
+        // realEnd 값 계산
+        boolean realEnd = (currentPage + 1) * currentSize >= totalPosts;
+
         return PageResponseDTO.<PostDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .postLists(postDTOS)
-                .total((int) result.getTotalElements())
+                .total(totalPosts)
+                .realEnd(realEnd)
                 .build();
     }
+
 
     @Transactional
     @Override
