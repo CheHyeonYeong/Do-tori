@@ -67,10 +67,6 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
             // 중복된 사용자 ID 예외 처리
             OAuth2Error oauth2Error = new OAuth2Error("duplicate_user_id", "Duplicate user ID", null);
             throw new OAuth2AuthenticationException(oauth2Error, e.getMessage());
-        } catch (AuthService.NickNameExistException e) {
-            // 중복된 닉네임 예외 처리
-            OAuth2Error oauth2Error = new OAuth2Error("duplicate_user_nickname", "Duplicate user nickname", null);
-            throw new OAuth2AuthenticationException(oauth2Error, e.getMessage());
         } catch (AuthService.EmailExistException e) {
             // 중복된 이메일 예외 처리
             OAuth2Error oauth2Error = new OAuth2Error("duplicate_user_email", "Duplicate user email", null);
@@ -96,14 +92,14 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
         return customAttribute;
     }
 
-    public Auth updateOrSaveUser(AuthDTO authDTO) throws AuthService.MidExistException, AuthService.NickNameExistException, AuthService.EmailExistException, AuthService.NickNameLengthException {
+    public Auth updateOrSaveUser(AuthDTO authDTO) throws AuthService.MidExistException, AuthService.EmailExistException, AuthService.NickNameLengthException {
         return authRepository.findByEmail(authDTO.getEmail())
                 .map(entity -> updateExistingUser(entity, authDTO))
                 .orElseGet(() -> {
                     try {
                         // 새로운 사용자 생성
                         return createNewUser(authDTO);
-                    } catch (AuthService.MidExistException | AuthService.NickNameExistException | AuthService.EmailExistException | AuthService.NickNameLengthException e) {
+                    } catch (AuthService.MidExistException | AuthService.EmailExistException | AuthService.NickNameLengthException e) {
                         // 예외를 RuntimeException으로 감싸서 다시 던짐
                         throw new RuntimeException(e);
                     }
@@ -116,17 +112,13 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
         return authRepository.save(existingAuth);
     }
 
-    public Auth createNewUser(AuthDTO authDTO) throws AuthService.MidExistException, AuthService.NickNameExistException , AuthService.EmailExistException, AuthService.NickNameLengthException {
+    public Auth createNewUser(AuthDTO authDTO) throws AuthService.MidExistException, AuthService.EmailExistException, AuthService.NickNameLengthException {
         String email = authDTO.getEmail();
         String nickName = authDTO.getNickName();
 
         // 이메일 중복 검사
         if (authRepository.existsByEmail(email)) {
             throw new AuthService.EmailExistException("이미 존재하는 이메일입니다.");
-        }
-        // 닉네임 중복 검사
-        if (authRepository.existsByNickName(nickName)) {
-            throw new AuthService.NickNameExistException("이미 존재하는 닉네임입니다.");
         }
 
         // 닉네임 길이 검사

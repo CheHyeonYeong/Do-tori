@@ -52,7 +52,7 @@
             overflow: hidden;
         }
         .card>hr {
-            margin: 0;
+            display: none !important;
         }
         .content, .content_info {
             display: flex !important;
@@ -89,6 +89,14 @@
         .default-profile-image {
             width : 55px;
             height : 55px;
+        }
+        .thumbnail {
+            width: 100%;
+        }
+        .card-footer {
+            display: flex !important;
+            justify-content: space-between !important;
+            padding: 0.5rem !important;
         }
 
         @media (max-width: 1334px) {
@@ -197,71 +205,44 @@
 
     <div class="main_info">
         <div class="main_info_container">
-
-
             <div th:each="dto:${toriBoxPosts}">
-                <div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px">
-                    <div class="card-header">
-                        <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
-                        <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
-
-                        <div th:if="${dto.nickName == #authentication.principal.nickName}">
-                            <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
-
-                                <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="5" cy="5" r="5" fill="black"/>
-                                        <circle cx="5" cy="22" r="5" fill="black"/>
-                                        <circle cx="5" cy="40" r="5" fill="black"/>
-                                    </svg>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" th:href="@{/post/modify(pid=${dto.pid})}" th:text="수정하기"></a>
-                                    <div class="dropdown-divider"></div>
-                                    <div class="dropdown-item">
-                                        <form th:action="@{/post/remove}" method="post">
-                                            <input type="text" name="pid" th:value="${dto.pid}" readonly style="display: none;">
-                                            <button type="submit" class="removeBtn"  style="all: unset; cursor: pointer;">삭제하기</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                <div class="card mx-auto p-2 vstack gap-3">
 
                     <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|" style="all: unset; cursor: pointer;">
-                        <div class="card-body">
+                        <div class="card-header">
                             <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
-                                <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
                                 <div th:if="${dto.thumbnails != null && !dto.thumbnails.isEmpty()}">
                                     <img th:src="@{/images/{filename}(filename=${dto.thumbnails[0]})}" alt="썸네일" class="thumbnail">
                                 </div>
                             </div>
                         </div>
                     </a>
+
+                    <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|" style="all: unset; cursor: pointer;">
+                        <div class="card-body">
+                            <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
+                                <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
+                            </div>
+                        </div>
+                    </a>
+
                     <div style="margin: 0 auto; width: 95%">
-                        <hr>
-                        <p class="hstack gap-3 date">
-                            <span>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
-                            <span>/</span>
-                            <span>
-                            <span th:if="${dto.modDate == null}">-</span>
-                            <span th:unless="${dto.modDate == null}">[[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]]</span>
-                            &nbsp;수정
-                        </span>
-                            <span class="p-2 ms-auto">
+                        <div class="card-footer text-body-secondary">
+                            <div class="writer_info">
+                                <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
+                                <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
+                                <div th:if="${dto.nickName == #authentication.principal.nickName}"></div>
+                            </div>
 
-                            <img id="likeBtn" th:src="@{/assets/Favorite.png}" style="width: 30px; height: 30px"
-                                 th:data-post-id="${dto.pid}" th:data-auth-id="${#authentication.principal.aid}">
-                            <span>[[${dto.toriBoxCount}]]</span>
-                            <img th:src="@{/assets/Comment.png}" style="width: 30px; height: 30px">
-                            <span class="progress-bar-success" style="color: black">[[${dto.commentCount}]]</span>
-                        </span>
-
-                        </p>
+                            <div class="like_box">
+                                <img id="likeBtn" th:src="@{/assets/Favorite.png}" style="width: 30px; height: 30px"
+                                     th:data-post-id="${dto.pid}" th:data-auth-id="${#authentication.principal.aid}">
+                                <span>[[${dto.toriBoxCount}]]</span>
+                            </div>
+                        </div>
                     </div>
+
+
                 </div>
             </div>
         </div>

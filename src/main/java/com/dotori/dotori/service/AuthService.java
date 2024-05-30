@@ -15,15 +15,6 @@ public interface AuthService {
         }
     }
 
-    static class NickNameExistException extends Exception {
-        // 닉네임 중복 확인
-
-        public NickNameExistException(){}
-        public NickNameExistException(String message) {
-            super(message);
-        }
-    }
-
     static class EmailExistException extends Exception {
         // 이메일 중복 확인
 
@@ -42,7 +33,7 @@ public interface AuthService {
         }
     }
 
-    Auth join(AuthDTO authDTO) throws MidExistException, NickNameExistException, EmailExistException, NickNameLengthException;
+    Auth join(AuthDTO authDTO) throws MidExistException, EmailExistException, NickNameLengthException;
 
     AuthDTO info(String id);
     void modify(AuthDTO authDTO);
