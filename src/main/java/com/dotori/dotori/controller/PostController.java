@@ -36,18 +36,27 @@ public class PostController {
         PageResponseDTO<PostDTO> responseDTO = postService.listWithCommentCount(pageRequestDTO);
         log.info(responseDTO);
 
-        if (authSecurityDTO != null) {
-            int aid = authSecurityDTO.getAid();
-            List<PostDTO> postDTOS = responseDTO.getPostLists();
+        int totalPosts = responseDTO.getTotal();
+        if (totalPosts > 0) { // 게시글이 있는 경우
+            List<PostDTO> postDTOList = responseDTO.getPostLists();
+            if (authSecurityDTO != null) {
+                int aid = authSecurityDTO.getAid();
 
-            // 각 PostDTO에 대해 좋아요 상태를 확인하고 설정
-            for (PostDTO postDTO : postDTOS) {
-                // 현재 사용자가 해당 게시물에 좋아요를 눌렀는지 확인
-                boolean isLiked = postService.isLikedByUser(postDTO.getPid(), aid);
+                for (PostDTO postDTO : postDTOList) {
+                    // postDTO가 null인지 확인
+                    if (postDTO != null) {
+                        // 현재 사용자가 해당 게시물에 좋아요를 눌렀는지 확인
+                        boolean isLiked = postService.isLikedByUser(postDTO.getPid(), aid);
 
-                // PostDTO의 liked 필드에 좋아요 상태를 설정
-                postDTO.setLiked(isLiked);
+                        // PostDTO의 liked 필드에 좋아요 상태를 설정
+                        postDTO.setLiked(isLiked);
+                    } else {
+                        log.warn("Null PostDTO encountered in the list.");
+                    }
+                }
             }
+        } else {
+            log.info("No posts found."); // 게시글이 없는 경우
         }
 
         model.addAttribute("responseDTO", responseDTO);
@@ -159,8 +168,8 @@ public class PostController {
         int pid = requestBody.get("pid");
         int aid = requestBody.get("aid");
 
-        ToriBoxDTO boardLikeDTO = ToriBoxDTO.builder().pid(pid).aid(aid).build();
-        int tid = postService.toriBoxPost(boardLikeDTO);
+        ToriBoxDTO toriBoxDTO = ToriBoxDTO.builder().pid(pid).aid(aid).build();
+        int tid = postService.toriBoxPost(toriBoxDTO);
 
         int likeCount = postService.countLikes(pid);
 
