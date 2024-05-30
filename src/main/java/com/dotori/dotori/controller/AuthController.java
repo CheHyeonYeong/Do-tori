@@ -2,8 +2,7 @@ package com.dotori.dotori.controller;
 
 import com.dotori.dotori.dto.AuthDTO;
 import com.dotori.dotori.dto.AuthSecurityDTO;
-import com.dotori.dotori.dto.ToriBoxDTO;
-import com.dotori.dotori.service.AuthService;;
+import com.dotori.dotori.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -95,6 +94,9 @@ public class AuthController {
             return "redirect:/auth/join";
         } catch (AuthService.EmailExistException ee) {
             redirectAttributes.addFlashAttribute("error", "email");
+            return "redirect:/auth/join";
+        } catch (AuthService.NickNameLengthException le) {
+            redirectAttributes.addFlashAttribute("error", "nickNameLength");
             return "redirect:/auth/join";
         }
 

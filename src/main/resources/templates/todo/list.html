@@ -25,10 +25,6 @@
         height: 120%;
     }
 
-    .fc-toolbar-title {
-        font-weight: bolder;
-    }
-
     .leftdiv {
         float: left;
         width: 45%;
@@ -334,6 +330,7 @@
     var daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
     renderGraph(currentMonth, currentYear, daysInMonth);
+
 
     var formattedDate = currentMonth + '월 ' + day + '일(' + weekday + ')';
 

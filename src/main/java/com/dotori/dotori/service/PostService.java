@@ -1,7 +1,6 @@
 package com.dotori.dotori.service;
 
 import com.dotori.dotori.dto.*;
-import com.dotori.dotori.entity.Post;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

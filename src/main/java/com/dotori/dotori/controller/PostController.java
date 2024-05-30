@@ -1,6 +1,7 @@
 package com.dotori.dotori.controller;
 
 import com.dotori.dotori.dto.*;
+import com.dotori.dotori.service.AuthService;
 import com.dotori.dotori.service.PostService;
 import com.dotori.dotori.service.PostServiceImpl;
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
     private final PostServiceImpl postServiceImpl;
+    private final AuthService authService;
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/list")
@@ -139,10 +141,19 @@ public class PostController {
     }
 
     @GetMapping("/likes")
-    public void toriBoxes(Model model) {
+    public String toriBoxes(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Model model) {
         List<PostDTO> toriBoxPosts  = postService.toriBoxSelectAll();
         model.addAttribute("toriBoxPosts", toriBoxPosts);
-    }
 
+        String id = authSecurityDTO.getId();
+        AuthDTO authDTO = authService.info(id);
+
+        // 소셜 로그인 여부 확인
+        if (authDTO.isSocial() || authDTO.getProvider() != null) {
+            return "post/socialLikes"; // 소셜 로그인한 회원은 post/socialLikes 뷰 반환
+        } else {
+            return "post/likes"; // 일반 로그인한 회원은 post/likes 뷰 반환
+        }
+    }
 
 }
