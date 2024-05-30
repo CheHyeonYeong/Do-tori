@@ -216,4 +216,12 @@ public class PostServiceImpl implements PostService {
         return toriBoxPosts;
     }
 
+    @Override
+    public boolean isLikedByUser(int pid, int aid) {
+        Post post = postRepository.findById(pid)
+                .orElseThrow(() -> new RuntimeException("Not Found post id :" + pid));
+        Optional<ToriBox> existingLike = toriBoxRepository.findByAidAndPost(aid, post);
+        return existingLike.isPresent();
+    }
+
 }

@@ -12,79 +12,13 @@
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
+    <link th:href="@{/css/aside.css}" rel="stylesheet" />
 
     <style>
-        a {
-            color: #000;
-        }
-        a:hover {
-            color: #000;
-        }
-
         .content_layout {
             display: flex;
             align-items: center;
             height: 100vh;
-        }
-
-        .aside {
-            width: 20%;
-            height: 100vh;
-            background-color: #CCBFB2;
-            transition: 1s;
-        }
-
-        .auth, .auth_modify, .auth_logout, .auth_toriBox {
-            width: 95%;
-            margin: 16px auto 0;
-            padding: 24px 25px;
-            border-radius: 20px;
-            background-color: #F4F4F4;
-            display: flex;
-            align-items: center;
-        }
-
-        .auth, .auth_modify, .auth_logout {
-            position: relative;
-        }
-        .aside_menu_film {
-            background-color: #F0ECE8;
-            opacity: 0.7;
-            position: absolute;
-            z-index: 100;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            border-radius: 20px;
-
-            transition: 0.5s;
-        }
-        .auth:hover .aside_menu_film {
-            opacity: 0;
-            z-index: -10;
-        }
-        .auth_modify:hover .aside_menu_film {
-            opacity: 0;
-            z-index: -10;
-        }
-        .auth_logout:hover .aside_menu_film {
-            opacity: 0;
-            z-index: -10;
-        }
-
-        .auth {
-            justify-content: space-between;
-            padding: 22px 25px;
-        }
-        .logout, .info {
-            border: none;
-        }
-
-        .auth_aside_txt {
-            margin-left: 16px;
-
-            cursor: pointer;
         }
 
         .icon_box {
@@ -96,99 +30,31 @@
             width: 80%;
         }
         .main_info_container {
-            width: 90%;
-            height: 95vh;
+            width: 60%;
             margin: 0 auto;
             display: flex;
-            justify-content: left;
             flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
         }
 
         .card {
-            width: 30% !important;
-            height: 26rem !important;
             box-shadow: 1px 1px 3px rgb(107 104 104 / 30%);
             border: 1px solid #b9b9b9;
             overflow: hidden;
             margin: 0 2rem 4rem 0 !important;
-        }
-        .card .img_box {
             width: 100%;
-            height: 50%;
-            overflow: hidden;
         }
         .card>hr {
             margin: 0;
         }
-        .content, .content_info {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            padding: 0 0.5rem !important;
-        }
-        .content {
-            height: 30%;
-        }
+
         .card-body>p {
             color: #a8a8a8;
         }
-        .content_info {
-            height: 20%;
-        }
+
         .like_icon img {
             width: 40px;
-        }
-
-        .toggle-btn{
-            width: 40px;
-            height: 30px;
-            cursor: pointer;
-
-            display: none;
-            position: absolute;
-            top: 1%;
-            left: 0;
-            z-index: 1000;
-            margin: 10px;
-        }
-        .trigger{
-            width: 40px;
-            height: 20px;
-            cursor: pointer;
-
-            /*display: none;*/
-
-            position: relative;
-        }
-        .trigger span{
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background-color: #CCBFB2;
-
-            transition: 0.3s;
-        }
-
-        .trigger span:nth-child(1){
-            top: 0;
-        }
-        .trigger span:nth-child(2){
-            top: 50%;
-        }
-        .trigger span:nth-child(3){
-            top: 100%;
-        }
-
-        .toggle-btn.active .trigger span:nth-child(1){
-            transform: rotate(45deg);
-            top: 50%;
-        }
-        .toggle-btn.active .trigger span:nth-child(2){
-            opacity: 0;
-        }
-        .toggle-btn.active .trigger span:nth-child(3){
-            transform: rotate(-45deg);
-            top: 50%;
         }
 
         .profile-image {
@@ -202,30 +68,13 @@
         }
 
         @media (max-width: 1334px) {
-            .auth, .auth_modify, .auth_logout, .auth_toriBox {
-                padding: 8px;
-                border-radius: 8px;
-            }
-            .auth .icon_box span {
-                display: none;
-            }
-
             .card {
-                width: 22rem !important;
                 height: 22rem !important;
                 margin: 0 auto 2rem !important;
             }
 
         }
         @media (max-width: 768px) {
-            .aside {
-                visibility: hidden;
-                z-index: -1;
-                opacity: 0;
-            }
-            .toggle-btn {
-                display: block;
-            }
 
             .main_info {
                 width: 100%;
@@ -237,17 +86,6 @@
             .main_info_container.active {
                 margin: auto;
             }
-            .aside.active {
-                z-index: 11;
-                opacity: 1;
-                visibility: visible;
-                position: absolute;
-                width: 35%;
-            }
-            .toggle-btn.active {
-                left: 38%;
-            }
-
             .card {
                 width: 16rem !important;
                 height: 16rem !important;
@@ -277,6 +115,7 @@
     </script>
 
 </head>
+<body>
 
 <div layout:fragment="content" class="content_layout">
     <aside class="aside">
@@ -334,81 +173,62 @@
     </div>
 
     <div class="main_info">
-        <div class="main_info_container">
+        <div class="main_info_container" th:each="dto:${toriBoxPosts}">
+                <div class="card " style="margin: 50px; height: auto;">
+                    <div class="card-header">
+                        <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
+                        <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
 
+                        <div th:if="${dto.nickName == #authentication.principal.nickName}">
+                            <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
 
-                <div th:each="dto:${toriBoxPosts}">
-                    <div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px">
-                        <div class="card-header">
-                            <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
-                            <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
+                                <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="5" cy="5" r="5" fill="black"/>
+                                        <circle cx="5" cy="22" r="5" fill="black"/>
+                                        <circle cx="5" cy="40" r="5" fill="black"/>
+                                    </svg>
+                                </a>
 
-                            <div th:if="${dto.nickName == #authentication.principal.nickName}">
-                                <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
-
-                                    <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <circle cx="5" cy="5" r="5" fill="black"/>
-                                            <circle cx="5" cy="22" r="5" fill="black"/>
-                                            <circle cx="5" cy="40" r="5" fill="black"/>
-                                        </svg>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" th:href="@{/post/modify(pid=${dto.pid})}" th:text="수정하기"></a>
-                                        <div class="dropdown-divider"></div>
-                                        <div class="dropdown-item">
-                                            <form th:action="@{/post/remove}" method="post">
-                                                <input type="text" name="pid" th:value="${dto.pid}" readonly style="display: none;">
-                                                <button type="submit" class="removeBtn"  style="all: unset; cursor: pointer;">삭제하기</button>
-                                            </form>
-                                        </div>
+                                <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" th:href="@{/post/modify(pid=${dto.pid})}" th:text="수정하기"></a>
+                                    <div class="dropdown-divider"></div>
+                                    <div class="dropdown-item">
+                                        <form th:action="@{/post/remove}" method="post">
+                                            <input type="text" name="pid" th:value="${dto.pid}" readonly style="display: none;">
+                                            <button type="submit" class="removeBtn"  style="all: unset; cursor: pointer;">삭제하기</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-
-                        <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|" style="all: unset; cursor: pointer;">
-                            <div class="card-body">
-                                <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
-                                    <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
-                                    <div th:if="${dto.thumbnails != null && !dto.thumbnails.isEmpty()}">
-                                        <img th:src="@{/images/{filename}(filename=${dto.thumbnails[0]})}" alt="썸네일" class="thumbnail">
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <div style="margin: 0 auto; width: 95%">
-                            <hr>
-                            <p class="hstack gap-3 date">
-                                <span>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
-                                <span>/</span>
-                                <span>
-                            <span th:if="${dto.modDate == null}">-</span>
-                            <span th:unless="${dto.modDate == null}">[[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]]</span>
-                            &nbsp;수정
-                        </span>
-                                <span class="p-2 ms-auto">
-
-                            <img id="likeBtn" th:src="@{/assets/Favorite.png}" style="width: 30px; height: 30px"
-                                 th:data-post-id="${dto.pid}" th:data-auth-id="${#authentication.principal.aid}">
-                            <span>[[${dto.toriBoxCount}]]</span>
-                            <img th:src="@{/assets/Comment.png}" style="width: 30px; height: 30px">
-                            <span class="progress-bar-success" style="color: black">[[${dto.commentCount}]]</span>
-                        </span>
-
-                            </p>
                         </div>
                     </div>
+
+                    <a th:href="|@{/post/read(pid=${dto.pid})}|" style="all: unset; ">
+                        <div class="card-body">
+                            <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
+                                <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
+                                <div th:if="${dto.thumbnails != null && !dto.thumbnails.isEmpty()}">
+                                    <img th:src="@{/images/{filename}(filename=${dto.thumbnails[0]})}" alt="썸네일" class="thumbnail">
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="card-footer" style="margin: 0 auto; width: 95%">
+
+                        <p class="hstack gap-3 date">
+                            <span>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
+                            <span>/</span>
+                            <span>
+                                <span th:if="${dto.modDate == null}">-</span>
+                                <span th:unless="${dto.modDate == null}">[[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]]</span>&nbsp;수정
+                            </span>
+                        </p>
+                    </div>
                 </div>
+
             </div>
-
-
-
-
         </div>
     </div>
-</div>
-
+</body>
 </html>
