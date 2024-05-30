@@ -10,20 +10,21 @@ import java.util.List;
 @ToString
 public class PageResponseDTO<E> {
 
-    private int size;
-    private int total;
-    private int commentCount;
+    private int size; // 불러올 게시물 수
+    private int total; // 전체 게시물 수
+    private int commentCount; //댓글 수
+    private boolean realEnd;
 
     private List<E> postLists;  // 게시글 내용!
 
     @Builder(builderMethodName = "withAll")
-    public PageResponseDTO(PageRequestDTO pageRequestDTO, List<E> postLists, int total) {
+    public PageResponseDTO(PageRequestDTO pageRequestDTO, List<E> postLists, int total, boolean realEnd) {
         if(total <= 0) {
             return;
         }
         this.size = pageRequestDTO.getSize();
         this.total = total;
-
+        this.realEnd = realEnd;
         this.postLists = postLists;
 
     }
