@@ -79,7 +79,7 @@
   --bs-highlight-bg: #fff3cd;
 }
 
-@font-face { /* 애플산돌고딕 폰트 적용 */
+@font-face {
   font-family: "Dovemayo_gothic";
   src: url("../assets/Dovemayo_gothic.ttf") format("truetype");
   font-weight: normal;

@@ -58,6 +58,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     calendar.render();
 
+    // 오늘 날짜로 currentDate 설정
+    currentDate = new Date();
+    currentMonth = currentDate.getMonth();
+    currentYear = currentDate.getUTCFullYear();
+    day = currentDate.getDate();
+    weekday = weekdays[new Date(currentDate).getDay()];
+
+    var formattedDate = (currentMonth + 1) + '월 ' + day + '일(' + weekday + ')';
+
+    var selectedDateElement = document.getElementById('selectedDate');
+    selectedDateElement.textContent = formattedDate;
+
     // 그래프가 렌더링될 컨테이너 요소를 가져옴
     const contribution = document.getElementById('contribution');
 
