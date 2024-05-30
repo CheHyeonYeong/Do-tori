@@ -32,8 +32,13 @@ public class PostController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/list")
-    public void list(PageRequestDTO pageRequestDTO, Model model, @AuthenticationPrincipal AuthSecurityDTO authSecurityDTO) {
+    public String list(PageRequestDTO pageRequestDTO, Model model, @AuthenticationPrincipal AuthSecurityDTO authSecurityDTO) {
         PageResponseDTO<PostDTO> responseDTO = postService.listWithCommentCount(pageRequestDTO);
+
+        if (!authSecurityDTO.isTutorialDone()) {
+            return "redirect:/todo/list";
+        }
+
         log.info(responseDTO);
 
         int totalPosts = responseDTO.getTotal();
@@ -60,12 +65,18 @@ public class PostController {
         }
 
         model.addAttribute("responseDTO", responseDTO);
+
+        return "post/list";
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/register")
-    public void registerGet(Model model) {
+    public String registerGet(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Model model) {
         // + 버튼을 누르면 글 등록 페이지로 들어감
+        if (!authSecurityDTO.isTutorialDone()) {
+            return "redirect:/todo/list";
+        }
+        return "post/register";
     }
 
 
