@@ -211,8 +211,12 @@
                         </span>
                         <span class="p-2 ms-auto">
 
-                            <img id="likeBtn" th:src="@{/assets/Favorite.png}" style="width: 30px; height: 30px"
-                                 th:data-post-id="${dto.pid}" th:data-auth-id="${#authentication.principal.aid}">
+                            <img id="likeBtn"
+                                 th:src="${dto.liked ? '/assets/Favorite_onclick.png' : '/assets/Favorite.png' }"
+                                 style="width: 30px;"
+                                 th:data-post-id="${dto.pid}"
+                                 th:data-auth-id="${#authentication.principal != null ? #authentication.principal.aid : ''}"
+                                 th:data-liked="${dto.liked}">
                             <span>[[${dto.toriBoxCount}]]</span>
                             <img th:src="@{/assets/Comment.png}" style="width: 30px; height: 30px">
                             <span class="progress-bar-success" style="color: black">[[${dto.commentCount}]]</span>
@@ -295,6 +299,44 @@
         e.stopPropagation();
         self.location = '/post/list';
     }, false);
+
+    // 좋아요 버튼 클릭 이벤트 처리
+    document.querySelectorAll('#likeBtn').forEach(function (likeBtn) {
+        likeBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const postId = this.getAttribute('data-post-id');
+            const authId = this.getAttribute('data-auth-id');
+            const isLiked = this.getAttribute('data-liked') === 'true';
+
+            // AJAX 요청 보내기
+            fetch('/post/like', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ pid: postId, aid: authId })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // 좋아요 카운트 업데이트
+                    const likeCountElement = this.nextElementSibling;
+                    likeCountElement.textContent = data.likeCount;
+
+                    // 좋아요 상태에 따라 이미지 변경
+                    if (isLiked) {
+                        this.src = '/assets/Favorite.png';
+                        this.setAttribute('data-liked', 'false');
+                    } else {
+                        this.src = '/assets/Favorite_onclick.png';
+                        this.setAttribute('data-liked', 'true');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    });
 
 </script>
 </body>

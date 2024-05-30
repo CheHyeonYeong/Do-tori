@@ -16,6 +16,7 @@ public interface PostService {
 
     int toriBoxPost(ToriBoxDTO toriBoxDTO) throws Exception;
     int countLikes(int pid);
+    boolean isLikedByUser(int pid, int aid);
 
     List<PostDTO> toriBoxSelectAll();
     PageResponseDTO<PostDTO> listWithCommentCount(PageRequestDTO pageRequestDTO);
