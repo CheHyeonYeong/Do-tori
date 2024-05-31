@@ -28,8 +28,8 @@ public class CommentController {
         }
 
         Map<String, Integer> map = new HashMap<>();
-        int id = commentService.register(commentDTO);
-        map.put("id", id);
+//        int id = commentService.register(commentDTO);
+//        map.put("id", id);
         return map;
     }
 

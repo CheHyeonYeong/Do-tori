@@ -50,9 +50,8 @@ public class PostServiceImpl implements PostService {
                             .map(PostThumbnail::getThumbnail)
                             .collect(Collectors.toList());
                     postDTO.setThumbnails(thumbnails); // 썸네일 설정 추가
-                    postDTO.setToriBoxCount(countLikes(postDTO.getPid()));
-                    // 프로필 이미지 설정
-                    postDTO.setProfileImage(posts.getAuth().getProfileImage());
+                    postDTO.setToriBoxCount(countLikes(postDTO.getPid())); // like count 추가
+                    postDTO.setProfileImage(posts.getAuth().getProfileImage()); // 프로필 이미지 설정
                     return postDTO;
                 })
                 .collect(Collectors.toList());

@@ -20,10 +20,9 @@ public class PostDTO {
     private Long commentCount;
     private int toriBoxCount;
 
+    private int aid;
     private String nickName;
     private String profileImage;
-
-    private int aid;
 
     @NotEmpty
     @Size(min = 1, max = 500)
