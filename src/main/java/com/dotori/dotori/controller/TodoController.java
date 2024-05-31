@@ -59,7 +59,6 @@ public class TodoController {
         log.info("registered todo");
         todoService.addTodo(todo);
 
-        redirectAttributes.addAttribute("selectedDate", todo.getTodoDate().toString());
         return "redirect:/todo/list";
     }
 
