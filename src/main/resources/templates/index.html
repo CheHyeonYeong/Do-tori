@@ -303,6 +303,16 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="js/todo.js"></script>
 <script>
+
+    var user = /*[[${#authentication.principal}]]*/ null;
+
+    if (user !== null) {
+        window.location.href = "http://localhost:8080/todo/list"; // 리다이렉트할 페이지의 URL을 입력하세요.
+    } else{
+
+    }
+
+    // 오늘 날짜 보여주기
     var currentDate = new Date();
     var currentMonth = currentDate.getMonth();
     var currentYear = currentDate.getUTCFullYear();
@@ -317,8 +327,8 @@
 
     var selectedDateElement = document.getElementById('selectedDate');
     selectedDateElement.textContent = formattedDate;
-</script>
-<script>
+
+
     // 현재 URL 가져오기
     var currentURL = window.location.href;
 
