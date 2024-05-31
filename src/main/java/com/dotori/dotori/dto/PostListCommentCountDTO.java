@@ -20,8 +20,9 @@ public class PostListCommentCountDTO {
     private Long commentCount;
     private String thumbnail;
 
-    public PostListCommentCountDTO(int pid, String content, String nickName, LocalDateTime regDate, LocalDateTime modDate, String thumbnail, Long commentCount) {
+    public PostListCommentCountDTO(int pid,int aid, String content, String nickName, LocalDateTime regDate, LocalDateTime modDate, String thumbnail, Long commentCount) {
         this.pid = pid;
+        this.aid = aid;
         this.content = content;
         this.nickName = nickName;
         this.regDate = regDate;
