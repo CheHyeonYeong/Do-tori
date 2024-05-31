@@ -168,12 +168,67 @@
             cursor: pointer;
             margin: 0 10px;
         }
+
+        .profile-image {
+            width : 46px;
+            height : 46px;
+            border-radius : 50%;
+        }
+        .nav-item.active .menu-bar {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-<div link href="/templates/layout/navbar.html" rel="stylesheet" />
+<nav class="navbar navbar-expand-lg border-bottom text-center">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                <li class="nav-item active col ">
 
+                    <a class="nav-link" href="/todo/list">
+                        <span class="menu-bar todo">Do-tori</span>
+                    </a>
+                </li>
+                <li class="nav-item col">
+                    <a class="navbar-brand">
+                        <svg width="63" height="41" viewBox="0 0 125 83" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <rect width="125" height="83" fill="url(#pattern0_218_111)"/>
+                            <rect width="125" height="83" fill="url(#pattern1_218_111)"/>
+                            <rect width="125" height="83" fill="url(#pattern2_218_111)"/>
+
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item active col ">
+                    <a class="nav-link" href="/post/list">
+                        <span class="menu-bar">To-rest</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img src="/assets/Profile.png" id="profileImage" class="profile profile-image profileImage" />
+                </a>
+                <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item login" href="/auth/login">로그인</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item join" href="/auth/join">회원가입</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- 캘린더 시작 -->
 <div class="container">
     <div class="row-cols-1">
         <div class="col-md-6 leftdiv">
@@ -263,7 +318,33 @@
     var selectedDateElement = document.getElementById('selectedDate');
     selectedDateElement.textContent = formattedDate;
 </script>
+<script>
+    // 현재 URL 가져오기
+    var currentURL = window.location.href;
 
+    // Do-tori 메뉴 엘리먼트 가져오기
+    var doToriMenu = document.querySelector('.nav-item:first-child');
+
+    // To-rest 메뉴 엘리먼트 가져오기
+    var toRestMenu = document.querySelector('.nav-item:last-child');
+
+    // 현재 URL에 따라 active 클래스 추가/제거
+    if (currentURL.includes('/todo/list')) {
+        doToriMenu.classList.add('active');
+        toRestMenu.classList.remove('active');
+    } else if (
+        currentURL.includes('/post/list') ||
+        currentURL.includes('/post/register') ||
+        currentURL.includes('/post/read') ||
+        currentURL.includes('/post/modify')
+    ) {
+        doToriMenu.classList.remove('active');
+        toRestMenu.classList.add('active');
+    }
+
+
+
+</script>
 
 </body>
 </html>
