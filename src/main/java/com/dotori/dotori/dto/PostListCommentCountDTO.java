@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 public class PostListCommentCountDTO {
     private int pid;
+    private int aid;
     private String content;
     private String nickName;
     private LocalDateTime regDate;

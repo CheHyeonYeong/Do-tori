@@ -64,9 +64,17 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public int addPost(PostDTO postDTO, List<MultipartFile> files) throws Exception {
+        // Auth 엔티티 가져오기
+        Auth auth = authRepository.findById(postDTO.getAid())
+                .orElseThrow(() -> new Exception("Not Found auth id :" + postDTO.getAid()));
+
         Post post = modelMapper.map(postDTO, Post.class);
+        post.setAuth(auth); // Auth 엔티티 설정
+
+        post.setNickName(auth.getNickName());
         List<PostThumbnail> thumbnails = uploadImages(files, post);
         post.getThumbnails().addAll(thumbnails);
+
         int pid = postRepository.save(post).getPid();
         return pid;
     }
@@ -76,6 +84,10 @@ public class PostServiceImpl implements PostService {
         Optional<Post> post = postRepository.findById(id);
         Post result = post.orElseThrow();
         PostDTO postDTO = modelMapper.map(result, PostDTO.class);
+
+        // Auth 엔티티에서 nickName 가져와 설정
+        postDTO.setNickName(result.getAuth().getNickName());
+
         List<String> thumbnails = result.getThumbnails().stream()
                 .map(PostThumbnail::getThumbnail)
                 .collect(Collectors.toList());
@@ -85,23 +97,35 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void modifyPost(PostDTO postDTO, List<MultipartFile> files, List<String> deletedThumbnails) throws Exception {
-        Optional<Post> post = postRepository.findById(postDTO.getPid());
-        Post result = post.orElseThrow();
+        Optional<Post> postOptional = postRepository.findById(postDTO.getPid());
+        Post post = postOptional.orElseThrow();
 
+        // Auth 엔티티 가져오기
+        Auth auth = authRepository.findById(postDTO.getAid())
+                .orElseThrow(() -> new Exception("Not Found auth id :" + postDTO.getAid()));
+
+        // Post 엔티티의 nickName과 Auth 엔티티의 nickName이 다른 경우 업데이트
+        if (post.getNickName() == null || !post.getNickName().equals(auth.getNickName())) {
+            post.setNickName(auth.getNickName());
+        }
+
+        // 썸네일 관련 코드 처리
         if (deletedThumbnails != null && !deletedThumbnails.isEmpty()) {
             for (String filename : deletedThumbnails) {
-                result.getThumbnails().removeIf(thumbnail -> thumbnail.getThumbnail().equals(filename));
+                post.getThumbnails().removeIf(thumbnail -> thumbnail.getThumbnail().equals(filename));
                 // 실제 파일 삭제 로직 추가
             }
         }
 
         if (files != null && !files.isEmpty()) {
-            List<PostThumbnail> thumbnails = uploadImages(files, result);
-            result.getThumbnails().addAll(thumbnails);
+            List<PostThumbnail> thumbnails = uploadImages(files, post);
+            post.getThumbnails().addAll(thumbnails);
         }
 
-        result.changePost(postDTO.getContent(), LocalDateTime.now(), result.getThumbnails());
+        post.changePost(postDTO.getContent(), LocalDateTime.now(), post.getThumbnails());
+        postRepository.save(post);
     }
+
     private List<PostThumbnail> uploadImages(List<MultipartFile> files, Post post) throws Exception {
         List<PostThumbnail> thumbnails = new ArrayList<>();
 
@@ -207,14 +231,6 @@ public class PostServiceImpl implements PostService {
             throw new RuntimeException("Error inserting ToriBox", e);
         }
     }
-
-//    public List<PostDTO> toriBoxSelectAll() {
-//        List<ToriBox> toriBoxList = toriBoxRepository.findAll();
-//        List<PostDTO> toriBoxPosts = toriBoxList.stream()
-//                .map(toriBox -> modelMapper.map(toriBox.getPost(), PostDTO.class))
-//                .collect(Collectors.toList());
-//        return toriBoxPosts;
-//    }
 
     public List<PostDTO> toriBoxSelectAll() {
         List<ToriBox> toriBoxList = toriBoxRepository.findAll();
