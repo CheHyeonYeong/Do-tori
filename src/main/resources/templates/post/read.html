@@ -137,7 +137,8 @@
             <div class="card">
                 <div class="card-header writer_info">
                     <div class="writer">
-                        <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage">
+                        <img th:src="@{${dto.profileImage != null ? '/images/' + dto.profileImage + '?t=' + #dates.createNow().getTime() : '/assets/Profile.png'}}"
+                             class="profile profile-image profileImage"/>
                         <span class="card-title name">[[${dto.nickName}]]</span>
                     </div>
                     <div class="toggle" th:with="user=${#authentication.principal}">
@@ -199,7 +200,7 @@
         <div class="col-md-12">
             <div class="my-4">
                 <div class="input-group-comment mb-3">
-                    <input type="hidden" name="nickName" th:value="${#authentication.principal.nickName}"  class="form-control nickname" readonly>
+                    <input type="hidden" name="aid" th:value="${#authentication.principal.aid}"  class="form-control aid" readonly>
 
                     <input type="text" class="form-control commentContent" placeholder="댓글을 입력하세요">
                     <button type="button" class="btn addCommentBtn">등록하기</button>
@@ -230,14 +231,15 @@
 
 <script layout:fragment="script" th:inline="javascript">
     const pid = [[${dto.pid}]];
-    const authNickName = [[${#authentication.principal.nickName}]];
+    const aid = [[${#authentication.principal.aid}]];
+
     const commentList = document.querySelector('.commentList');
 
     function printList(dtoList) {
         let str = '';
         if (dtoList && dtoList.length > 0) {
             for (const dto of dtoList) {
-                const isOwner = dto.nickName === authNickName; // 작성자와 현재 사용자가 같은지 확인
+                const isOwner = dto.aid === aid; // 작성자와 현재 사용자가 같은지 확인
                 str += `
                 <li class="list-group-item d-flex justify-content-between commentItem" style="background-color: #F5F0EA; border: none; align-items: center;">
                     <img src="/assets/Profile.png" class="col-1 profile" id="profileImage" style="width: 50px; height: 50px">
@@ -310,19 +312,19 @@
         const commentObj = {
             pid: pid,
             content: document.querySelector(".commentContent").value,
-            nickName: authNickName
+            aid: aid
         };
         addComment(commentObj).then(response => {
             alert(response.id);
             document.querySelector(".commentContent").value = '';
             count += 1;
-            // document.querySelector(".nickname").value = '';
+            document.querySelector(".aid").value = '';
             printComments();
-
         }).catch(error => {
             console.error(error);
         });
     }, false);
+
 
     commentList.addEventListener('click', (e) => {
         if (e.target.classList.contains('removeBtn')) {

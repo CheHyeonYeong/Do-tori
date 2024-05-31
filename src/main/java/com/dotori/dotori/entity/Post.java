@@ -1,10 +1,7 @@
 package com.dotori.dotori.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,6 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(value = {AuditingEntityListener.class})
@@ -25,6 +23,10 @@ public class Post{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pid")
     private int pid;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "aid")
+    private Auth auth;
 
     @Column(name = "nickName")
     private String nickName;

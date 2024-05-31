@@ -30,7 +30,7 @@ public class CommentRepositoryTests {
         Optional<Post> result = postRepository.findById(15);  //optional Type으로 받아서 처리해야 함
         Post post = result.orElseThrow();
         IntStream.rangeClosed(1,100).forEach(i -> {
-            Comment comment = Comment.builder().post(post).content("comment test"+i).nickName("채현영").build();
+            Comment comment = Comment.builder().post(post).content("comment test"+i).build();
             commentRepository.save(comment);
         });
     }
@@ -38,7 +38,7 @@ public class CommentRepositoryTests {
 
     @Transactional      //lazy 하니가 출력 이후에 적용이 되나, transactional은 쿼리가 다 성공해야 성공처리를 하기 때문에 완료 이후에 가져오게 되어 성공함
     @Test
-    public void testBoardReplies() {
+    public void testPostReplies() {
         //실제 게시물 번호
         int pid = 98;
         Pageable pageable = PageRequest.of(0,10, Sort.by("pid").descending());

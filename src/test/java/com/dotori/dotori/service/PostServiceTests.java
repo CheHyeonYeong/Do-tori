@@ -6,7 +6,13 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,26 +27,29 @@ public class PostServiceTests {
 
     //주석 지우면 에러남
 //    @Test
-//    public void testAddPost() {
-//        PostDTO postDTO = PostDTO.builder().content("content").nickName("tu"+11).build();
-//        postService.addPost(postDTO);
-//        int pid = postDTO.getPid();
+//    public void testAddPost() throws Exception {
+//        PostDTO postDTO = PostDTO.builder().content("content").aid(1).build();
+//
+//        int pid = postService.addPost(postDTO);
+//
 //        log.info(pid);
 //    }
+
 
     @Test
     public void testGetPost() {
         PostDTO post = postService.getPost(56);
         log.info(post.getContent());
-
     }
+
     //주석 지우면 에러남
 //    @Test
-//    public void updateTest() {
+//    public void updateTest() throws Exception {
 //        log.info("updateTest");
-//        PostDTO postDTO = PostDTO.builder().pid(56).content("content").nickName("tu5").build();
+//        PostDTO postDTO = PostDTO.builder().pid(2).content("contenttest2").
+//                aid(1).build();
 //        postService.modifyPost(postDTO);
-//        log.info(postService.getPost(56).getContent());
+//        log.info(postService.getPost(2).getContent());
 //    }
 
 

@@ -44,8 +44,9 @@
                     <div class="card-header" style="display: inline">
                         <input type="text" class="form-control" name="pid" th:value="${dto.pid}" readonly style="display: none;">
 
-                        <input type="hidden" name = "nickName" th:value="${#authentication.principal.nickName}" readonly />
-                        <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto; margin-bottom: 10px">
+                        <input type="hidden" name = "aid" th:value="${#authentication.principal.aid}" readonly />
+                        <img th:src="@{${dto.profileImage != null ? '/images/' + dto.profileImage + '?t=' + #dates.createNow().getTime() : '/assets/Profile.png'}}"
+                             class="profile profile-image profileImage"/>
                         <span class="card-title name" style="font-size: 30px; margin-left: 10px">[[${#authentication.principal.nickName}]]</span>
                         <hr>
                     </div>

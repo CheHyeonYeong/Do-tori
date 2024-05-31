@@ -2,13 +2,11 @@ package com.dotori.dotori.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,9 +19,11 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    private String nickName;
-
     private int pid;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "aid")
+    private Auth auth;
 
     @NotNull
     private String content;

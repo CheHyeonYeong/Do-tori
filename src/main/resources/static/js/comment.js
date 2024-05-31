@@ -6,6 +6,7 @@ async function getList(pid, page = 1, size = 10) {
 }
 
 async function addComment(commentObj) {
+    console.log("AddComment");
     const response = await axios.post('/comments/', commentObj);
     return response.data;
 }

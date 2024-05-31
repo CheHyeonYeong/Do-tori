@@ -19,6 +19,10 @@
         body {
             background-color: #F5F0EA;
         }
+        .profile {
+            width: 30px;
+            border-radius: 50%;
+        }
     </style>
 
 </head>
@@ -34,8 +38,9 @@
             <form action="/post/register" method="post" enctype="multipart/form-data">
                 <div class="card">
                     <div class="card-header" style="display: inline">
-                        <input type="hidden" name = "nickName" th:value="${#authentication.principal.nickName}" readonly />
-                        <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto; margin-bottom: 10px">
+                        <input type="hidden" name = "aid" th:value="${#authentication.principal.aid}" readonly />
+                        <!--                        <input type="hidden" name = "nickName" th:value="${#authentication.principal.nickName}" readonly />-->
+                        <img th:src="@{${#authentication.principal.profileImage != null ? '/images/' + #authentication.principal.profileImage + '?t=' + #dates.createNow().getTime() : '/assets/Profile.png'}}" class="profile">
                         <span class="card-title name" style="font-size: 30px; margin-left: 10px">[[${#authentication.principal.nickName}]]</span>
                         <hr>
                     </div>
