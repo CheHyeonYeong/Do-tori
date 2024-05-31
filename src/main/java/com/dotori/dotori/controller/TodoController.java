@@ -35,7 +35,7 @@ public class TodoController {
         List<TodoDTO> todos = todoService.getTodoByAid(aid);
 
         // 카테고리 순서대로 배열
-        List<String> categoryOrder = List.of("없음", "일정", "공부", "습관");
+        List<String> categoryOrder = List.of("No category", "일정", "공부", "습관");
 
         Map<String, List<TodoDTO>> todoCategory = todos.stream()
                 .collect(Collectors.groupingBy(TodoDTO::getCategory));
@@ -59,7 +59,6 @@ public class TodoController {
         log.info("registered todo");
         todoService.addTodo(todo);
 
-        redirectAttributes.addAttribute("selectedDate", todo.getTodoDate().toString());
         return "redirect:/todo/list";
     }
 

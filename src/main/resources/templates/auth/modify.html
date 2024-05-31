@@ -13,99 +13,9 @@
     <!-- Core theme CSS (includes Bootstrap)-->
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
     <link th:href="@{/css/aside.css}" rel="stylesheet" />
+    <link th:href="@{/css/auth_modify.css}" rel="stylesheet" />
+    <script th:src="@{/js/auth_info.js}"></script>
 
-    <style>
-        .content_layout {
-            display: flex;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .icon_box {
-            display: flex;
-            align-items: center;
-        }
-
-        .main_info {
-            width: 80%;
-        }
-        .main_info_container {
-            width: 44%;
-            margin: 0 auto;
-        }
-
-        .title {
-            display: inline-block;
-            padding: 1rem 1.2rem;
-            background-color: #f5f0ea;
-            border: 1px solid #000;
-            border-radius: 20px;
-            text-align: center;
-
-            margin-bottom: 3rem;
-        }
-
-        .mb {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        .mb span {
-            display: inline-block;
-            width: 20%;
-            text-align: center;
-            border-bottom: 1px solid #000;
-            padding-bottom: 4px;
-        }
-        .mb input {
-            width: 70%; /* 입력 칸의 좌우 길이 조정 */
-            margin: 0 auto; /* 가운데 정렬 */
-            border-radius: 10px;
-            border: none;
-            padding: 0.5rem;
-            background-color: #d9d9d9;
-        }
-
-        .btn_box {
-            display: flex;
-            justify-content: right;
-            margin-top: 40px;
-        }
-        .btn {
-            margin-left: 18px;
-            padding: 12px 3rem;
-            border: none;
-        }
-        .closeBtn {
-            background-color: #d9d9d9;
-            color: #000;
-        }
-        .closeBtn:hover {
-            background-color: #adadad;
-        }
-        .modifyBtn {
-            background-color: #ccbfb2;
-            color: #000;
-        }
-        .modifyBtn:hover {
-            background-color: #928980;
-        }
-
-    </style>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleBtn = document.querySelector('.toggle-btn');
-            const aside = document.querySelector('.aside');
-            const info = document.querySelector('.main_info_container')
-
-            toggleBtn.addEventListener('click', function() {
-                this.classList.toggle('active');
-                aside.classList.toggle('active');
-                info.classList.toggle('active');
-            });
-        });
-    </script>
 
 </head>
 
@@ -204,6 +114,10 @@
         </div>
     </div>
 </div>
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <script layout:fragment="script" th:inline="javascript">
     const formObj = document.querySelector("#f1")
