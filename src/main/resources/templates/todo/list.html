@@ -242,14 +242,13 @@
 
                             <div class="todolist-content">
                                 <div th:each="category : ${categoryOrder}">
-                                    <h6 th:text="${category}" style="margin-bottom: 20px"></h6>
+                                    <h6 th:text="${category == 'No category' ? '없음' : category}" style="margin-bottom: 20px"></h6>
                                     <form>
                                         <div th:each="todo, iter : ${todoCategory.get(category)}">
                                             <div th:id="'todo-' + ${iter.index}" class="todo-item">
 
                                                 <select name="category" class="form-control" style="display:none">
-                                                    <option value="No category"
-                                                            th:selected="${todo.category == 'No category'}">없음
+                                                    <option value="No category" th:text="${category == 'No category' ? '없음' : 'No category'}">없음
                                                     </option>
                                                     <option value="공부" th:selected="${todo.category == '공부'}">공부
                                                     </option>
