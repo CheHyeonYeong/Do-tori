@@ -21,7 +21,7 @@ public class CommentDTO {
     @NotEmpty
     private String content;
 
-    // auth
+    // auth 참조
     private int aid;
     private String nickName;
     private String profileImage;

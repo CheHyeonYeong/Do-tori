@@ -22,14 +22,16 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/")
-    public Map<String, Integer> registerComment(@RequestBody CommentDTO commentDTO, BindingResult bindingResult) throws BindException {
+    public Map<String, Integer> registerComment(@RequestBody CommentDTO commentDTO, BindingResult bindingResult) throws Exception{
+        log.info("registerComment");
         if (bindingResult.hasErrors()) {
+            log.info("register comment failed" + bindingResult.getAllErrors());
             throw new BindException(bindingResult);
         }
 
         Map<String, Integer> map = new HashMap<>();
-//        int id = commentService.register(commentDTO);
-//        map.put("id", id);
+        int id = commentService.register(commentDTO);
+        map.put("id", id);
         return map;
     }
 
