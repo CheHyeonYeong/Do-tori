@@ -21,6 +21,7 @@ public class PostDTO {
     private int toriBoxCount;
 
     private String nickName;
+    private String profileImage;
 
     private int aid;
 

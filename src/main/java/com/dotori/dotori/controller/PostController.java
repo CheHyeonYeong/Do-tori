@@ -143,22 +143,32 @@ public class PostController {
     public String modify(PageRequestDTO pageRequestDTO, @Valid PostDTO postDTO, BindingResult bindingResult,
                          RedirectAttributes redirectAttributes,
                          @RequestParam(value = "files", required = false) List<MultipartFile> files,
-                         @RequestParam(value = "deletedThumbnails", required = false) List<String> deletedThumbnails) throws Exception {
+                         @RequestParam(value = "deletedThumbnails", required = false) List<String> deletedThumbnails) {
         log.info("Post Modify coming");
-        if (bindingResult.hasErrors()) {
-            log.error("has Error");
-            String link = pageRequestDTO.getLink();
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+
+        try {
+            if (bindingResult.hasErrors()) {
+                log.error("has Error");
+                String link = pageRequestDTO.getLink();
+                redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+                redirectAttributes.addAttribute("pid", postDTO.getPid());
+                return "redirect:/post/modify?" + link;
+            }
+            postService.modifyPost(postDTO, files, deletedThumbnails);
+
+            redirectAttributes.addFlashAttribute("result", "modify success");
             redirectAttributes.addAttribute("pid", postDTO.getPid());
-            return "redirect:/post/modify?" + link;
+
+            return "redirect:/post/read";
+
+        } catch (Exception e) {
+            log.error("Error occurred while modifying post", e);
+            redirectAttributes.addFlashAttribute("error", "게시글 수정 중 오류가 발생했습니다.");
+            return "redirect:/post/modify?pid=" + postDTO.getPid();
         }
-        postService.modifyPost(postDTO, files, deletedThumbnails);
 
-        redirectAttributes.addFlashAttribute("result", "modify success");
-        redirectAttributes.addAttribute("pid", postDTO.getPid());
-
-        return "redirect:/post/read";
     }
+
 
 
     @PreAuthorize("hasRole('ROLE_USER')")

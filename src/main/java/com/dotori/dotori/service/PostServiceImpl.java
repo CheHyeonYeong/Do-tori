@@ -51,6 +51,8 @@ public class PostServiceImpl implements PostService {
                             .collect(Collectors.toList());
                     postDTO.setThumbnails(thumbnails); // 썸네일 설정 추가
                     postDTO.setToriBoxCount(countLikes(postDTO.getPid()));
+                    // 프로필 이미지 설정
+                    postDTO.setProfileImage(posts.getAuth().getProfileImage());
                     return postDTO;
                 })
                 .collect(Collectors.toList());
@@ -67,6 +69,10 @@ public class PostServiceImpl implements PostService {
         // Auth 엔티티 가져오기
         Auth auth = authRepository.findById(postDTO.getAid())
                 .orElseThrow(() -> new Exception("Not Found auth id :" + postDTO.getAid()));
+
+        // 프사
+        String profile = auth.getProfileImage();
+        postDTO.setProfileImage(profile);
 
         Post post = modelMapper.map(postDTO, Post.class);
         post.setAuth(auth); // Auth 엔티티 설정
@@ -87,6 +93,8 @@ public class PostServiceImpl implements PostService {
 
         // Auth 엔티티에서 nickName 가져와 설정
         postDTO.setNickName(result.getAuth().getNickName());
+        // 프사
+        postDTO.setProfileImage(result.getAuth().getProfileImage());
 
         List<String> thumbnails = result.getThumbnails().stream()
                 .map(PostThumbnail::getThumbnail)
@@ -174,6 +182,10 @@ public class PostServiceImpl implements PostService {
                         thumbnails.add(postListCommentCountDTO.getThumbnail());
                     }
                     postDTO.setThumbnails(thumbnails);
+
+                    // 프로필 사진 정보 설정
+                    String profileImage = postListCommentCountDTO.getProfileImage();
+                    postDTO.setProfileImage(profileImage);
 
                     postDTO.setToriBoxCount(countLikes(postDTO.getPid()));
                     return postDTO;

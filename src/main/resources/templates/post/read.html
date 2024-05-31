@@ -137,7 +137,8 @@
             <div class="card">
                 <div class="card-header writer_info">
                     <div class="writer">
-                        <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage">
+                        <img th:src="@{${dto.profileImage != null ? '/images/' + dto.profileImage + '?t=' + #dates.createNow().getTime() : '/assets/Profile.png'}}"
+                             class="profile profile-image profileImage"/>
                         <span class="card-title name">[[${dto.nickName}]]</span>
                     </div>
                     <div class="toggle" th:with="user=${#authentication.principal}">

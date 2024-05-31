@@ -174,61 +174,62 @@
 
     <div class="main_info">
         <div class="main_info_container" th:each="dto:${toriBoxPosts}">
-                <div class="card " style="margin: 50px; height: auto;">
-                    <div class="card-header">
-                        <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
-                        <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
+            <div class="card " style="margin: 50px; height: auto;">
+                <div class="card-header">
+                    <img th:src="@{${dto.profileImage != null ? '/images/' + dto.profileImage + '?t=' + #dates.createNow().getTime() : '/assets/Profile.png'}}"
+                         class="profile profile-image profileImage"/>
+                    <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
 
-                        <div th:if="${dto.nickName == #authentication.principal.nickName}">
-                            <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
+                    <div th:if="${dto.nickName == #authentication.principal.nickName}">
+                        <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
 
-                                <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="5" cy="5" r="5" fill="black"/>
-                                        <circle cx="5" cy="22" r="5" fill="black"/>
-                                        <circle cx="5" cy="40" r="5" fill="black"/>
-                                    </svg>
-                                </a>
+                            <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="5" cy="5" r="5" fill="black"/>
+                                    <circle cx="5" cy="22" r="5" fill="black"/>
+                                    <circle cx="5" cy="40" r="5" fill="black"/>
+                                </svg>
+                            </a>
 
-                                <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" th:href="@{/post/modify(pid=${dto.pid})}" th:text="수정하기"></a>
-                                    <div class="dropdown-divider"></div>
-                                    <div class="dropdown-item">
-                                        <form th:action="@{/post/remove}" method="post">
-                                            <input type="text" name="pid" th:value="${dto.pid}" readonly style="display: none;">
-                                            <button type="submit" class="removeBtn"  style="all: unset; cursor: pointer;">삭제하기</button>
-                                        </form>
-                                    </div>
+                            <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" th:href="@{/post/modify(pid=${dto.pid})}" th:text="수정하기"></a>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-item">
+                                    <form th:action="@{/post/remove}" method="post">
+                                        <input type="text" name="pid" th:value="${dto.pid}" readonly style="display: none;">
+                                        <button type="submit" class="removeBtn"  style="all: unset; cursor: pointer;">삭제하기</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <a th:href="|@{/post/read(pid=${dto.pid})}|" style="all: unset; ">
-                        <div class="card-body">
-                            <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
-                                <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
-                                <div th:if="${dto.thumbnails != null && !dto.thumbnails.isEmpty()}">
-                                    <img th:src="@{/images/{filename}(filename=${dto.thumbnails[0]})}" alt="썸네일" class="thumbnail">
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <div class="card-footer" style="margin: 0 auto; width: 95%">
-
-                        <p class="hstack gap-3 date">
-                            <span>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
-                            <span>/</span>
-                            <span>
-                                <span th:if="${dto.modDate == null}">-</span>
-                                <span th:unless="${dto.modDate == null}">[[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]]</span>&nbsp;수정
-                            </span>
-                        </p>
                     </div>
                 </div>
 
+                <a th:href="|@{/post/read(pid=${dto.pid})}|" style="all: unset; ">
+                    <div class="card-body">
+                        <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
+                            <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
+                            <div th:if="${dto.thumbnails != null && !dto.thumbnails.isEmpty()}">
+                                <img th:src="@{/images/{filename}(filename=${dto.thumbnails[0]})}" alt="썸네일" class="thumbnail">
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <div class="card-footer" style="margin: 0 auto; width: 95%">
+
+                    <p class="hstack gap-3 date">
+                        <span>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
+                        <span>/</span>
+                        <span>
+                            <span th:if="${dto.modDate == null}">-</span>
+                            <span th:unless="${dto.modDate == null}">[[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]]</span>&nbsp;수정
+                        </span>
+                    </p>
+                </div>
             </div>
+
         </div>
     </div>
+</div>
 </body>
 </html>

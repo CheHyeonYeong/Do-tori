@@ -94,6 +94,11 @@
             border: none;
             color: #fff;
         }
+
+        .profile {
+            width: 30px;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
@@ -159,7 +164,9 @@
             <div class="card mx-auto p-2 vstack gap-3" style="width: 50%; margin: 50px">
                 <div class="card-header">
                     <div class="writer_box">
-                        <img th:src="@{/assets/Profile.png}" class="profile" id="profileImage" style="width: 30px; height: auto">
+                        <img th:src="@{${dto.profileImage != null ? '/images/' + dto.profileImage + '?t=' + #dates.createNow().getTime() : '/assets/Profile.png'}}"
+                             class="profile profile-image profileImage"/>
+
                         <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
                     </div>
 
@@ -276,8 +283,15 @@
         const currentSize = parseInt(urlParams.get('size')) || 10;
         const nextSize = currentSize + 10;
 
-        // input 요소의 값 업데이트
-        self.location = '/post/list?size=' + nextSize;
+        // 검색 조건 가져오기
+        const type = urlParams.get('type') || '';
+        const keyword = urlParams.get('keyword') || '';
+
+        // 검색 조건을 포함하여 다음 요청 URL 생성
+        const nextUrl = `/post/list?size=${nextSize}&type=${type}&keyword=${keyword}`;
+
+        // 다음 요청 URL로 이동
+        self.location = nextUrl;
     });
 
     document.querySelector(".clearBtn").addEventListener("click", function (e){

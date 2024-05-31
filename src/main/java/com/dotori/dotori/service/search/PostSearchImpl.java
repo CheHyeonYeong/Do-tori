@@ -82,11 +82,16 @@ public class PostSearchImpl extends QuerydslRepositorySupport implements PostSea
         JPQLQuery<PostListCommentCountDTO> query = from(post)
                 .leftJoin(comment).on(comment.post.eq(post))
                 .leftJoin(postThumbnail).on(postThumbnail.post.eq(post))
+                .leftJoin(post.auth, auth)
                 .groupBy(post.pid)
                 .select(Projections.constructor(PostListCommentCountDTO.class,
-                        post.pid, post.auth.aid, post.content,
+                        post.pid,
+                        post.auth.aid,
+                        post.content,
                         (!auth.nickName.equals(post.nickName)) ? auth.nickName : post.nickName,
-                        post.regDate, post.modDate,
+                        auth.profileImage,
+                        post.regDate,
+                        post.modDate,
                         JPAExpressions.select(postThumbnail.thumbnail.max()).from(postThumbnail).where(postThumbnail.post.eq(post)),
                         comment.count()));
 
