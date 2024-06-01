@@ -96,7 +96,8 @@ public class PostServiceTests {
     @Test
     public void testLikeList(){
         log.info("testCountToriBox");
-        List<PostDTO> toriBox = postService.toriBoxSelectAll();
+        int aid = 1;
+        List<PostDTO> toriBox = postService.toriBoxSelectAll(aid);
         for (PostDTO postDTO : toriBox) {
             log.info(postDTO.getContent());
         }

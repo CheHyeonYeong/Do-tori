@@ -11,7 +11,7 @@ a:hover {
     width: 20%;
     height: 100vh;
     background-color: #CCBFB2;
-    transition: 1s;
+    transition: 0.3s;
 }
 
 .auth, .auth_modify, .auth_logout, .auth_toriBox, .auth_remove {
@@ -147,12 +147,22 @@ a:hover {
 }
 
 @media (max-width: 1260px) {
-    .auth, .auth_modify, .auth_logout, .auth_remove {
+    .auth, .auth_modify, .auth_remove {
         padding: 8px;
         border-radius: 8px;
     }
     .auth .icon_box span {
         display: none;
+    }
+
+    .auth_logout {
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .auth_toriBox {
+        padding: 14px;
+        border-radius: 8px;
     }
 
 }
