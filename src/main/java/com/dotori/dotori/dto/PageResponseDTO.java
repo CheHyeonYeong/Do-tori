@@ -15,6 +15,8 @@ public class PageResponseDTO<E> {
     private int commentCount; //댓글 수
     private boolean realEnd;
 
+    private long currentTime;
+
     private List<E> postLists;  // 게시글 내용!
 
     @Builder(builderMethodName = "withAll")
@@ -33,4 +35,7 @@ public class PageResponseDTO<E> {
         this.commentCount = commentCount;
     }
 
+    public void setCurrentTime(long currentTime) {
+        this.currentTime = currentTime;
+    }
 }

@@ -271,26 +271,32 @@
         }
     });
 
-    // 버튼 클릭 이벤트 리스너 추가
-    loadMoreBtn.addEventListener('click', () => {
-        // 현재 스크롤 위치 저장
-        scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-        sessionStorage.setItem('scrollPosition', scrollPosition);
+    window.addEventListener('DOMContentLoaded', () => {
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        if (loadMoreBtn) {
+            // 버튼 클릭 이벤트 리스너 추가
+            loadMoreBtn.addEventListener('click', () => {
+                // 현재 스크롤 위치 저장
+                scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+                sessionStorage.setItem('scrollPosition', scrollPosition);
 
-        // 현재 URL에서 size 값을 가져온 후, 10씩 증가시키기
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentSize = parseInt(urlParams.get('size')) || 10;
-        const nextSize = currentSize + 10;
+                // 현재 URL에서 size 값을 가져온 후, 10씩 증가시키기
+                const urlParams = new URLSearchParams(window.location.search);
+                const currentSize = parseInt(urlParams.get('size')) || 10;
+                const nextSize = currentSize + 10;
 
-        // 검색 조건 가져오기
-        const type = urlParams.get('type') || '';
-        const keyword = urlParams.get('keyword') || '';
+                // 검색 조건 가져오기
+                const type = urlParams.get('type') || '';
+                const keyword = urlParams.get('keyword') || '';
 
-        // 검색 조건을 포함하여 다음 요청 URL 생성
-        const nextUrl = `/post/list?size=${nextSize}&type=${type}&keyword=${keyword}`;
+                // 검색 조건을 포함하여 다음 요청 URL 생성
+                const nextUrl = `/post/list?size=${nextSize}&type=${type}&keyword=${keyword}`;
 
-        // 다음 요청 URL로 이동
-        self.location = nextUrl;
+                // 다음 요청 URL로 이동
+                self.location = nextUrl;
+            });
+        }
+
     });
 
     document.querySelector(".clearBtn").addEventListener("click", function (e){

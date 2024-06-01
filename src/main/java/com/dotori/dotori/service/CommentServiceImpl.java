@@ -37,6 +37,10 @@ public class CommentServiceImpl implements CommentService {
         Auth auth = authRepository.findById(commentDTO.getAid())
                 .orElseThrow(() -> new Exception("Not Found auth id :" + commentDTO.getAid()));
 
+        // 프로필 사진 불러오기
+        String profileImage = auth.getProfileImage();
+        commentDTO.setProfileImage(profileImage);
+
         Comment comment = modelMapper.map(commentDTO, Comment.class);
         comment.setPost(commentDTO.getPid());
         comment.setAuth(auth);
@@ -50,13 +54,17 @@ public class CommentServiceImpl implements CommentService {
     public CommentDTO read(int id) {
         Comment comment = commentRepository.findById(id).orElseThrow();
         Auth auth = comment.getAuth();
+
+        // 프로필 이미지 가져오기
+        String profileImage = auth.getProfileImage();
+
         return CommentDTO.builder()
                 .id(comment.getId())
                 .pid(comment.getPid())
                 .content(comment.getContent())
                 .aid(auth.getAid())
                 .nickName(auth.getNickName())
-                .profileImage(auth.getProfileImage())
+                .profileImage(profileImage)
                 .build();
     }
 

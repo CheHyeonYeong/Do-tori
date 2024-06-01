@@ -170,10 +170,9 @@ public class PostController {
     }
 
 
-
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/remove")
-    public String remove(PostDTO postDTO,PageRequestDTO pageRequestDTO, RedirectAttributes redirectAttributes) {
+    public String remove(PostDTO postDTO, PageRequestDTO pageRequestDTO, RedirectAttributes redirectAttributes) {
 
         log.info("remove : " + postDTO.getPid());
         postService.deletePost(postDTO.getPid());
@@ -195,7 +194,11 @@ public class PostController {
         int likeCount = postService.countLikes(pid);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("tid", tid);
+        if (tid == -1) { // 좋아요 취소 시
+            response.put("deleted", true);
+        } else {
+            response.put("tid", tid);
+        }
         response.put("likeCount", likeCount);
 
         return ResponseEntity.ok(response);
@@ -203,7 +206,15 @@ public class PostController {
 
     @GetMapping("/likes")
     public String toriBoxes(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, Model model) {
-        List<PostDTO> toriBoxPosts  = postService.toriBoxSelectAll();
+        int aid = authSecurityDTO.getAid();
+        List<PostDTO> toriBoxPosts = postService.toriBoxSelectAll(aid);
+
+        // 각 게시글의 좋아요 카운트 설정
+        for (PostDTO postDTO : toriBoxPosts) {
+            int likeCount = postService.countLikes(postDTO.getPid());
+            postDTO.setToriBoxCount(likeCount);
+        }
+
         model.addAttribute("toriBoxPosts", toriBoxPosts);
 
         String id = authSecurityDTO.getId();

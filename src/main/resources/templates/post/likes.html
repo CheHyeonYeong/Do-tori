@@ -18,7 +18,18 @@
         .content_layout {
             display: flex;
             align-items: center;
+            justify-content: right;
             height: 100vh;
+        }
+
+        .aside {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .toggle-btn {
+            position: fixed;
         }
 
         .icon_box {
@@ -30,31 +41,60 @@
             width: 80%;
         }
         .main_info_container {
-            width: 60%;
+            width: 90%;
+            height: 95vh;
             margin: 0 auto;
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
+            gap: 1rem;
+        }
+
+        .flex-filler {
+            flex-grow: 1;
+        }
+
+        .main_info_container::after {
+            content: '';
+            flex-grow: 999;
+        }
+
+        .card-box {
+            width: 30%;
+            flex-grow: 0;
+            flex-shrink: 0;
         }
 
         .card {
+            width: 100% !important;
+            height: 26rem !important;
             box-shadow: 1px 1px 3px rgb(107 104 104 / 30%);
             border: 1px solid #b9b9b9;
             overflow: hidden;
-            margin: 0 2rem 4rem 0 !important;
-            width: 100%;
+            padding: 0 !important;
         }
-        .card>hr {
-            margin: 0;
+        .card-h-box {
+            height: 50%;
+            overflow: hidden;
         }
-
+        .thumbnail-box {
+            height: 100%;
+        }
+        .card-b-box {
+            height: 30%;
+        }
         .card-body>p {
             color: #a8a8a8;
         }
-
         .like_icon img {
             width: 40px;
+        }
+
+        .modal {
+            z-index: 1000;
+            width: 100%;
+            height: 100vh;
+            background-color: #333;
+            opacity: 0.7;
         }
 
         .profile-image {
@@ -66,30 +106,38 @@
             width : 55px;
             height : 55px;
         }
+        .thumbnail {
+            width: 100%;
+        }
+        .card-footer {
+            display: flex !important;
+            justify-content: space-between !important;
+            padding: 0.5rem !important;
+        }
 
         @media (max-width: 1334px) {
-            .card {
-                height: 22rem !important;
-                margin: 0 auto 2rem !important;
+            .auth .icon_box span {
+                display: none;
             }
 
         }
         @media (max-width: 768px) {
 
-            .main_info {
-                width: 100%;
-            }
             .main_info_container {
-                width: 80%;
+                width: 90%;
                 margin: 0;
             }
             .main_info_container.active {
-                margin: auto;
+                margin: 0;
             }
+
             .card {
-                width: 16rem !important;
-                height: 16rem !important;
-                margin: 0 auto 1rem !important;
+                width: 100% !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .card-box {
+                width: 100% !important;
             }
 
             .profile-image {
@@ -173,63 +221,98 @@
     </div>
 
     <div class="main_info">
-        <div class="main_info_container" th:each="dto:${toriBoxPosts}">
-            <div class="card " style="margin: 50px; height: auto;">
-                <div class="card-header">
-                    <img th:src="@{${dto.profileImage != null ? '/images/' + dto.profileImage + '?t=' + #dates.createNow().getTime() : '/assets/Profile.png'}}"
-                         class="profile profile-image profileImage"/>
-                    <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
+        <div class="main_info_container">
+            <div th:each="dto:${toriBoxPosts}" class="card-box" style="width: 30%;">
+                <div class="card mx-auto p-2 vstack gap-3">
+                    <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|" style="all: unset; cursor: pointer; height: 50%; overflow: hidden; background-color: #d9d9d9;" class="card-h-box">
+                        <div th:if="${dto.thumbnails != null && !dto.thumbnails.isEmpty()}" class="thumbnail-box" style="display: block; text-align: center; cursor: pointer; height: 100%;">
+                            <img th:src="@{/images/{filename}(filename=${dto.thumbnails[0]})}" alt="썸네일" class="thumbnail">
+                        </div>
+                    </a>
 
-                    <div th:if="${dto.nickName == #authentication.principal.nickName}">
-                        <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
+                    <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|" style="all: unset; cursor: pointer; height: 30%;"class="card-b-box">
+                        <div class="card-body">
+                            <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
+                                <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
+                            </div>
+                        </div>
+                    </a>
 
-                            <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="5" cy="5" r="5" fill="black"/>
-                                    <circle cx="5" cy="22" r="5" fill="black"/>
-                                    <circle cx="5" cy="40" r="5" fill="black"/>
-                                </svg>
-                            </a>
+                    <div style="margin: 0 auto; width: 95%; height: 20%;">
+                        <div class="card-footer text-body-secondary" style="height: 100%; align-items: center;">
+                            <div class="writer_info">
+                                <img th:src="@{${dto.profileImage != null ? '/images/' + dto.profileImage + '?t=' + #dates.createNow().getTime() : '/assets/Profile.png'}}"
+                                     class="profile profile-image profileImage"/>
+                                <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
+                                <div th:if="${dto.nickName == #authentication.principal.nickName}"></div>
+                            </div>
 
-                            <div class="dropdown-menu dropdown-menu-end" id="mypage" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" th:href="@{/post/modify(pid=${dto.pid})}" th:text="수정하기"></a>
-                                <div class="dropdown-divider"></div>
-                                <div class="dropdown-item">
-                                    <form th:action="@{/post/remove}" method="post">
-                                        <input type="text" name="pid" th:value="${dto.pid}" readonly style="display: none;">
-                                        <button type="submit" class="removeBtn"  style="all: unset; cursor: pointer;">삭제하기</button>
-                                    </form>
-                                </div>
+                            <div class="like_box">
+                                <img id="likeBtn"
+                                     th:src="${dto.liked ? '/assets/Favorite_onclick.png' : '/assets/Favorite.png' }"
+                                     style="width: 30px;"
+                                     th:data-post-id="${dto.pid}"
+                                     th:data-auth-id="${#authentication.principal != null ? #authentication.principal.aid : ''}"
+                                     th:data-liked="${dto.liked}">
+                                <span>[[${dto.toriBoxCount}]]</span>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <a th:href="|@{/post/read(pid=${dto.pid})}|" style="all: unset; ">
-                    <div class="card-body">
-                        <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
-                            <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
-                            <div th:if="${dto.thumbnails != null && !dto.thumbnails.isEmpty()}">
-                                <img th:src="@{/images/{filename}(filename=${dto.thumbnails[0]})}" alt="썸네일" class="thumbnail">
-                            </div>
-                        </div>
-                    </div>
-                </a>
-                <div class="card-footer" style="margin: 0 auto; width: 95%">
 
-                    <p class="hstack gap-3 date">
-                        <span>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>
-                        <span>/</span>
-                        <span>
-                            <span th:if="${dto.modDate == null}">-</span>
-                            <span th:unless="${dto.modDate == null}">[[${#temporals.format(dto.modDate, 'yyyy-MM-dd')}]]</span>&nbsp;수정
-                        </span>
-                    </p>
                 </div>
             </div>
 
+            <div class="flex-filler"></div>
         </div>
     </div>
+
 </div>
+
+<script th:inline="javascript">
+    // 좋아요 버튼 클릭 이벤트 처리
+    document.querySelectorAll('#likeBtn').forEach(function (likeBtn) {
+        likeBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const postId = this.getAttribute('data-post-id');
+            const authId = this.getAttribute('data-auth-id');
+            const isLiked = this.getAttribute('data-liked') === 'true';
+            const card = this.closest('.card'); // .card 요소 가져오기
+
+            // AJAX 요청 보내기
+            fetch('/post/like', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ pid: postId, aid: authId })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // 좋아요 카운트 업데이트
+                    const likeCountElement = this.nextElementSibling;
+                    likeCountElement.textContent = data.likeCount;
+
+                    // 좋아요 상태에 따라 이미지 변경
+                    if (isLiked) {
+                        this.src = '/assets/Favorite.png';
+                        this.setAttribute('data-liked', 'false');
+                        if (data.deleted) { // 좋아요 취소 시
+                            card.remove(); // 카드 요소 제거
+                            location.reload();
+                        }
+                    } else {
+                        this.src = '/assets/Favorite_onclick.png';
+                        this.setAttribute('data-liked', 'true');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    });
+</script>
+
 </body>
 </html>

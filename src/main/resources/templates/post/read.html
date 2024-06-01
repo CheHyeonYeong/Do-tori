@@ -217,7 +217,6 @@
             <button id="loadMoreBtn" class="btn btn-primary moreBtn" type="button">더보기</button>
         </div>
 
-
     </div>
 </div> <!--end layout:fragment -->
 
@@ -234,6 +233,7 @@
     const aid = [[${#authentication.principal.aid}]];
 
     const commentList = document.querySelector('.commentList');
+    // const currentTime = [[${#dates.createNow().time}]];
 
     function printList(dtoList) {
         let str = '';
@@ -242,7 +242,8 @@
                 const isOwner = dto.aid === aid; // 작성자와 현재 사용자가 같은지 확인
                 str += `
                 <li class="list-group-item d-flex justify-content-between commentItem" style="background-color: #F5F0EA; border: none; align-items: center;">
-                    <img src="/assets/Profile.png" class="col-1 profile" id="profileImage" style="width: 50px; height: 50px">
+                    <img src="${dto.profileImage ? '/images/' + dto.profileImage + '?t=' + new Date().getTime() : '/assets/Profile.png'}"
+                         class="profile profile-image profileImage" style="border-radius: 50%"/>
                     <div style="background-color: #F5F0EA; width: 90%; border-bottom: 1px solid #c3c3c3">
                         <h5 style="font-size: 1.2rem;">
                             <span class="col-2">${dto.nickName}</span>

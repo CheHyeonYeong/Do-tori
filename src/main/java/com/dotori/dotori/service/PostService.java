@@ -1,6 +1,7 @@
 package com.dotori.dotori.service;
 
 import com.dotori.dotori.dto.*;
+import com.dotori.dotori.entity.Post;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface PostService {
     int countLikes(int pid);
     boolean isLikedByUser(int pid, int aid);
 
-    List<PostDTO> toriBoxSelectAll();
+    List<PostDTO> toriBoxSelectAll(int aid);
     PageResponseDTO<PostDTO> listWithCommentCount(PageRequestDTO pageRequestDTO);
 
 

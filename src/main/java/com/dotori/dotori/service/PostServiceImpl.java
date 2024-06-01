@@ -224,7 +224,7 @@ public class PostServiceImpl implements PostService {
         if (existingLike.isPresent()) {
             ToriBox toriBox = existingLike.get();
             toriBoxRepository.delete(toriBox);
-            return toriBox.getId();
+            return -1;
         } else {
             ToriBox toriBox = ToriBox.builder().post(post).pid(post.getPid()).aid(auth.getAid()).build();
             ToriBox savedToriBox = toriBoxRepository.save(toriBox);
@@ -243,8 +243,8 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    public List<PostDTO> toriBoxSelectAll() {
-        List<ToriBox> toriBoxList = toriBoxRepository.findAll();
+    public List<PostDTO> toriBoxSelectAll(int aid) {
+        List<ToriBox> toriBoxList = toriBoxRepository.findByAid(aid);
         List<PostDTO> toriBoxPosts = toriBoxList.stream()
                 .map(toriBox -> {
                     Post post = toriBox.getPost();

@@ -6,6 +6,7 @@ import com.dotori.dotori.dto.PageResponseDTO;
 import com.dotori.dotori.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
