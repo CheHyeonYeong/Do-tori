@@ -361,9 +361,12 @@ function renderGraph(currentMonth, currentYear, daysInMonth) {
 
 //튜토리얼 사진 추가
 var tutorialImages = [
-    "/assets/joinBg.png",
-    "/assets/tutorial-1.png",
-    "/assets/tutorial-2.png"
+    "/assets/1_MAIN.png",
+    "/assets/1_MAIN-1.png",
+    "/assets/2_To-rest.png",
+    "/assets/2_To-rest-1.png",
+    "/assets/2_To-rest-2.png",
+    "/assets/3_like.png"
 ];
 var currentImageIndex = 0;
 
