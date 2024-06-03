@@ -10,4 +10,7 @@ import java.util.List;
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Integer> {
     List<Todo> findByAid(int aid);
+
+    void deleteByAid(int aid);
+
 }
