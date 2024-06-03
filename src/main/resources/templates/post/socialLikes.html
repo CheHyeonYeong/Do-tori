@@ -223,7 +223,7 @@
                         </div>
                     </a>
 
-                    <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|" style="all: unset; cursor: pointer; height: 30%;"class="card-b-box">
+                    <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|" style="all: unset; cursor: pointer; height: 30%; overflow: hidden; text-overflow: ellipsis;"class="card-b-box">
                         <div class="card-body">
                             <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
                                 <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
