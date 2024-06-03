@@ -198,14 +198,18 @@
 
                 <a th:href="|@{/post/read(pid=${dto.pid})}&${link}|" style="all: unset; cursor: pointer;">
                     <div class="card-body">
-                        <div class="input-group mb-3" style="display: block; text-align: center; cursor: pointer">
-                            <div class="body-content" style="text-align: left">[[${dto.content}]]</div>
-                            <div th:if="${dto.thumbnails != null && !dto.thumbnails.isEmpty()}">
-                                <img th:src="@{/images/{filename}(filename=${dto.thumbnails[0]})}" alt="썸네일" class="thumbnail">
+                        <div class="input-group mb-3" style="display: block; cursor: pointer">
+                            <div class="body-content" style="white-space: pre-wrap; margin-bottom: 1rem;">[[${dto.content}]]</div>
+                            <div style="display: flex; align-items: flex-start;">
+                                <div th:if="${dto.thumbnails != null && !dto.thumbnails.isEmpty()}" style="margin-right: 1rem;">
+                                    <img th:src="@{/images/{filename}(filename=${dto.thumbnails[0]})}" alt="썸네일" class="thumbnail" style="max-width: 100px; max-height: 100px;">
+                                </div>
+                                <div style="flex: 1;"></div>
                             </div>
                         </div>
                     </div>
                 </a>
+
                 <div style="margin: 0 auto; width: 95%">
                     <hr>
                     <p class="hstack gap-3 date">

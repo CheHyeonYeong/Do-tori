@@ -167,13 +167,12 @@
                         <input type="hidden" class="form-control" th:value="${dto.pid}" readonly>
                     </div>
                     <div class="input-group mb-3" style="display: block; text-align: center">
-                        <div class="body-content">[[${dto.content}]]</div>
+                        <div class="body-content" style="white-space: pre-wrap;">[[${dto.content}]]</div>
                         <div th:if="${dto.thumbnails != null and !dto.thumbnails.isEmpty()}">
                             <div th:each="thumbnail : ${dto.thumbnails}">
                                 <img th:src="@{/images/{thumbnail}(thumbnail=${thumbnail})}" class="img-fluid">
                             </div>
                         </div>
-
                     </div>
                     <div class="input-group mb-3 content_bottom">
                         <span> [[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] 작성</span>

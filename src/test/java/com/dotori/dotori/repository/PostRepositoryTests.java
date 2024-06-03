@@ -23,7 +23,7 @@ public class PostRepositoryTests {
 
     @Test
     public void testInsert() {
-        IntStream.rangeClosed(1,100).forEach(i -> {
+        IntStream.rangeClosed(1,20).forEach(i -> {
             Post post = Post.builder()
                     .content("content...................."+i)
                     .nickName("tu"+(i%10+11)) //사용자는 0~9번까지
