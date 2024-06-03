@@ -17,4 +17,6 @@ public interface PostRepository extends JpaRepository<Post, Integer>, PostSearch
     @Query(value = "select now()", nativeQuery = true)
     String getTime();
 
+    void deleteByAuth_Aid(int aid);
+
 }

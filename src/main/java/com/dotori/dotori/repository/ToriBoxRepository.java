@@ -16,4 +16,6 @@ public interface ToriBoxRepository extends JpaRepository<ToriBox, Integer> {
 
     List<ToriBox> findByAid(int aid);
 
+    void deleteByAid(int aid);
+
 }
