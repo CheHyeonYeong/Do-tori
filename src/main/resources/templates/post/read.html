@@ -141,7 +141,7 @@
                              class="profile profile-image profileImage"/>
                         <span class="card-title name">[[${dto.nickName}]]</span>
                     </div>
-                    <div class="toggle" th:with="user=${#authentication.principal}">
+                    <div th:if="${dto.aid == #authentication.principal.aid}" class="toggle">
                         <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <svg width="5" height="20" viewBox="0 0 10 45" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="5" cy="5" r="5" fill="black"/>
@@ -315,7 +315,6 @@
             aid: aid
         };
         addComment(commentObj).then(response => {
-            alert(response.id);
             document.querySelector(".commentContent").value = '';
             count += 1;
             document.querySelector(".aid").value = '';

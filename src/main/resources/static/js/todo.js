@@ -70,6 +70,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var selectedDateElement = document.getElementById('selectedDate');
     selectedDateElement.textContent = formattedDate;
 
+    // todoDateInput에 오늘 날짜 설정
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById('todoDateInput').value = today;
+
     // 그래프가 렌더링될 컨테이너 요소를 가져옴
     const contribution = document.getElementById('contribution');
 

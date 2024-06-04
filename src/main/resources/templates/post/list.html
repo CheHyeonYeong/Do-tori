@@ -170,7 +170,7 @@
                         <div class="card-title" style="display:inline; font-weight: bold">[[${dto.nickName}]]</div>
                     </div>
 
-                    <div th:if="${dto.nickName == #authentication.principal.nickName}">
+                    <div th:if="${dto.aid == #authentication.principal.aid}">
                         <div class="dropdown" style="float: right; margin-top: 3px; display: inline">
 
                             <a id="modifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

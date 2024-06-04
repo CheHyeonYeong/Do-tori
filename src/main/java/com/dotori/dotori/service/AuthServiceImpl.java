@@ -2,10 +2,7 @@ package com.dotori.dotori.service;
 
 import com.dotori.dotori.dto.AuthDTO;
 import com.dotori.dotori.entity.Auth;
-import com.dotori.dotori.repository.AuthRepository;
-import com.dotori.dotori.repository.PostRepository;
-import com.dotori.dotori.repository.TodoRepository;
-import com.dotori.dotori.repository.ToriBoxRepository;
+import com.dotori.dotori.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
     private final PostRepository postRepository;
     private final TodoRepository todoRepository;
     private final ToriBoxRepository toriBoxRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public Auth join(AuthDTO authDTO) throws MidExistException, EmailExistException, NickNameLengthException{
@@ -84,6 +82,8 @@ public class AuthServiceImpl implements AuthService {
         int aid = auth.getAid();
 
         postRepository.deleteByAuth_Aid(aid);
+
+        commentRepository.deleteByAuth_Aid(aid);
 
         toriBoxRepository.deleteByAid(aid);
 
