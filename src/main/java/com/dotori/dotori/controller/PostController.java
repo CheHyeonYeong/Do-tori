@@ -118,6 +118,7 @@ public class PostController {
         model.addAttribute("likes", likes); // 좋아요 개수
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/modify")
     public String modifyGet(@AuthenticationPrincipal AuthSecurityDTO authSecurityDTO, PostDTO postDTO, PageRequestDTO pageRequestDTO, Model model) {
         int pid = postDTO.getPid();
@@ -127,7 +128,7 @@ public class PostController {
 
         model.addAttribute("dto", dto);
 
-        if (authSecurityDTO != null && authSecurityDTO.getNickName().equals(dto.getNickName())) {
+        if (authSecurityDTO != null && authSecurityDTO.getAid() == dto.getAid()) {
             // 작성자가 일치하는 경우에 대한 처리 로직 추가
             return "post/modify";
         } else {
@@ -139,6 +140,7 @@ public class PostController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/modify")
     public String modify(PageRequestDTO pageRequestDTO, @Valid PostDTO postDTO, BindingResult bindingResult,
                          RedirectAttributes redirectAttributes,

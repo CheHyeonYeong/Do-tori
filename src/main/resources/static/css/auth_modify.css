@@ -80,3 +80,10 @@
 .checkBtn:hover {
     background-color: #928980;
 }
+.removeBtn {
+    color: red;
+    transition: 0.2s;
+}
+.removeBtn:hover {
+    color: #ff2626;
+}

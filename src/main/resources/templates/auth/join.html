@@ -24,12 +24,12 @@
         <form id="registerForm" th:action="@{/auth/join}" method="post">
             <div class="mb">
                 <span class="input-group-txt">아이디</span>
-                <input type="text" name="id" class="form-con">
+                <input type="text" name="id" class="form-con id">
             </div>
 
             <div class="mb">
                 <span class="input-group-txt">비밀번호</span>
-                <input type="password" name="password" id="password" class="form-con">
+                <input type="password" name="password" id="password" class="form-con pw">
             </div>
 
             <div class="mb">
@@ -110,6 +110,14 @@
         if (!nicknameRegex.test(nickname)) {
             alert("닉네임은 5글자 이하여야 합니다.")
             nicknameInput.focus();
+            return;
+        }
+
+        const id = document.querySelector('.id').value
+        const pw = document.querySelector('.pw').value
+
+        if (id === pw) {
+            alert("아이디와 비밀번호는 같을 수 없습니다 !!");
             return;
         }
 
