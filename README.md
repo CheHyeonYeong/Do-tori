@@ -8,7 +8,7 @@ Do-Tori는 사용자들이 자신의 할 일 목록을 공유하고, 질문과 �
 
 **기획의도**: 사용자가 자신의 할 일을 공유하며 함께한다는 가치에서 오는 생산성 향상에 기반하여, todo와 community 기능을 결합하게 되었습니다. 커뮤니티에서 소외감을 느끼지 않도록 AI 답변 기능을 추가하여 질문에 대한 즉각적인 답변을 받을 수 있게 했습니다.
 
-> @이소현: 추후에 구글 폼 답변 내용 그래프 첨부 부탁드립니다.
+<img src="./google_form.png" width="700">
 
 ### 프로젝트 개요
 
@@ -43,7 +43,7 @@ Do-Tori는 사용자들이 자신의 할 일 목록을 공유하고, 질문과 �
 
 ### 활용 장비 및 재료
 
-![개발 환경 사진 첨부]
+<img src="./tool.png" width="700">
 
 - PostMan
 - IntelliJ
@@ -57,7 +57,8 @@ Do-Tori는 사용자들이 자신의 할 일 목록을 공유하고, 질문과 �
 
 #### ERD 및 아키텍처
 
-![프로젝트 구조 이미지](https://prod-files-secure.s3.us-west-2.amazonaws.com/65d47488-3ffd-440e-b655-cb7516b09d13/a7d75260-78d2-4a67-9846-5e1794bb60f6/Untitled_(7).png)
+<img src="./Architecture.png" width="700">
+<img src="./erd.png" width="700">
 
 ### 기대 효과
 
