@@ -10,9 +10,17 @@ Do-Tori는 사용자들이 자신의 할 일 목록을 공유하고, 질문과 �
 
 <img src="./google_form.png" width="700">
 
+
+### 🔎 Team Member
+
+| 김신이(PL) | 이소현 | 조민준 | 채현영 |
+| --- | --- | --- | --- |
+| ![image](https://github.com/CheHyeonYeong/Do-tori/assets/62824602/cea2ba9e-078d-4cfc-9623-383e4bef7904) | ![image](https://github.com/CheHyeonYeong/Do-tori/assets/62824602/69ba163e-86e0-4b3b-99c0-a6f1dcfb8ac9) | ![image](https://github.com/CheHyeonYeong/Do-tori/assets/62824602/561ff217-7e4d-4e0a-a0d7-7a7977ace8f1) | ![image](https://github.com/CheHyeonYeong/Do-tori/assets/62824602/c24e7391-6d60-42df-9954-c96a8737126e) |
+| [@SiNiKin](https://github.com/SiNiKin) | [@LeeSoHyunn](https://github.com/LeeSoHyunn) | [@Rencal3491](https://github.com/Rencal3491) | [@CheHyeonYeong](https://github.com/CheHyeonYeong)  |
+
 ### 프로젝트 개요
 
-**A 그룹**: 블로그 및 게시판 형식을 활용한 커뮤니티 사이트 개발
+블로그 및 게시판 형식을 활용한 커뮤니티 사이트 개발
 
 **앱 이름**: Do-Tori 🌰
 
@@ -78,6 +86,4 @@ Do-Tori는 사용자들이 자신의 할 일 목록을 공유하고, 질문과 �
     - 사용자들로부터 피드백을 받고, 개선점을 파악하여 지속적으로 서비스를 개선해 나갈 수 있습니다.
     - 이를 통해 앱은 지속적으로 발전하며, 사용자들에게 더 나은 경험을 제공할 수 있을 것입니다.
 
----
 
-Do-Tori를 통해 효율적인 할 일 관리와 활발한 커뮤니티 활동을 경험해보세요!
